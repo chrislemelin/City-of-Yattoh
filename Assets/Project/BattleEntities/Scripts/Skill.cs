@@ -1,11 +1,14 @@
-﻿using System.Collections;
+﻿using Placeholdernamespace.Battle.Env;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public abstract class Skill : MonoBehaviour {
-
-    public List<Tile> TileSet()
+namespace Placeholdernamespace.Battle.Entities.Skills
+{
+    public abstract class Skill : MonoBehaviour
     {
-        return new List<Tile>();
+        public List<Tile> TileSet()
+        {
+            return new List<Tile>();
+        }
     }
 }

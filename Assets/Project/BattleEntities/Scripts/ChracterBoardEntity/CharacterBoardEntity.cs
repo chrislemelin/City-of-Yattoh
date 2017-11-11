@@ -1,82 +1,92 @@
-﻿using System;
+﻿using Placeholdernamespace.Battle.Env;
+using Placeholdernamespace.Battle.Interaction;
+using Placeholdernamespace.Battle.Managers;
+using Placeholdernamespace.Battle.UI;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
-public class CharacterBoardEntity: BoardEntity{
-
-    public float speed;
-
-    private Tile target = null;
-    private List<Tile> path;
-
-    public override void Start()
+namespace Placeholdernamespace.Battle.Entities
+{
+    public class CharacterBoardEntity : BoardEntity
     {
-        base.Start();
-    }
+        public float speed;
 
-    public override List<Move> MoveSet()
-    {
-        return TileManager.Instance.DFSMoves(tile.Position, stats.MovementPoints);
-    }
+        private Tile target = null;
+        private List<Tile> path;
 
-    public List<Move> TheoritcalMoveSet(Position position, int movementPoints)
-    {
-        return TileManager.Instance.DFSMoves(tile.Position, movementPoints);
-    }
-
-    public void ExecuteMove(Move move)
-    {
-        this.stats.ModifyMovementPoint(move.movementCost);
-        PathSelectManager.Instance.pause = true;
-        path = move.path;
-        if(path.Count > 0)
+        public override void Init(TurnManager turnManager, TileManager tileManager, TileSelectionManager tileSelectionManager, Profile profile)
         {
-            target = path[0];
-            path.Remove(target);
+            base.Init(turnManager, tileManager, tileSelectionManager, profile);
         }
-    }
 
-    private void checkAtTarget()
-    {
-        if(transform.position == target.transform.position)
+        public override List<Move> MoveSet()
         {
-            TileManager.Instance.MoveBoardEntity(target.Position, this);
+            return tileManager.DFSMoves(GetTile().Position, stats.MovementPoints);
+        }
 
-            if(path.Count == 0)
+        public void ExecuteMove(Move move)
+        {
+            profile.UpdateProfile(null);
+            if (move != null)
             {
-                target = null;
-                PathSelectManager.Instance.pause = false;
-                PathSelectManager.Instance.ClearPath();
-
-            }
-            else
-            {
-                target = path[0];
-                path.Remove(target);
+                stats.ModifyMovementPoint(move.movementCost);
+                tileSelectionManager.pause = true;
+                path = move.path;
+                if (path.Count > 0)
+                {
+                    target = path[0];
+                    path.Remove(target);
+                }
             }
         }
-    }
 
-    private void doMovement()
-    {
-        float step = speed * Time.deltaTime;
-        transform.position = Vector3.MoveTowards(transform.position, target.transform.position, step);
-    }
-
-    void Update()
-    {
-        if(target != null)
+        private void checkAtTarget()
         {
-            doMovement();
-            checkAtTarget();
+            if (transform.position == target.transform.position)
+            {
+                tileManager.MoveBoardEntity(target.Position, this);
+
+                if (path.Count == 0)
+                {
+                    target = null;
+                    tileSelectionManager.pause = false;
+                    tileSelectionManager.ClearGlowPath();
+                }
+                else
+                {
+                    target = path[0];
+                    path.Remove(target);
+                }
+            }
         }
 
-    }
+        private void doMovement()
+        {
+            float step = speed * Time.deltaTime;
+            transform.position = Vector3.MoveTowards(transform.position, target.transform.position, step);
+        }
 
-    public override void NewTurnHandler(object sender, EventArgs args)
-    {
-        stats.NewTurn();
+        public override void OnSelect()
+        {
+            base.OnSelect();
+            tileSelectionManager.SelectTile(this, MoveSet(), ExecuteMove);
+        }
+
+        void Update()
+        {
+            if (target != null)
+            {
+                doMovement();
+                checkAtTarget();
+            }
+
+        }
+
+        public override void MyTurn()
+        {
+            stats.NewTurn();
+        }
     }
 }

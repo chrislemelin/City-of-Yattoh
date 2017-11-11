@@ -2,17 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 namespace Placeholdernamespace.Common.Utils
 {
-    public abstract class OnClickRedirect : MonoBehaviour
+    public class OnClickRedirectGeneral : OnClickRedirect
     {
+        [SerializeField]
+        public MonoBehaviour target;
 
-        public abstract IClickable GetTarget();
-
-        public void OnMouseDown()
+        public override IClickable GetTarget()
         {
-            GetTarget().OnMouseDown();
+            return (IClickable)target;
         }
     }
 }

@@ -3,28 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-
-[System.Serializable]
-public class Stat{
-
-    [SerializeField]
-    private string name;
-    public string Name
+namespace Placeholdernamespace.Battle.Entities.AttributeStats
+{
+    [System.Serializable]
+    public class Stat
     {
-        get { return name; }
-    }
 
-    [SerializeField]
-    private float value;
-    public float Value
-    {
-        get{return value;}
-    }
+        [SerializeField]
+        private string name;
+        public string Name
+        {
+            get { return name; }
+        }
 
-    public Stat (string name, float value)
-    {
-        this.name = name;
-        this.value = value;
-    }
+        [SerializeField]
+        private float value;
+        public float Value
+        {
+            get { return value; }
+        }
 
+        public Stat(string name, float value)
+        {
+            this.name = name;
+            this.value = value;
+        }
+
+    }
 }

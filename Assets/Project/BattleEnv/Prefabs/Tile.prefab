@@ -184,6 +184,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bbe1c31ea6fa7b45a644f0da74f4e8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  colorEffectManager: {fileID: 114701556830611960}
+  glowManager: {fileID: 114490621250599966}
 --- !u!114 &114798152263451086
 MonoBehaviour:
   m_ObjectHideFlags: 1

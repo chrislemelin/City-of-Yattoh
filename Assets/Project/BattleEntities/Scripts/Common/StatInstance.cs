@@ -2,91 +2,92 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class StatInstance
+namespace Placeholdernamespace.Battle.Entities.AttributeStats
 {
-    [SerializeField]
-    private int armour;
-
-    [SerializeField]
-    private int inteligence;
-
-    [SerializeField]
-    private int maxHealth;
-
-    [SerializeField]
-    private int movement;
-
-    [SerializeField]
-    private int speed;
-
-    [SerializeField]
-    private int strength;
-
-    private Dictionary<StatType, Stat> stats = new Dictionary<StatType, Stat>();
-
-    public StatInstance()
+    [System.Serializable]
+    public class StatInstance
     {
-        stats = new Dictionary<StatType, Stat>();
-    }
+        [SerializeField]
+        private int armour;
 
-    public StatInstance(StatInstance obj)
-    {
-        stats.Clear();
-        foreach (StatType type in obj.stats.Keys)
+        [SerializeField]
+        private int inteligence;
+
+        [SerializeField]
+        private int maxHealth;
+
+        [SerializeField]
+        private int movement;
+
+        [SerializeField]
+        private int speed;
+
+        [SerializeField]
+        private int strength;
+
+        private Dictionary<StatType, Stat> stats = new Dictionary<StatType, Stat>();
+
+        public StatInstance()
         {
-            Stat stat = obj.stats[type];
-            stats.Add(type, new Stat(stat.Name, stat.Value));
+            stats = new Dictionary<StatType, Stat>();
         }
-    }
 
-    public void UseDefaults()
-    {
-        stats.Clear();
-        stats.Add(StatType.Armour, new Stat("Armour", armour));
-        stats.Add(StatType.Inteligence, new Stat("Inteligence", inteligence));
-        stats.Add(StatType.MaxHealth, new Stat("MaxHealth", maxHealth));
-        stats.Add(StatType.Movement, new Stat("Movement", movement));
-        stats.Add(StatType.Speed, new Stat("Speed", speed));
-        stats.Add(StatType.Strength, new Stat("Strength", strength));
-    }
-
-    public int getValue(StatType type)
-    {
-        if(stats.ContainsKey(type))
+        public StatInstance(StatInstance obj)
         {
-            return (int)stats[type].Value;
+            stats.Clear();
+            foreach (StatType type in obj.stats.Keys)
+            {
+                Stat stat = obj.stats[type];
+                stats.Add(type, new Stat(stat.Name, stat.Value));
+            }
         }
-        return -1;
-    }
 
-    public void ApplyMod(StatModifier mod)
-    {
-        if (stats.ContainsKey(mod.StatType))
-        {   
-            Stat newStat = new Stat(stats[mod.StatType].Name, mod.Apply(stats[mod.StatType].Value, mod.StatType));
-            stats.Remove(mod.StatType);
-            stats.Add(mod.StatType, newStat);
-        }
-        else
+        public void UseDefaults()
         {
-            Console.WriteLine("doesnt have stat of type " + mod.StatType);
+            stats.Clear();
+            stats.Add(StatType.Armour, new Stat("Armour", armour));
+            stats.Add(StatType.Inteligence, new Stat("Inteligence", inteligence));
+            stats.Add(StatType.MaxHealth, new Stat("MaxHealth", maxHealth));
+            stats.Add(StatType.Movement, new Stat("Movement", movement));
+            stats.Add(StatType.Speed, new Stat("Speed", speed));
+            stats.Add(StatType.Strength, new Stat("Strength", strength));
         }
-    }
 
-    public int GetStat(StatType type)
-    {
-        if (stats.ContainsKey(type))
+        public int getValue(StatType type)
         {
-            return (int)stats[type].Value;
+            if (stats.ContainsKey(type))
+            {
+                return (int)stats[type].Value;
+            }
+            return -1;
         }
-        return -1;
+
+        public void ApplyMod(StatModifier mod)
+        {
+            if (stats.ContainsKey(mod.StatType))
+            {
+                Stat newStat = new Stat(stats[mod.StatType].Name, mod.Apply(stats[mod.StatType].Value, mod.StatType));
+                stats.Remove(mod.StatType);
+                stats.Add(mod.StatType, newStat);
+            }
+            else
+            {
+                Console.WriteLine("doesnt have stat of type " + mod.StatType);
+            }
+        }
+
+        public int GetStat(StatType type)
+        {
+            if (stats.ContainsKey(type))
+            {
+                return (int)stats[type].Value;
+            }
+            return -1;
+        }
+
+        public IEnumerable<Stat> GetStats()
+        {
+            return stats.Values;
+        }
     }
-
-    public IEnumerable<Stat> GetStats()
-    {
-        return stats.Values;
-    }
-
-
 }

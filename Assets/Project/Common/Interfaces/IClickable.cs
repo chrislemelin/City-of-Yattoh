@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public interface IClickable {
-
-    void OnMouseDown();
-
+﻿namespace Placeholdernamespace.Common.Interfaces
+{
+    public interface IClickable
+    {
+        void OnMouseDown();
+    }
 }

@@ -1,12 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Placeholdernamespace.Common.Interfaces;
+using Placeholdernamespace.Battle.Entities;
+using Placeholdernamespace.Battle.Interaction;
 
-public class OnClickBoardEntityRedirect : OnClickRedirect
+namespace Placeholdernamespace.Common.Utils
 {
-
-    public override IClickable GetTarget()
+    public class OnClickBoardEntityRedirect : OnClickRedirect
     {
-        CharacterBoardEntity c = GetComponentInParent<CharacterBoardEntity>();
-        return ((IClickable)c.Tile.GetComponentInChildren<PathOnClick>());
+
+        public override IClickable GetTarget()
+        {
+            CharacterBoardEntity c = GetComponentInParent<CharacterBoardEntity>();
+            return ((IClickable)c.GetTile().GetComponentInChildren<PathOnClick>());
+        }
     }
 }

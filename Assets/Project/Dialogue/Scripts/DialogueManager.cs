@@ -97,7 +97,7 @@ public class DialogueManager: MonoBehaviour {
         foreach (DialogueOption option in currentFrame.options)
         {
             GameObject button = Instantiate(OptionButtonPrefab);
-            button.transform.parent = DisplayPanel.transform;
+            button.transform.SetParent(DisplayPanel.transform);
             Text text = button.GetComponentInChildren<Text>();
             button.GetComponent<Button>().onClick.AddListener(ContinueDialogue);
             button.GetComponent<Button>().onClick.AddListener(option.OnMouseDown);
