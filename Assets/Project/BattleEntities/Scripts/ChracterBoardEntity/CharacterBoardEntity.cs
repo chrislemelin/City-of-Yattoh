@@ -15,6 +15,7 @@ namespace Placeholdernamespace.Battle.Entities
 
         private Tile target = null;
         private List<Tile> path;
+        private Dictionary<Tile, Move> cachedMoves = new Dictionary<Tile, Move>();
 
         public override void Init(TurnManager turnManager, TileManager tileManager, TileSelectionManager tileSelectionManager, Profile profile)
         {
@@ -71,7 +72,26 @@ namespace Placeholdernamespace.Battle.Entities
         public override void OnSelect()
         {
             base.OnSelect();
-            tileSelectionManager.SelectTile(this, MoveSet(), ExecuteMove);
+            List<Move> moves = MoveSet();
+            cachedMoves.Clear();
+            foreach(Move m in moves)
+            {
+                cachedMoves.Add(m.destination, m);
+            }
+
+            tileSelectionManager.SelectTile(this, moves, ExecuteMoveHelper);
+        }
+
+        private void ExecuteMoveHelper(Tile t)
+        {
+            if(t != null)
+            {
+                ExecuteMove(cachedMoves[t]);
+            }
+            else
+            {
+                ExecuteMove(null);
+            }
         }
 
         void Update()
