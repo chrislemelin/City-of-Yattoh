@@ -10,79 +10,71 @@ namespace Placeholdernamespace.Battle.Interaction
 {
     public class TileSelectionManager : MonoBehaviour
     {
-        private TurnManager turnManager;
         private Profile profile;
         private Dictionary<Tile, TileSelectOption> possibleTiles = new Dictionary<Tile, TileSelectOption>();
 
         public bool active = true;
-        public bool pause = false;
         public List<PathOnClick> glowpath = new List<PathOnClick>();
 
-        public Color BoardEntityOnSelectColor;
-        public Color TileOnSelectColor;
-        public Color MoveableHighlightColor;
+        public Color defaultBoardEntityHighlightColor;
+        public Color defaultHighlightColor;
+        public Color defaultHoverColor;
 
-        private Action<Tile> selectionCallBack;
+        private Action<TileSelectOption> selectionCallBack;
+        private BoardEntity selectedEntity;
 
-        private BoardEntity selectedBoardEntity;
-        public BoardEntity SelectedBoardEntity
+        public void Init(Profile profile)
         {
-            get { return selectedBoardEntity; }
-        }
-
-        private PathOnClick selectedTile = null;
-        public PathOnClick SelectedTile
-        {
-            get { return selectedTile; }
-        }
-
-
-        public void Init(TurnManager turnManager, Profile profile)
-        {
-            this.turnManager = turnManager;
             this.profile = profile;
         }
 
+        public bool IsActive()
+        {
+            return selectionCallBack != null;
+        }
 
         public void TileClicked(PathOnClick pathOnClick)
         {
-
             if (selectionCallBack != null)
             {
-                if (possibleTiles.ContainsKey(pathOnClick.Tile))
-                {
-                    selectionCallBack(pathOnClick.Tile);
-                }
-                else
-                {
-                    selectionCallBack(null);
-                }
+                BoardEntity tempSelectedEntity = selectedEntity;
+                selectedEntity = null;
+                ClearGlowPath();
 
                 foreach (Tile t in possibleTiles.Keys)
                 {
                     unHighlightMovableTile(t.GetComponentInChildren<PathOnClick>());
                 }
+                if (tempSelectedEntity != null)
+                {
+                    unGlow(tempSelectedEntity.GetTile().PathOnClick);
+                }
 
-
-                ClearGlowPath();
+                Action<TileSelectOption> tempSelectOption = selectionCallBack;
                 selectionCallBack = null;
-                selectedBoardEntity = null;
-                selectedTile = null;
-                possibleTiles.Clear();
+                if (pathOnClick!= null && possibleTiles.ContainsKey(pathOnClick.Tile))
+                {
+                    tempSelectOption(possibleTiles[pathOnClick.Tile]);
+                }
+                else
+                {
+                    tempSelectOption(null);
+                }
 
+                                      
             }
+        }
+
+        public void CancelSelection()
+        {
+            TileClicked(null);
         }
 
         public void TileHover(PathOnClick pathOnClick)
         {
             if (ValidityCheck(pathOnClick))
             {
-                if (pathOnClick == selectedTile)
-                {
-                    return;
-                }
-
-                if (selectedTile.Tile.BoardEntity != null)
+                if (possibleTiles.ContainsKey(pathOnClick.Tile))
                 {
                     List<PathOnClick> newPath = new List<PathOnClick>();
                     foreach (Tile t in possibleTiles[pathOnClick.Tile].OnHover)
@@ -92,49 +84,75 @@ namespace Placeholdernamespace.Battle.Interaction
                     NewGlowPath(newPath);
                 }
             }
+            else
+            {
+                NewGlowPath(new List<PathOnClick>());
+            }
         }
 
         private bool ValidityCheck(PathOnClick pathOnClick)
         {
-            // on pause
-            if (pause)
-            {
-                return false;
-            }
-            // should always be able to deselect
-            if (pathOnClick == selectedTile)
-            {
-                return true;
-            }
             // tile is not a valid moveable tile
-            if (selectedBoardEntity != null && !possibleTiles.ContainsKey(pathOnClick.Tile))
+            if (selectionCallBack != null && !possibleTiles.ContainsKey(pathOnClick.Tile))
             {
                 return false;
             }
             return true;
         }
 
-        public void SelectTile(BoardEntity boardEntity, List<Move> moves, Action<Tile> callBack)
+        public void SelectTile (BoardEntity boardEntity, List<Tile> tiles, Action<TileSelectOption> callBack, Color? highlightColor, Color? hoverColor)
         {
+            Color highlightColorUsing = (Color)(highlightColor != null ? highlightColor : defaultHighlightColor);
+            Color hoverColorUsing = (Color)(hoverColor != null ? hoverColor : defaultHoverColor);
+
+            List<TileSelectOption> options = new List<TileSelectOption>();
+            foreach (Tile t in tiles)
+            {
+                options.Add(new TileSelectOption()
+                {
+                    Selection = t,
+                    OnHover = new List<Tile>() { t },
+                    HighlightColor = highlightColorUsing,
+                    HoverColor = hoverColorUsing
+                });
+            }
+            SelectTile(boardEntity, options, callBack);
+        }
+
+        public void SelectTile(BoardEntity boardEntity, List<Move> moves, Action<TileSelectOption> callBack, Color? highlightColor, Color? hoverColor)
+        {
+            Color highlightColorUsing = (Color)(highlightColor!= null ? highlightColor: defaultHighlightColor);
+            Color hoverColorUsing = (Color)(hoverColor != null ? hoverColor : defaultHoverColor);
+
             List<TileSelectOption> options = new List<TileSelectOption>();
             foreach(Move m in moves)
             {
                 options.Add(new TileSelectOption()
                 {
                     Selection = m.destination,
-                    OnHover = m.path                   
+                    OnHover = m.path,
+                    HighlightColor = highlightColorUsing,
+                    HoverColor = hoverColorUsing,
+                    ReturnObject = m
                 });
             }
             SelectTile(boardEntity, options, callBack);
         }
 
-        public void SelectTile(BoardEntity boardEntity, List<TileSelectOption> options, Action<Tile> callBack)
+        public void SelectTile(BoardEntity boardEntity, List<TileSelectOption> options, Action<TileSelectOption> callBack)
         {
             if (selectionCallBack == null)
             {
                 selectionCallBack = callBack;
-                selectedBoardEntity = boardEntity.GetTile().BoardEntity;
-                glow(boardEntity.GetTile().PathOnClick);
+
+                possibleTiles.Clear();
+                options.ForEach(x => possibleTiles.Add(x.Selection, x));
+
+                if (boardEntity != null)
+                {
+                    selectedEntity = boardEntity;
+                    glow(selectedEntity.GetTile().PathOnClick);
+                }
 
                 // highlight possible moves
                 foreach (TileSelectOption opt in options)
@@ -142,16 +160,19 @@ namespace Placeholdernamespace.Battle.Interaction
                     highlightMovableTile(opt.Selection.GetComponentInChildren<PathOnClick>());
                 }
 
-                profile.UpdateProfile(selectedBoardEntity);
-                selectedTile = boardEntity.GetTile().PathOnClick;
-                possibleTiles.Clear();
-                options.ForEach(x => possibleTiles.Add(x.Selection, x));
+                //selectedTile = boardEntity.GetTile().PathOnClick;
+ 
             }
         }
 
         private void highlightMovableTile(PathOnClick pathOnClick)
         {
-            pathOnClick.ColorEffectManager.TurnOn(this, MoveableHighlightColor);
+            Color highlightColor = defaultHighlightColor;
+            if (possibleTiles.ContainsKey(pathOnClick.Tile))
+            {
+                highlightColor = possibleTiles[pathOnClick.Tile].HighlightColor;
+            }
+            pathOnClick.ColorEffectManager.TurnOn(this, highlightColor);
         }
 
         private void unHighlightMovableTile(PathOnClick pathOnClick)
@@ -159,10 +180,15 @@ namespace Placeholdernamespace.Battle.Interaction
             pathOnClick.ColorEffectManager.TurnOff(this);
         }
 
-        private void glow(PathOnClick tile)
+        private void glow(PathOnClick pathOnClick)
         {
-            tile.GlowManager.TurnOn(this, TileOnSelectColor);
-            glowBoardEntity(tile);
+            Color hoverColor = defaultBoardEntityHighlightColor;
+            if(possibleTiles.ContainsKey(pathOnClick.Tile))
+            {
+                hoverColor = possibleTiles[pathOnClick.Tile].HoverColor;
+            }
+            pathOnClick.GlowManager.TurnOn(this, hoverColor);
+            glowBoardEntity(pathOnClick);
         }
 
         private void unGlow(PathOnClick tile)
@@ -177,7 +203,15 @@ namespace Placeholdernamespace.Battle.Interaction
             BoardEntity boardEntity = tile.Tile.BoardEntity;
             if (boardEntity != null)
             {
-                boardEntity.GetComponentInChildren<GlowManager>().TurnOn(this, BoardEntityOnSelectColor);
+                boardEntity.GetComponentInChildren<GlowManager>().TurnOn(this, defaultBoardEntityHighlightColor);
+            }
+        }
+
+        public void GlowBoardEntity(BoardEntity boardEntity)
+        {
+            if (boardEntity != null)
+            {
+                boardEntity.GetComponentInChildren<GlowManager>().TurnOn(this, defaultBoardEntityHighlightColor);
             }
         }
 
@@ -190,15 +224,17 @@ namespace Placeholdernamespace.Battle.Interaction
             }
         }
 
+        public void UnGlowBoardEntity(BoardEntity boardEntity)
+        {
+            if (boardEntity != null)
+            {
+                boardEntity.GetComponentInChildren<GlowManager>().TurnOff(this);
+            }
+        }
 
         public void ClearGlowPath()
         {
             NewGlowPath(new List<PathOnClick>());
-            if (selectedTile != null)
-            {
-                unGlow(selectedTile);
-            }
-
         }
 
         public void NewGlowPath(PathOnClick pathOnClick)
@@ -221,17 +257,15 @@ namespace Placeholdernamespace.Battle.Interaction
             glowpath = newPath;
 
         }
-
-        private bool isSelectedEnityTurn()
-        {
-            return (selectedBoardEntity != null && selectedBoardEntity == turnManager.CurrentBoardEntity);
-        }
     }
 
     public class TileSelectOption
     {
         public Tile Selection;
         public List<Tile> OnHover;
+        public Color HoverColor;
+        public Color HighlightColor;
+        public object ReturnObject;
     }
 }
 

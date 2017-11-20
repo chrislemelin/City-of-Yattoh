@@ -13,20 +13,20 @@ namespace Placeholdernamespace.Battle.Env
     {
 
         public GameObject testBoardEntity;
-
+        public BoardEntitySelector boardEntitySelector;
         public TileGenerator generator;
-        private TileSelectionManager pathSelectManager;
+
         private TurnManager turnManager;
         private Profile profile;
 
         private Dictionary<Tuple<Position, Position>, GameObject> tupleToWall = new Dictionary<Tuple<Position, Position>, GameObject>();
         private Dictionary<Position, Tile> coordinateToTile = new Dictionary<Position, Tile>();
 
-        public void Init(TileSelectionManager pathSelectManager, TurnManager turnManager, Profile profile)
+        public void Init(TurnManager turnManager, Profile profile)
         {
             this.turnManager = turnManager;
-            this.pathSelectManager = pathSelectManager;
             this.profile = profile;
+            this.boardEntitySelector.Init();
             generateBoard();
         }
 
@@ -139,13 +139,13 @@ namespace Placeholdernamespace.Battle.Env
         private void generateBoard()
         {
             generator.init();
-            GenerateBoardResponse response = generator.generateTiles(this, pathSelectManager);
+            GenerateBoardResponse response = generator.generateTiles(this, boardEntitySelector.TileSelectionManager);
             this.coordinateToTile = response.coordinateToTile;
             this.tupleToWall = response.tuppleToWall;
 
             //this should be removed later
             GameObject BE = Instantiate(testBoardEntity);
-            BE.GetComponent<BoardEntity>().Init(turnManager, this, pathSelectManager, profile);
+            BE.GetComponent<CharacterBoardEntity>().Init(turnManager, this, boardEntitySelector);
             AddBoardEntity(new Position(0, 0), BE);
 
         }

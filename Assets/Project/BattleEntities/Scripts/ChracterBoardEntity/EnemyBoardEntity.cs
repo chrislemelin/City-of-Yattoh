@@ -10,9 +10,9 @@ namespace Placeholdernamespace.Battle.Entities
 { 
     public class EnemyBoardEntity : BoardEntity {
 
-        public override void Init(TurnManager turnManager, TileManager tileManager, TileSelectionManager pathSelectManager, Profile profile)
+        public override void Init(TurnManager turnManager, TileManager tileManager, BoardEntitySelector boardEntitySelector)
         {
-            base.Init(turnManager, tileManager, pathSelectManager, profile);
+            base.Init(turnManager, tileManager, boardEntitySelector);
         }
 
         public override void MyTurn()

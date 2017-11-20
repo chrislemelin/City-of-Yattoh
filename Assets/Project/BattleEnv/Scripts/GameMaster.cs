@@ -19,7 +19,6 @@ namespace Placeholdernamespace.Battle
         }
 
         public TurnManager turnManager;
-        public TileSelectionManager pathSelectManager;
         public TileManager tileManager;
         public Profile profile;
 
@@ -28,8 +27,7 @@ namespace Placeholdernamespace.Battle
         {
             instance = this;
 
-            pathSelectManager.Init(turnManager, profile);
-            tileManager.Init(pathSelectManager, turnManager, profile);
+            tileManager.Init(turnManager, profile);
 
 
         }

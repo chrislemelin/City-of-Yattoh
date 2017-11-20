@@ -16,9 +16,11 @@ namespace Placeholdernamespace.Battle.Interaction
         private PathOnClick pathOnClick;
         private TileSelectionManager pathSelectManager;
 
+        public static bool disabled = false;
+
         private bool IsActive
         {
-            get { return pathSelectManager.SelectedBoardEntity == null; }
+            get { return !pathSelectManager.IsActive(); }
         }
 
         void Start()
@@ -35,7 +37,7 @@ namespace Placeholdernamespace.Battle.Interaction
 
         public void OnMouseEnter()
         {
-            if (IsActive)
+            if (IsActive && !disabled)
             {
                 if (tile.BoardEntity != null && tile.BoardEntity.GetComponentInChildren<GlowManager>() != null)
                 {

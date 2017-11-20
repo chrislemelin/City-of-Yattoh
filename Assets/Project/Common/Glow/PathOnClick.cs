@@ -7,7 +7,7 @@ namespace Placeholdernamespace.Battle.Interaction
 {
     public class PathOnClick : MonoBehaviour, IClickable
     {
-
+        public static bool pause = false;
         private TileSelectionManager pathSelectManager;
         public Color BoardEntityOnSelectColor;
         public Color TileOnSelectColor;
@@ -59,21 +59,29 @@ namespace Placeholdernamespace.Battle.Interaction
 
         public void OnMouseDown()
         {
-            if (tile.BoardEntity != null && !pathSelectManager.SelectedBoardEntity == tile.BoardEntity)
+            if (!pause)
             {
-                tile.BoardEntity.OnSelect();
-            }
-            else
-            {
-                pathSelectManager.TileClicked(this);
+                // pass the select on to the board entity
+                if (tile.BoardEntity != null && !pathSelectManager.IsActive())
+                {
+                    tile.BoardEntity.OnSelect();
+                }
+                // pass the select onto the tile
+                else
+                {
+                    pathSelectManager.TileClicked(this);
+                }
             }
         }
 
         public void OnMouseEnter()
         {
-            if (pathSelectManager.SelectedBoardEntity != null)
+            if (!pause)
             {
-                pathSelectManager.TileHover(this);
+                if (pathSelectManager.IsActive())
+                {
+                    pathSelectManager.TileHover(this);
+                }
             }
         }
 

@@ -40,8 +40,7 @@ GameObject:
   - component: {fileID: 50169604986461472}
   - component: {fileID: 114653560778829354}
   - component: {fileID: 114910173449349550}
-  - component: {fileID: 114409299267050798}
-  - component: {fileID: 114816402783044486}
+  - component: {fileID: 114245910978165384}
   m_Layer: 0
   m_Name: BoardEntitySprite
   m_TagString: Untagged
@@ -121,7 +120,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2.56, y: 2.56}
   m_EdgeRadius: 0
---- !u!114 &114409299267050798
+--- !u!114 &114245910978165384
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -129,7 +128,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1844718460837428}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66b63a014bd926f41bab45fa9377bdfb, type: 3}
+  m_Script: {fileID: 11500000, guid: 2ffb99f67b59661428a4cf4257aeb964, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &114653560778829354
@@ -148,18 +147,6 @@ MonoBehaviour:
   _glowColor: {r: 2, g: 0, b: 1.7793102, a: 1}
   _outlineWidth: 10
   _alphaThreshold: 0
---- !u!114 &114816402783044486
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1844718460837428}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1fed1ccb4390e9f47ac79278e2b4ded2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 114868530270863054}
 --- !u!114 &114868530270863054
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -11,15 +11,16 @@ namespace Placeholdernamespace.Battle.Entities
 {
     public class CharacterBoardEntity : BoardEntity
     {
-        public float speed;
-
+        [SerializeField]
+        private float speed = 5;
+        private SkillSelector skillSelector;
         private Tile target = null;
         private List<Tile> path;
         private Dictionary<Tile, Move> cachedMoves = new Dictionary<Tile, Move>();
 
-        public override void Init(TurnManager turnManager, TileManager tileManager, TileSelectionManager tileSelectionManager, Profile profile)
+        public void Init(TurnManager turnManager, TileManager tileManager, BoardEntitySelector boardEntitySelector)
         {
-            base.Init(turnManager, tileManager, tileSelectionManager, profile);
+            base.Init(turnManager, tileManager, boardEntitySelector);
         }
 
         public override List<Move> MoveSet()
@@ -27,21 +28,8 @@ namespace Placeholdernamespace.Battle.Entities
             return tileManager.DFSMoves(GetTile().Position, stats.MovementPoints);
         }
 
-        public void ExecuteMove(Move move)
-        {
-            profile.UpdateProfile(null);
-            if (move != null)
-            {
-                stats.ModifyMovementPoint(move.movementCost);
-                tileSelectionManager.pause = true;
-                path = move.path;
-                if (path.Count > 0)
-                {
-                    target = path[0];
-                    path.Remove(target);
-                }
-            }
-        }
+        
+        
 
         private void checkAtTarget()
         {
@@ -52,8 +40,8 @@ namespace Placeholdernamespace.Battle.Entities
                 if (path.Count == 0)
                 {
                     target = null;
-                    tileSelectionManager.pause = false;
-                    tileSelectionManager.ClearGlowPath();
+                    PathOnClick.pause = false;
+                    OutlineOnHover.disabled = false;
                 }
                 else
                 {
@@ -72,6 +60,10 @@ namespace Placeholdernamespace.Battle.Entities
         public override void OnSelect()
         {
             base.OnSelect();
+            //boardEntitySelector.setSelectedBoardEntity(this);
+            /*
+            base.OnSelect();
+            skillSelector.SetSkills(skills);
             List<Move> moves = MoveSet();
             cachedMoves.Clear();
             foreach(Move m in moves)
@@ -79,18 +71,22 @@ namespace Placeholdernamespace.Battle.Entities
                 cachedMoves.Add(m.destination, m);
             }
 
-            tileSelectionManager.SelectTile(this, moves, ExecuteMoveHelper);
+            tileSelectionManager.SelectTile(this, moves, ExecuteMove, null, null);
+            */
         }
 
-        private void ExecuteMoveHelper(Tile t)
+        public void ExecuteMove(Move move)
         {
-            if(t != null)
+            if(move != null)
             {
-                ExecuteMove(cachedMoves[t]);
+                OutlineOnHover.disabled = true;
+                PathOnClick.pause = true;
+                ExecuteMoveHelper(move);
             }
             else
             {
-                ExecuteMove(null);
+
+                ExecuteMoveHelper(null);
             }
         }
 
@@ -107,6 +103,20 @@ namespace Placeholdernamespace.Battle.Entities
         public override void MyTurn()
         {
             stats.NewTurn();
+        }
+
+        private void ExecuteMoveHelper(Move move)
+        {
+            if (move != null)
+            {
+                stats.ModifyMovementPoint(move.movementCost);
+                path = move.path;
+                if (path.Count > 0)
+                {
+                    target = path[0];
+                    path.Remove(target);
+                }
+            }
         }
     }
 }

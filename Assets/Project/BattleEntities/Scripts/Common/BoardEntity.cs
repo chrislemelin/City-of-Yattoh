@@ -8,16 +8,23 @@ using Placeholdernamespace.Battle.Entities.AttributeStats;
 using Placeholdernamespace.Battle.Env;
 using Placeholdernamespace.Battle.Interaction;
 using Placeholdernamespace.Battle.UI;
+using Placeholdernamespace.Battle.Entities.Skills;
 
 namespace Placeholdernamespace.Battle.Entities
 {
     public abstract class BoardEntity : MonoBehaviour, ISelectable
     {
+        protected List<Skill> skills = new List<Skill>();
+        public List<Skill> Skills
+        {
+            get { return skills; }
+        }
+
+        protected BoardEntitySelector boardEntitySelector;
 
         protected TurnManager turnManager;
         protected TileManager tileManager;
         protected TileSelectionManager tileSelectionManager;
-        protected Profile profile;
 
         public Tile GetTile()
         {
@@ -52,13 +59,17 @@ namespace Placeholdernamespace.Battle.Entities
             get { return name; }
         }
 
-        public virtual void Init(TurnManager turnManager, TileManager tileManager, TileSelectionManager tileSelectionManager, Profile profile)
+        public virtual void Init(TurnManager turnManager, TileManager tileManager, BoardEntitySelector boardEntitySelector)
         {
             this.turnManager = turnManager;
             this.tileManager = tileManager;
-            this.tileSelectionManager = tileSelectionManager;
-            this.profile = profile;
+            this.boardEntitySelector = boardEntitySelector;
             stats.Start();
+
+            Skill basicAttack = new BasicAttack();
+            basicAttack.Init(tileManager, this);
+            skills.Add(basicAttack);
+
             turnManager.AddBoardEntity(this);
         }
 
@@ -66,7 +77,7 @@ namespace Placeholdernamespace.Battle.Entities
 
         public virtual void OnSelect()
         {
-            profile.UpdateProfile(this);
+            boardEntitySelector.setSelectedBoardEntity(this);
         }
     }
 }
