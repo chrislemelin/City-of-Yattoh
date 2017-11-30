@@ -1,4 +1,5 @@
 ﻿using Placeholdernamespace.Battle;
+using Placeholdernamespace.Battle.Calculator;
 using Placeholdernamespace.Battle.Entities;
 using Placeholdernamespace.Battle.Env;
 using Placeholdernamespace.Battle.Interaction;
@@ -23,6 +24,7 @@ namespace Placeholdernamespace.Battle
         public TileManager tileManager;
         public Profile profile;
 
+        public BattleCalculator battleCalulator;
         public BoardEntitySelector boardEntitySelector;
         public GameObject Player1;
         public GameObject Enemy1;
@@ -35,11 +37,11 @@ namespace Placeholdernamespace.Battle
             tileManager.Init(turnManager, profile);
 
             GameObject BE = Instantiate(Player1);
-            BE.GetComponent<CharacterBoardEntity>().Init(turnManager, tileManager, boardEntitySelector);
+            BE.GetComponent<CharacterBoardEntity>().Init(turnManager, tileManager, boardEntitySelector, battleCalulator);
             tileManager.AddBoardEntity(new Position(0, 0), BE);
 
             BE = Instantiate(Enemy1);
-            BE.GetComponent<CharacterBoardEntity>().Init(turnManager, tileManager, boardEntitySelector);
+            BE.GetComponent<CharacterBoardEntity>().Init(turnManager, tileManager, boardEntitySelector, battleCalulator);
             tileManager.AddBoardEntity(new Position(1, 1), BE);
 
         }

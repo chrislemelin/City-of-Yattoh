@@ -1,4 +1,5 @@
-﻿using Placeholdernamespace.Battle.Env;
+﻿using Placeholdernamespace.Battle.Calculator;
+using Placeholdernamespace.Battle.Env;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,16 +10,18 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         protected string title;
         protected TileManager tileManager;
         protected BoardEntity boardEntity;
+        protected BattleCalculator battleCalculator; 
 
         public string Title
         {
             get { return title; }
         }
 
-        public void Init(TileManager tileManager, BoardEntity boardEntity)
+        public void Init(TileManager tileManager, BoardEntity boardEntity, BattleCalculator battleCalculator)
         {
             this.tileManager = tileManager;
             this.boardEntity = boardEntity;
+            this.battleCalculator = battleCalculator;
         }
 
         public abstract List<Tile> TileSet();
@@ -62,6 +65,12 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             }
 
             return intDict;
+        }
+
+        protected List<Tile> TeamTiles(List<Tile> tiles, Team? team)
+        {
+            tiles.RemoveAll(t => t.BoardEntity == null || team == null && t.BoardEntity.Team != team);
+            return tiles;
         }
     }
 

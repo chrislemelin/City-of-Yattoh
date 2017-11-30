@@ -41,7 +41,6 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
             mutableStats[StatType.AP] = new Stat(GetStatInstance().GetStat(StatType.AP), 0);
 
             modifiers.Add(new StatModifier(StatType.Movement, StatModifierType.Mult, 1.5f));
-            modifiers.Add(new StatModifier(StatType.Movement, StatModifierType.Mult, 2));
 
         }
 

@@ -59,9 +59,7 @@ namespace Placeholdernamespace.Battle.Interaction
                 else
                 {
                     tempSelectOption(null);
-                }
-
-                                      
+                }                                    
             }
         }
 

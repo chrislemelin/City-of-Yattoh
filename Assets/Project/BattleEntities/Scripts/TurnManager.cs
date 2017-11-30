@@ -81,7 +81,7 @@ namespace Placeholdernamespace.Battle.Managers
         {
             turnQueue.Clear();
             turnQueue.AddRange(enities);
-            turnQueue.OrderBy(x => x.stats.GetStatInstance().GetStat(StatType.Speed));
+            turnQueue.OrderBy(x => x.Stats.GetStatInstance().GetStat(StatType.Speed));
             UpdateGui();
         }
     }

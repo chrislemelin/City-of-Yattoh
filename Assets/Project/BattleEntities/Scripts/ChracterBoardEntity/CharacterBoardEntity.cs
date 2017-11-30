@@ -9,30 +9,30 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using Placeholdernamespace.Battle.Entities.AttributeStats;
+using Placeholdernamespace.Battle.Calculator;
 
-    namespace Placeholdernamespace.Battle.Entities
+namespace Placeholdernamespace.Battle.Entities
 {
     public class CharacterBoardEntity : BoardEntity
     {
         [SerializeField]
         private float speed = 5;
 
-        [SerializeField]
-        private Team team;
+
 
         //private SkillSelector skillSelector;
         private Tile target = null;
         private List<Tile> path;
         private Dictionary<Tile, Move> cachedMoves = new Dictionary<Tile, Move>();
 
-        public void Init(TurnManager turnManager, TileManager tileManager, BoardEntitySelector boardEntitySelector)
+        public void Init(TurnManager turnManager, TileManager tileManager, BoardEntitySelector boardEntitySelector, BattleCalculator battleCalculator)
         {
-            base.Init(turnManager, tileManager, boardEntitySelector);
+            base.Init(turnManager, tileManager, boardEntitySelector, battleCalculator);
         }
 
         public override List<Move> MoveSet()
         {
-            return tileManager.DFSMoves(GetTile().Position, stats.GetMutableStat(StatType.Movement).Value);
+            return tileManager.DFSMoves(GetTile().Position, Stats.GetMutableStat(StatType.Movement).Value, team);
         }
     
         private void checkAtTarget()
@@ -111,5 +111,5 @@ using Placeholdernamespace.Battle.Entities.AttributeStats;
         }
     }
 
-    public enum Team { Player, Enemy, Neutral }
+    
 }

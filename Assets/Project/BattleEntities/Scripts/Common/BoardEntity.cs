@@ -9,11 +9,19 @@ using Placeholdernamespace.Battle.Env;
 using Placeholdernamespace.Battle.Interaction;
 using Placeholdernamespace.Battle.UI;
 using Placeholdernamespace.Battle.Entities.Skills;
+using Placeholdernamespace.Battle.Calculator;
 
 namespace Placeholdernamespace.Battle.Entities
 {
     public abstract class BoardEntity : MonoBehaviour, ISelectable
     {
+        [SerializeField]
+        protected Team team;
+        public Team Team
+        {
+            get { return team; }
+        }
+
         protected List<Skill> skills = new List<Skill>();
         public List<Skill> Skills
         {
@@ -46,7 +54,7 @@ namespace Placeholdernamespace.Battle.Entities
         }
 
         [SerializeField]
-        public Stats stats;
+        protected Stats stats;
         public Stats Stats
         {
             get { return stats; }
@@ -59,7 +67,7 @@ namespace Placeholdernamespace.Battle.Entities
             get { return name; }
         }
 
-        public virtual void Init(TurnManager turnManager, TileManager tileManager, BoardEntitySelector boardEntitySelector)
+        public virtual void Init(TurnManager turnManager, TileManager tileManager, BoardEntitySelector boardEntitySelector, BattleCalculator battleCalculator)
         {
             this.turnManager = turnManager;
             this.tileManager = tileManager;
@@ -67,7 +75,7 @@ namespace Placeholdernamespace.Battle.Entities
             stats.Start();
 
             Skill basicAttack = new BasicAttack();
-            basicAttack.Init(tileManager, this);
+            basicAttack.Init(tileManager, this, battleCalculator);
             skills.Add(basicAttack);
 
             turnManager.AddBoardEntity(this);
@@ -80,4 +88,6 @@ namespace Placeholdernamespace.Battle.Entities
             boardEntitySelector.setSelectedBoardEntity(this);
         }
     }
+
+    public enum Team { Player, Enemy, Neutral, Environment }
 }

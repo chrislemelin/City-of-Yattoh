@@ -71,6 +71,42 @@ namespace Placeholdernamespace.Battle.Env
             }
         }
 
+        public List<Tile> GetAllAdjacentTiles(Position position, bool ignoreWalls = false)
+        {
+            Tile startingTile = GetTile(position);
+            List<Tile> returnList = new List<Tile>();
+            Tile neighbor;
+
+            neighbor = GetTile(position + new Position(1, 0));
+            addTileHelper(returnList, neighbor, startingTile, ignoreWalls);
+
+            neighbor = GetTile(position + new Position(-1, 0));
+            addTileHelper(returnList, neighbor, startingTile, ignoreWalls);
+
+            neighbor = GetTile(position + new Position(0, 1));
+            addTileHelper(returnList, neighbor, startingTile, ignoreWalls);
+
+            neighbor = GetTile(position + new Position(0, -1));
+            addTileHelper(returnList, neighbor, startingTile, ignoreWalls);
+
+            return returnList;
+        }
+
+        private void addTileHelper(List<Tile> returnList, Tile tile, Tile startingTile ,bool ignoreWalls)
+        {
+            if (tile != null)
+            {
+                if (ignoreWalls)
+                {
+                    returnList.Add(tile);
+                }
+                else if (!startingTile.CheckIfBlocked(tile))
+                {
+                    returnList.Add(tile);
+                }
+            }
+        }
+
         public List<Tile> GetAllTilesNear(Position position, Position range, bool ignoreWalls = false, bool sortByDistance = false)
         {
             Tile startingTile = GetTile(position);
@@ -149,7 +185,7 @@ namespace Placeholdernamespace.Battle.Env
             return GetTile(start).CheckIfBlocked(GetTile(end));
         }
 
-        public List<Tile> DFS(Position start, Position end)
+        public List<Tile> DFS(Position start, Position end, Team? team = null)
         {
             List<Tile> tiles = new List<Tile>();
             Tile startTile = GetTile(start);
@@ -171,6 +207,10 @@ namespace Placeholdernamespace.Battle.Env
                 neighbors.RemoveAll(
                     x => path.ContainsKey(x)
                 );
+                if(team != null)
+                {
+                    neighbors.RemoveAll(x => (x.BoardEntity != null && x.BoardEntity.Team != team));
+                }
 
                 foreach (Tile nextTile in neighbors)
                 {
@@ -204,7 +244,7 @@ namespace Placeholdernamespace.Battle.Env
         /// <param name="start"></param>
         /// <param name="range"></param>
         /// <returns></returns>
-        public List<Move> DFSMoves(Position start, int range)
+        public List<Move> DFSMoves(Position start, int range, Team? team = null)
         {
             List<Move> tiles = new List<Move>();
             Tile startTile = GetTile(start);
@@ -217,7 +257,14 @@ namespace Placeholdernamespace.Battle.Env
                 List<Move> newVisitingTiles = new List<Move>();
                 foreach (Move move in visitingTiles)
                 {
-                    List<Tile> neighbors = GetAllTilesNear(move.destination.Position, 1, sortByDistance: true);
+                    List<Tile> neighbors = GetAllAdjacentTiles(move.destination.Position);
+
+                    //cannot pass through other team, unless team is null
+                    if (team != null)
+                    {
+                        neighbors.RemoveAll(x => (x.BoardEntity != null && x.BoardEntity.Team != team));
+                    }
+
                     foreach (Tile processingTile in neighbors)
                     {
                         if (processingTile == startTile)
@@ -245,6 +292,10 @@ namespace Placeholdernamespace.Battle.Env
                 }
                 visitingTiles = newVisitingTiles;
             }
+
+            //cannot end on an already occupied tile
+            tiles.RemoveAll(x => (x.destination.BoardEntity));
+
             return tiles;
         }
 

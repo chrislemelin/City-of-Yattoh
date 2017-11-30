@@ -14,11 +14,12 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
         public override List<Tile> TileSet()
         {
-            return tileManager.GetAllTilesNear(boardEntity.GetTile().Position);
+            return TeamTiles(tileManager.GetAllTilesNear(boardEntity.GetTile().Position), boardEntity.Team);
         }
 
         public override void Action(Tile t)
         {
+            battleCalculator.DoDamage((CharacterBoardEntity)boardEntity, (CharacterBoardEntity) t.BoardEntity, new Calculator.DamagePackageInternal(boardEntity.Stats.GetStatInstance().getValue(AttributeStats.StatType.Strength),Calculator.DamageType.physical));
             MonoBehaviour.print("woop an attack at "+t.Position);
         }
 

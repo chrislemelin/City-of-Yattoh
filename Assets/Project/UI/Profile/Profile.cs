@@ -65,8 +65,8 @@ namespace Placeholdernamespace.Battle.UI
         {
             foreach(StatType type in displayOrder)
             {
-                Stat stat = boardEntity.stats.GetStatInstance().GetStat(type);
-                string text = boardEntity.stats.StatToString(type);
+                Stat stat = boardEntity.Stats.GetStatInstance().GetStat(type);
+                string text = boardEntity.Stats.StatToString(type);
                 AddText(text);
             }
         }

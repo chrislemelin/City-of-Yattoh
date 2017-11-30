@@ -10,13 +10,13 @@ namespace Placeholdernamespace.Battle.Calculator
     {
         public void DoDamage(CharacterBoardEntity source, CharacterBoardEntity target, DamagePackageInternal damage)
         {
-            int newHealth = target.stats.GetMutableStat(Entities.AttributeStats.StatType.Health).Value - (int)damage.damage;
+            int newHealth = target.Stats.GetMutableStat(Entities.AttributeStats.StatType.Health).Value - (int)damage.damage;
             if(newHealth < 0)
             {
                 // dat bibba dead
                 newHealth = 0;
             }
-            target.stats.SetMutableStat(Entities.AttributeStats.StatType.Health, newHealth);
+            target.Stats.SetMutableStat(Entities.AttributeStats.StatType.Health, newHealth);
         }
         
     }

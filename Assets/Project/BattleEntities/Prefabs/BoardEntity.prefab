@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4914905680874010}
   - component: {fileID: 114868530270863054}
+  - component: {fileID: 114631525846542012}
   m_Layer: 0
   m_Name: BoardEntity
   m_TagString: Untagged
@@ -41,6 +42,7 @@ GameObject:
   - component: {fileID: 114653560778829354}
   - component: {fileID: 114910173449349550}
   - component: {fileID: 114245910978165384}
+  - component: {fileID: 95305796568920940}
   m_Layer: 0
   m_Name: BoardEntitySprite
   m_TagString: Untagged
@@ -68,7 +70,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1542313980632146}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -14.1328125, y: 142.5332, z: 0}
+  m_LocalPosition: {x: 0.17365444, y: 1.4509792, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4646218256061062}
@@ -120,12 +122,40 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2.56, y: 2.56}
   m_EdgeRadius: 0
+--- !u!95 &95305796568920940
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1844718460837428}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e8188beb1777d12419a293698742e128, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!114 &114245910978165384
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1844718460837428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ffb99f67b59661428a4cf4257aeb964, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114631525846542012
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1542313980632146}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2ffb99f67b59661428a4cf4257aeb964, type: 3}
@@ -158,38 +188,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 562850e52a28c1f4f95fafc53f2f9637, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  team: 0
   stats:
     baseStats:
       armour:
-        name: Armour
+        type: 5
         value: 1
         display: 1
       inteligence:
-        name: Inteligence
+        type: 0
         value: 2
         display: 1
       maxHealth:
-        name: Health
+        type: 6
         value: 10
         display: 1
       movement:
-        name: Movement
+        type: 0
         value: 4
         display: 1
       speed:
-        name: Speed
+        type: 0
         value: 5
         display: 1
       strength:
-        name: Strength
+        type: 0
         value: 3
         display: 1
       ap:
-        name: AP
+        type: 0
         value: 8
         display: 1
       apGain:
-        name: AP Gain
+        type: 0
         value: 2
         display: 0
   name: Test Character
