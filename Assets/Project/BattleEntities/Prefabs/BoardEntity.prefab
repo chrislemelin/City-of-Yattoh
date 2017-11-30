@@ -160,12 +160,38 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stats:
     baseStats:
-      armour: 1
-      inteligence: 2
-      maxHealth: 3
-      movement: 5
-      speed: 5
-      strength: 6
+      armour:
+        name: Armour
+        value: 1
+        display: 1
+      inteligence:
+        name: Inteligence
+        value: 2
+        display: 1
+      maxHealth:
+        name: Health
+        value: 10
+        display: 1
+      movement:
+        name: Movement
+        value: 4
+        display: 1
+      speed:
+        name: Speed
+        value: 5
+        display: 1
+      strength:
+        name: Strength
+        value: 3
+        display: 1
+      ap:
+        name: AP
+        value: 8
+        display: 1
+      apGain:
+        name: AP Gain
+        value: 2
+        display: 0
   name: Test Character
   speed: 1
 --- !u!114 &114910173449349550

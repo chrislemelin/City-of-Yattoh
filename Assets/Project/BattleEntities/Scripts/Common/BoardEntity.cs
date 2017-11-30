@@ -46,8 +46,8 @@ namespace Placeholdernamespace.Battle.Entities
         }
 
         [SerializeField]
-        public AttributeStats.Stats stats;
-        public AttributeStats.Stats Stats
+        public Stats stats;
+        public Stats Stats
         {
             get { return stats; }
         }
@@ -73,7 +73,7 @@ namespace Placeholdernamespace.Battle.Entities
             turnManager.AddBoardEntity(this);
         }
 
-        public abstract void MyTurn();
+        public abstract void StartMyTurn();
 
         public virtual void OnSelect()
         {

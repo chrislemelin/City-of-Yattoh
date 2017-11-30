@@ -15,12 +15,15 @@ namespace Placeholdernamespace.Battle.UI
         [SerializeField]
         private GameObject panel;
 
+        private List<StatType> displayOrder = new List<StatType>() { StatType.Health, StatType.AP, StatType.Movement, StatType.Strength, StatType.Armour, StatType.Speed, StatType.Inteligence };
+
         private List<GameObject> texts = new List<GameObject>();
         private BoardEntity currentBoardEntity;
 
         public void Start()
         {
             gameObject.SetActive(false);
+
         }
 
         public void UpdateProfile(BoardEntity boardEntity)
@@ -49,11 +52,8 @@ namespace Placeholdernamespace.Battle.UI
             {
                 Destroy(g);
             }
-
             AddTitle(boardEntity.Name);
-            AddText("Movement Points: " + boardEntity.Stats.MovementPoints + "/" + boardEntity.stats.BaseStats.getValue(StatType.Movement));
             EvaluateStats(boardEntity);
-
         }
 
         private void RefreshProfile(object sender)
@@ -63,20 +63,17 @@ namespace Placeholdernamespace.Battle.UI
 
         private void EvaluateStats(BoardEntity boardEntity)
         {
-            foreach (Stat stat in boardEntity.stats.GetStatInstance().GetStats())
+            foreach(StatType type in displayOrder)
             {
-                EvaluateStat(stat);
+                Stat stat = boardEntity.stats.GetStatInstance().GetStat(type);
+                string text = boardEntity.stats.StatToString(type);
+                AddText(text);
             }
-        }
-
-        private void EvaluateStat(Stat stat)
-        {
-            AddText(stat.Name + ":" + stat.Value);
         }
 
         private void AddTitle(string text)
         {
-            GameObject titleName = Instantiate(titleGameObject);
+            GameObject titleName = Instantiate(titleGameObject);   
             titleName.GetComponent<Text>().text = text;
             titleName.transform.SetParent(panel.transform);
             texts.Add(titleName);

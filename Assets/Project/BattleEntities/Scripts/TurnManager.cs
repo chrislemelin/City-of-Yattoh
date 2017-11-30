@@ -17,8 +17,8 @@ namespace Placeholdernamespace.Battle.Managers
         public event NewTurnHandler OnNewTurn;
 
 
-        private BoardEntity currentBoardEntity;
-        public BoardEntity CurrentBoardEntity
+        private static BoardEntity currentBoardEntity;
+        public static BoardEntity CurrentBoardEntity
         {
             get { return currentBoardEntity; }
         }
@@ -54,18 +54,14 @@ namespace Placeholdernamespace.Battle.Managers
             currentBoardEntity = turnQueue[0];
             turnQueue.RemoveAt(0);
             UpdateGui();
-            NewTurn();
+            currentBoardEntity.StartMyTurn();
+
         }
 
         public void ClearBoardEnities()
         {
             enities.Clear();
             ReCalcQueue();
-        }
-
-        public void NewTurn()
-        {
-            currentBoardEntity.MyTurn();
         }
 
         private void UpdateGui()

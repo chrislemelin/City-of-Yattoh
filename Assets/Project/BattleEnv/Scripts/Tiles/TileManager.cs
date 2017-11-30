@@ -12,7 +12,6 @@ namespace Placeholdernamespace.Battle.Env
     public class TileManager : MonoBehaviour
     {
 
-        public GameObject testBoardEntity;
         public BoardEntitySelector boardEntitySelector;
         public TileGenerator generator;
 
@@ -142,11 +141,6 @@ namespace Placeholdernamespace.Battle.Env
             GenerateBoardResponse response = generator.generateTiles(this, boardEntitySelector.TileSelectionManager);
             this.coordinateToTile = response.coordinateToTile;
             this.tupleToWall = response.tuppleToWall;
-
-            //this should be removed later
-            GameObject BE = Instantiate(testBoardEntity);
-            BE.GetComponent<CharacterBoardEntity>().Init(turnManager, this, boardEntitySelector);
-            AddBoardEntity(new Position(0, 0), BE);
 
         }
 

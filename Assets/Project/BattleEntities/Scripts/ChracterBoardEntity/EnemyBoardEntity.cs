@@ -15,7 +15,7 @@ namespace Placeholdernamespace.Battle.Entities
             base.Init(turnManager, tileManager, boardEntitySelector);
         }
 
-        public override void MyTurn()
+        public override void StartMyTurn()
         {
         }
     }
