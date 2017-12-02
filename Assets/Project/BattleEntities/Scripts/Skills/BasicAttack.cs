@@ -19,7 +19,14 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
         public override void Action(Tile t)
         {
-            battleCalculator.DoDamage((CharacterBoardEntity)boardEntity, (CharacterBoardEntity) t.BoardEntity, new Calculator.DamagePackageInternal(boardEntity.Stats.GetStatInstance().getValue(AttributeStats.StatType.Strength),Calculator.DamageType.physical));
+            int basePower = boardEntity.Stats.GetStatInstance().getValue(AttributeStats.StatType.Strength);
+            Dictionary<SkillModifierType, int> baseStats = new Dictionary<SkillModifierType, int>();
+            baseStats[SkillModifierType.Power] = basePower;
+            Dictionary<SkillModifierType,int> effectiveStats = getSkillModifiers(baseStats);
+
+            int effectivePower = effectiveStats[SkillModifierType.Power];
+
+            battleCalculator.DoDamage((CharacterBoardEntity)boardEntity, (CharacterBoardEntity) t.BoardEntity, new Calculator.DamagePackageInternal(effectivePower, Calculator.DamageType.physical));
             MonoBehaviour.print("woop an attack at "+t.Position);
         }
 

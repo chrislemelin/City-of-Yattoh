@@ -37,6 +37,9 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         {
             Dictionary<SkillModifierType, float> floatDict = new Dictionary<SkillModifierType, float>();
             List<SkillModifier> modifiers = new List<SkillModifier>();
+
+            modifiers.Add(new SkillModifier(SkillModifierType.Power, SkillModifierApplication.Add, 2));
+
             foreach(SkillModifierType type in dict.Keys)
             {
                 floatDict[type] = dict[type];

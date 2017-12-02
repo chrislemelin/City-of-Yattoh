@@ -2,6 +2,7 @@
 using Placeholdernamespace.Battle.Entities.AttributeStats;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 namespace Placeholdernamespace.Battle.UI
@@ -15,6 +16,8 @@ namespace Placeholdernamespace.Battle.UI
         [SerializeField]
         private GameObject panel;
 
+
+        public GameObject obj;
         private List<StatType> displayOrder = new List<StatType>() { StatType.Health, StatType.AP, StatType.Movement, StatType.Strength, StatType.Armour, StatType.Speed, StatType.Inteligence };
 
         private List<GameObject> texts = new List<GameObject>();
@@ -23,7 +26,7 @@ namespace Placeholdernamespace.Battle.UI
         public void Start()
         {
             gameObject.SetActive(false);
-
+            //GetComponent<VerticalLayoutGroup>()
         }
 
         public void UpdateProfile(BoardEntity boardEntity)
@@ -69,21 +72,22 @@ namespace Placeholdernamespace.Battle.UI
                 string text = boardEntity.Stats.StatToString(type);
                 AddText(text);
             }
+            //TextMesh mesh = GetComponent<MeshRenderer>().w
         }
 
         private void AddTitle(string text)
         {
             GameObject titleName = Instantiate(titleGameObject);   
-            titleName.GetComponent<Text>().text = text;
-            titleName.transform.SetParent(panel.transform);
+            titleName.GetComponent<TextMeshProUGUI>().text = text;
+            titleName.transform.SetParent(panel.transform, false);
             texts.Add(titleName);
         }
 
         private void AddText(string text)
         {
             GameObject movementStat = Instantiate(textGameObject);
-            movementStat.GetComponent<Text>().text = text;
-            movementStat.transform.SetParent(panel.transform);
+            movementStat.GetComponent<TextMeshProUGUI>().text = text;
+            movementStat.transform.SetParent(panel.transform, false);
             texts.Add(movementStat);
         }
 

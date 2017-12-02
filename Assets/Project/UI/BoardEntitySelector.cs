@@ -1,6 +1,7 @@
 ﻿using Placeholdernamespace.Battle.Entities;
 using Placeholdernamespace.Battle.Env;
 using Placeholdernamespace.Battle.Interaction;
+using Placeholdernamespace.Battle.Managers;
 using Placeholdernamespace.Battle.UI;
 using System.Collections;
 using System.Collections.Generic;
@@ -41,18 +42,24 @@ namespace Placeholdernamespace.Battle.Interaction
 
         public void setSelectedBoardEntity(BoardEntity boardEntity)
         {
-            skillSelector.SetBoardEntity(boardEntity);
+            
+    
             profile.UpdateProfile(boardEntity);
             selectedBoardEntity = boardEntity;
             buildMoveOptions();
+
         }
 
         private void buildMoveOptions()
         {
             if (selectedBoardEntity is CharacterBoardEntity)
-            {
+            {             
                 tileSelectionManager.SelectTile(selectedBoardEntity, selectedBoardEntity.MoveSet(), sendMoveToBoardEntity, null, null);
-                skillSelector.SetSkills(selectedBoardEntity.Skills);
+                if (TurnManager.CurrentBoardEntity == selectedBoardEntity)
+                {
+                    skillSelector.SetBoardEntity(selectedBoardEntity);
+                    skillSelector.SetSkills(selectedBoardEntity.Skills);
+                }
             }
         }
 

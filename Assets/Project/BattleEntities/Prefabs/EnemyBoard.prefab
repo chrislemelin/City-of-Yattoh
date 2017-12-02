@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4914905680874010}
   - component: {fileID: 114868530270863054}
   m_Layer: 0
-  m_Name: BoardEntity 1
+  m_Name: EnemyBoard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -40,7 +40,7 @@ GameObject:
   - component: {fileID: 50169604986461472}
   - component: {fileID: 114653560778829354}
   - component: {fileID: 114910173449349550}
-  - component: {fileID: 114409299267050798}
+  - component: {fileID: 114622698875298742}
   m_Layer: 0
   m_Name: BoardEntitySprite
   m_TagString: Untagged
@@ -120,7 +120,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2.56, y: 2.56}
   m_EdgeRadius: 0
---- !u!114 &114409299267050798
+--- !u!114 &114622698875298742
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -128,7 +128,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1844718460837428}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66b63a014bd926f41bab45fa9377bdfb, type: 3}
+  m_Script: {fileID: 11500000, guid: 2ffb99f67b59661428a4cf4257aeb964, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &114653560778829354
@@ -158,14 +158,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 562850e52a28c1f4f95fafc53f2f9637, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  team: 1
   stats:
     baseStats:
-      armour: 1
-      inteligence: 2
-      maxHealth: 3
-      movement: 5
-      speed: 3
-      strength: 6
+      armour:
+        type: 0
+        value: 1
+        display: 0
+      inteligence:
+        type: 0
+        value: 0
+        display: 0
+      maxHealth:
+        type: 0
+        value: 6
+        display: 0
+      movement:
+        type: 0
+        value: 0
+        display: 0
+      speed:
+        type: 0
+        value: 0
+        display: 0
+      strength:
+        type: 0
+        value: 0
+        display: 0
+      ap:
+        type: 0
+        value: 0
+        display: 0
+      apGain:
+        type: 0
+        value: 0
+        display: 0
   name: Test Character
   speed: 1
 --- !u!114 &114910173449349550
@@ -212,7 +239,7 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 916817b872118a444ab4278975b6e979, type: 3}
-  m_Color: {r: 0.46323532, g: 0.48914802, b: 1, a: 0.991}
+  m_Color: {r: 1, g: 0.058823526, b: 0.058823526, a: 0.991}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

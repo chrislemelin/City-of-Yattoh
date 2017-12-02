@@ -38,6 +38,7 @@ namespace Placeholdernamespace.Battle.Interaction
             if (selectionCallBack != null)
             {
                 BoardEntity tempSelectedEntity = selectedEntity;
+                BoardEntity boardEntityTemp = selectedEntity;
                 selectedEntity = null;
                 ClearGlowPath();
 
@@ -59,6 +60,10 @@ namespace Placeholdernamespace.Battle.Interaction
                 else
                 {
                     tempSelectOption(null);
+                    if (pathOnClick != null && pathOnClick != boardEntityTemp.GetTile().PathOnClick)
+                    {
+                        pathOnClick.OnMouseDown();
+                    }
                 }                                    
             }
         }
@@ -84,7 +89,7 @@ namespace Placeholdernamespace.Battle.Interaction
             }
             else
             {
-                NewGlowPath(new List<PathOnClick>());
+                NewGlowPath(new List<PathOnClick>());                
             }
         }
 
