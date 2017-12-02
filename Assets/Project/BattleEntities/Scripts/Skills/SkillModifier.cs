@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace Placeholdernamespace.Battle.Entities.Skills
 {
-    public class SkillModifier : MonoBehaviour
+    public class SkillModifier
     {
         private SkillModifierType skillModifierType;
         public SkillModifierType Type

@@ -60,6 +60,9 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
         public void NewTurn()
         {
             SetMutableStat(StatType.Movement, GetStatInstance().GetStat(StatType.Movement).Value);
+            int currentAP = GetMutableStat(StatType.AP).Value;
+            int newAP = currentAP + GetStatInstance().getValue(StatType.APGain);
+            SetMutableStat(StatType.AP, newAP);
         }
 
         public Stat GetMutableStat(StatType type)
@@ -93,6 +96,21 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
             int newValue = GetMutableStat(StatType.Movement).Value - value;
             SetMutableStat(StatType.Movement, newValue);
         }
+
+        public void SubtractAPPoints(int value)
+        {
+            // if its less than zero something should probably happen here
+            int newValue = GetMutableStat(StatType.AP).Value - value;
+            SetMutableStat(StatType.AP, newValue);
+        }
+
+        public void SubtractHealthPoints(int value)
+        {
+            // if its less than zero something should probably happen here
+            int newValue = GetMutableStat(StatType.Health).Value - value;
+            SetMutableStat(StatType.Health, newValue);
+        }
+
 
         public string StatToString(StatType type)
         {

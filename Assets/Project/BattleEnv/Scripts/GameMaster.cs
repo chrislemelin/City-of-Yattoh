@@ -44,6 +44,8 @@ namespace Placeholdernamespace.Battle
             BE.GetComponent<CharacterBoardEntity>().Init(turnManager, tileManager, boardEntitySelector, battleCalulator);
             tileManager.AddBoardEntity(new Position(1, 1), BE);
 
+            turnManager.startGame();
+
         }
     }
 }

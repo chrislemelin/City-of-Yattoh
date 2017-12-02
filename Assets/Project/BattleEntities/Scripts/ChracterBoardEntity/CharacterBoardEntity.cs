@@ -10,6 +10,7 @@ using UnityEngine.UI;
 
 using Placeholdernamespace.Battle.Entities.AttributeStats;
 using Placeholdernamespace.Battle.Calculator;
+using Placeholdernamespace.Battle.Entities.Skills;
 
 namespace Placeholdernamespace.Battle.Entities
 {
@@ -28,6 +29,10 @@ namespace Placeholdernamespace.Battle.Entities
         public void Init(TurnManager turnManager, TileManager tileManager, BoardEntitySelector boardEntitySelector, BattleCalculator battleCalculator)
         {
             base.Init(turnManager, tileManager, boardEntitySelector, battleCalculator);
+
+            Skill basicAttack = new BasicAttack();
+            basicAttack.Init(tileManager, this, battleCalculator);
+            skills.Add(basicAttack);
         }
 
         public override List<Move> MoveSet()

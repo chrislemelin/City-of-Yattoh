@@ -74,9 +74,7 @@ namespace Placeholdernamespace.Battle.Entities
             this.boardEntitySelector = boardEntitySelector;
             stats.Start();
 
-            Skill basicAttack = new BasicAttack();
-            basicAttack.Init(tileManager, this, battleCalculator);
-            skills.Add(basicAttack);
+
 
             turnManager.AddBoardEntity(this);
         }

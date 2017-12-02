@@ -9,15 +9,17 @@ namespace Placeholdernamespace.Battle.Entities.Skills
     {
         protected string title;
         protected TileManager tileManager;
-        protected BoardEntity boardEntity;
-        protected BattleCalculator battleCalculator; 
+        protected CharacterBoardEntity boardEntity;
+        protected BattleCalculator battleCalculator;
+
+        protected int APCost;
 
         public string Title
         {
             get { return title; }
         }
 
-        public void Init(TileManager tileManager, BoardEntity boardEntity, BattleCalculator battleCalculator)
+        public void Init(TileManager tileManager, CharacterBoardEntity boardEntity, BattleCalculator battleCalculator)
         {
             this.tileManager = tileManager;
             this.boardEntity = boardEntity;
@@ -30,7 +32,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
         public virtual bool IsActive()
         {
-            return TileSet().Count > 0;
+            return TileSet().Count > 0 && CanAffortAPCost();
         }
 
         protected Dictionary<SkillModifierType, int> getSkillModifiers(Dictionary<SkillModifierType, int> dict)
@@ -74,6 +76,24 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         {
             tiles.RemoveAll(t => t.BoardEntity == null || team == null && t.BoardEntity.Team != team);
             return tiles;
+        }
+
+        protected bool CanAffortAPCost()
+        {
+            return (boardEntity.Stats.GetMutableStat(AttributeStats.StatType.AP).Value >= GetAPCost());
+        }
+
+        protected int GetAPCost()
+        {
+            return GetSkillModifier(SkillModifierType.EnergyCost, APCost);
+        }
+
+        protected int GetSkillModifier(SkillModifierType type, int initialValue)
+        {
+            Dictionary<SkillModifierType, int> dict = new Dictionary<SkillModifierType, int>();
+            dict[type] = initialValue;
+            Dictionary<SkillModifierType, int> effectiveStats = getSkillModifiers(dict);
+            return effectiveStats[type];
         }
     }
 

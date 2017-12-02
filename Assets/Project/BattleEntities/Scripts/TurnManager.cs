@@ -27,16 +27,16 @@ namespace Placeholdernamespace.Battle.Managers
         private List<BoardEntity> turnQueue = new List<BoardEntity>();
         private int queueLength = 5;
 
-        public TurnManager()
+        public void startGame()
         {
-
+            NextTurn();
         }
 
         public void AddBoardEntity(BoardEntity boardEntity)
         {
             enities.Add(boardEntity);
             ReCalcQueue();
-            NextTurn();
+            //NextTurn();
         }
 
         public void RemoveBoardEntity(BoardEntity boardEntity)

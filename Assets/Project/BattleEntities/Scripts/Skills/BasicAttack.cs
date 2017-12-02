@@ -10,6 +10,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         public BasicAttack()
         {
             title = "Basic Attack";
+            APCost = 1;
         }
 
         public override List<Tile> TileSet()
@@ -26,7 +27,8 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
             int effectivePower = effectiveStats[SkillModifierType.Power];
 
-            battleCalculator.DoDamage((CharacterBoardEntity)boardEntity, (CharacterBoardEntity) t.BoardEntity, new Calculator.DamagePackageInternal(effectivePower, Calculator.DamageType.physical));
+            battleCalculator.DoDamage(boardEntity, (CharacterBoardEntity) t.BoardEntity, new Calculator.DamagePackageInternal(effectivePower, Calculator.DamageType.physical));
+            boardEntity.Stats.SubtractAPPoints(APCost);
             MonoBehaviour.print("woop an attack at "+t.Position);
         }
 

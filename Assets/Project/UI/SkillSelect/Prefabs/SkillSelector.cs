@@ -12,7 +12,7 @@ namespace Placeholdernamespace.Battle.Interaction
 {
     public class SkillSelector : MonoBehaviour {
 
-        private BoardEntity boardEntity;
+        private CharacterBoardEntity boardEntity;
 
         [SerializeField]
         private GameObject skillOptionButton;
@@ -23,6 +23,8 @@ namespace Placeholdernamespace.Battle.Interaction
         private List<GameObject> skillButtons = new List<GameObject>();
         private List<Skill> skills;
         private Skill selectedSkill;
+        private Action skillSelected;
+
         public Skill SelectedSkill
         {
             get { return selectedSkill; }
@@ -31,13 +33,14 @@ namespace Placeholdernamespace.Battle.Interaction
         private TileSelectionManager tileSelectionManager;
         private Action selectionCancel;    
 
-        public void Init(TileSelectionManager tileSelectionManager, Action selectionCancel)
+        public void Init(TileSelectionManager tileSelectionManager, Action selectionCancel, Action skillSelected)
         {
             this.tileSelectionManager = tileSelectionManager;
             this.selectionCancel = selectionCancel;
+            this.skillSelected = skillSelected;
         }
 
-        public void SetBoardEntity(BoardEntity boardEntity)
+        public void SetBoardEntity(CharacterBoardEntity boardEntity)
         {
             this.boardEntity = boardEntity;
         }
@@ -45,7 +48,7 @@ namespace Placeholdernamespace.Battle.Interaction
         public void SetSkills(List<Skill> newSkills)
         {
             skills = newSkills;
-            gameObject.SetActive(true);
+            Show();
 
             ClearButtonList();
             foreach (Skill skill in skills)
@@ -76,20 +79,25 @@ namespace Placeholdernamespace.Battle.Interaction
 
         private void buildSkillButton(Skill skill)
         {
-            GameObject skillButton = Instantiate(skillOptionButton);
-            skillButton.GetComponentInChildren<Text>().text = skill.Title;
-            skillButton.transform.SetParent(skillOptionContainer.transform);
-            skillButton.GetComponent<Button>().onClick.AddListener(() => { SetSelectedSkill(skill); Show();  });
-            skillButtons.Add(skillButton);
+            bool interactable = skill.IsActive();
+            GameObject skillButton = buildSkillButton(skill.Title, () => { SetSelectedSkill(skill); }, interactable);
         }
 
         private void buildCancelSkillButton()
         {
+            buildSkillButton("Cancel", () => { tileSelectionManager.CancelSelection(); ExecuteSkill(null); });
+        }
+
+        private GameObject buildSkillButton(string title, Action onClick, bool interactable = true)
+        {
             GameObject skillButton = Instantiate(skillOptionButton);
-            skillButton.GetComponentInChildren<Text>().text = "Cancel";
+            skillButton.GetComponent<Button>().interactable = interactable;
+            skillButton.GetComponentInChildren<Text>().text = title;
             skillButton.transform.SetParent(skillOptionContainer.transform);
-            skillButton.GetComponent<Button>().onClick.AddListener(() => { tileSelectionManager.CancelSelection(); ExecuteSkill(null); } );
+            skillButton.GetComponent<Button>().onClick.AddListener(() => onClick());
             skillButtons.Add(skillButton);
+            skillButton.SetActive(true);
+            return skillButton;
         }
 
         private void ExecuteSkill(TileSelectOption tile)
@@ -98,7 +106,7 @@ namespace Placeholdernamespace.Battle.Interaction
             {
                 selectedSkill.Action(tile.Selection);
                 selectedSkill = null;
-                Hide();
+                skillSelected();
             }
             else
             {

@@ -37,16 +37,18 @@ namespace Placeholdernamespace.Battle.Interaction
         public void Init()
         {
             tileSelectionManager.Init(profile);
-            skillSelector.Init(tileSelectionManager, buildMoveOptions);
+            skillSelector.Init(tileSelectionManager, buildMoveOptions, ()=> setSelectedBoardEntity(null));
         }
 
         public void setSelectedBoardEntity(BoardEntity boardEntity)
-        {
-            
-    
+        {             
             profile.UpdateProfile(boardEntity);
             selectedBoardEntity = boardEntity;
             buildMoveOptions();
+            if(boardEntity == null)
+            {
+                skillSelector.Hide();
+            }
 
         }
 
@@ -57,7 +59,7 @@ namespace Placeholdernamespace.Battle.Interaction
                 tileSelectionManager.SelectTile(selectedBoardEntity, selectedBoardEntity.MoveSet(), sendMoveToBoardEntity, null, null);
                 if (TurnManager.CurrentBoardEntity == selectedBoardEntity)
                 {
-                    skillSelector.SetBoardEntity(selectedBoardEntity);
+                    skillSelector.SetBoardEntity((CharacterBoardEntity)selectedBoardEntity);
                     skillSelector.SetSkills(selectedBoardEntity.Skills);
                 }
             }
@@ -89,6 +91,8 @@ namespace Placeholdernamespace.Battle.Interaction
         {
 
         }
+
+        
 
 
 
