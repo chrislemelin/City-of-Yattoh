@@ -100,7 +100,7 @@ public class DialogueManager: MonoBehaviour {
             button.transform.SetParent(DisplayPanel.transform);
             Text text = button.GetComponentInChildren<Text>();
             button.GetComponent<Button>().onClick.AddListener(ContinueDialogue);
-            button.GetComponent<Button>().onClick.AddListener(option.OnMouseDown);
+            button.GetComponent<Button>().onClick.AddListener(option.OnMouseUp);
             optionsButtons.Add(button);
 
             foreach (char newChar in option.displayText.ToCharArray())

@@ -1,4 +1,5 @@
 ﻿using Placeholdernamespace.Battle.Env;
+using Placeholdernamespace.Battle.UI;
 using Placeholdernamespace.Common.Interfaces;
 using System.Collections;
 using System.Collections.Generic;
@@ -57,9 +58,9 @@ namespace Placeholdernamespace.Battle.Interaction
             tile = GetComponentInParent<Tile>();
         }
 
-        public void OnMouseDown()
+        public void OnMouseUp()
         {
-            if (!pause)
+            if (!pause && !UIHoverListener.isUIOverride)
             {
                 // pass the select on to the board entity
                 if (tile.BoardEntity != null && !pathSelectManager.IsActive())
@@ -76,7 +77,7 @@ namespace Placeholdernamespace.Battle.Interaction
 
         public void OnMouseEnter()
         {
-            if (!pause)
+            if (!pause && !UIHoverListener.isUIOverride)
             {
                 if (pathSelectManager.IsActive())
                 {

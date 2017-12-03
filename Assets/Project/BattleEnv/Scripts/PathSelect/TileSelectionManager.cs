@@ -14,6 +14,7 @@ namespace Placeholdernamespace.Battle.Interaction
         private Dictionary<Tile, TileSelectOption> possibleTiles = new Dictionary<Tile, TileSelectOption>();
 
         public bool active = true;
+        private bool skillSelectorActive;
         public List<PathOnClick> glowpath = new List<PathOnClick>();
 
         public Color defaultBoardEntityHighlightColor;
@@ -62,7 +63,7 @@ namespace Placeholdernamespace.Battle.Interaction
                     tempSelectOption(null);
                     if (pathOnClick != null && pathOnClick != boardEntityTemp.GetTile().PathOnClick)
                     {
-                        pathOnClick.OnMouseDown();
+                        pathOnClick.OnMouseUp();
                     }
                 }                                    
             }

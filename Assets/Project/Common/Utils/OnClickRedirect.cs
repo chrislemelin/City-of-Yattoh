@@ -12,7 +12,7 @@ namespace Placeholdernamespace.Common.Utils
 
         public void OnMouseDown()
         {
-            GetTarget().OnMouseDown();
+            GetTarget().OnMouseUp();
         }
     }
 }

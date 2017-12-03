@@ -2,6 +2,6 @@
 {
     public interface IClickable
     {
-        void OnMouseDown();
+        void OnMouseUp();
     }
 }

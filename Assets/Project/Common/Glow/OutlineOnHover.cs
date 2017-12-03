@@ -1,5 +1,6 @@
 ﻿using Placeholdernamespace.Battle.Env;
 using Placeholdernamespace.Battle.Interaction;
+using Placeholdernamespace.Battle.UI;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -37,7 +38,7 @@ namespace Placeholdernamespace.Battle.Interaction
 
         public void OnMouseEnter()
         {
-            if (IsActive && !disabled)
+            if (IsActive && !disabled && !UIHoverListener.isUIOverride)
             {
                 if (tile.BoardEntity != null && tile.BoardEntity.GetComponentInChildren<GlowManager>() != null)
                 {

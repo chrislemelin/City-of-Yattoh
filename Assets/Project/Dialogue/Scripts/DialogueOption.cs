@@ -12,7 +12,7 @@ public class DialogueOption : IClickable{
 	public delegate void onOptionChoose();
 	public onOptionChoose onChoose;
 
-    public void OnMouseDown()
+    public void OnMouseUp()
     {
         if(onChoose != null)
             onChoose();

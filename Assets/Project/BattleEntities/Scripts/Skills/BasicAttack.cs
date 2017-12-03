@@ -1,4 +1,5 @@
 ﻿using Placeholdernamespace.Battle.Env;
+using Placeholdernamespace.Common.Animator;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,6 +30,8 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
             battleCalculator.DoDamage(boardEntity, (CharacterBoardEntity) t.BoardEntity, new Calculator.DamagePackageInternal(effectivePower, Calculator.DamageType.physical));
             boardEntity.Stats.SubtractAPPoints(APCost);
+            boardEntity.GetComponentInChildren<Animator>().SetInteger("Attack", AnimatorUtils.GetAttackDirectionCode(boardEntity.Position, t.Position));
+
             MonoBehaviour.print("woop an attack at "+t.Position);
         }
 

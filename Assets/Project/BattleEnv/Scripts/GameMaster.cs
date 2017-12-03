@@ -42,7 +42,7 @@ namespace Placeholdernamespace.Battle
 
             BE = Instantiate(Enemy1);
             BE.GetComponent<CharacterBoardEntity>().Init(turnManager, tileManager, boardEntitySelector, battleCalulator);
-            tileManager.AddBoardEntity(new Position(1, 1), BE);
+            tileManager.AddBoardEntity(new Position(2, 1), BE);
 
             turnManager.startGame();
 
