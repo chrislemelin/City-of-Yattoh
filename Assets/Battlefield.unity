@@ -173,6 +173,7 @@ GameObject:
   - component: {fileID: 384742378}
   - component: {fileID: 384742377}
   - component: {fileID: 384742381}
+  - component: {fileID: 384742382}
   m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
@@ -212,7 +213,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -275,6 +276,17 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &384742382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 384742376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9376bf174cd27534db6730a5d817ad1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &765057796
 GameObject:
   m_ObjectHideFlags: 0
@@ -564,6 +576,11 @@ Prefab:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114548806340644180, guid: 9217a597fd3e7894db9e14153c009b5e,
+        type: 2}
+      propertyPath: m_Color.a
+      value: 0.878
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9217a597fd3e7894db9e14153c009b5e, type: 2}
   m_IsPrefabParent: 0
@@ -756,7 +773,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -210, y: -10}
-  m_SizeDelta: {x: 200, y: 0}
+  m_SizeDelta: {x: 200, y: 10}
   m_Pivot: {x: 0, y: 1}
 --- !u!1001 &1414778516
 Prefab:
@@ -1291,10 +1308,10 @@ RectTransform:
   m_Father: {fileID: 1400243327}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 10, y: 0}
+  m_SizeDelta: {x: 10, y: 10}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &2058815538
 MonoBehaviour:

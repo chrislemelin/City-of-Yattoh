@@ -49,7 +49,6 @@ namespace Placeholdernamespace.Battle.Interaction
             {
                 skillSelector.Hide();
             }
-
         }
 
         private void buildMoveOptions()
@@ -80,21 +79,10 @@ namespace Placeholdernamespace.Battle.Interaction
                 }
                 if(skillSelector.SelectedSkill == null)
                 {
-                    profile.UpdateProfile(null);
+                    setSelectedBoardEntity(null);
                     skillSelector.Hide();
                 }
-  
             }
         }
-
-        private void SkillSelected()
-        {
-
-        }
-
-        
-
-
-
     }
 }

@@ -33,7 +33,7 @@ namespace Placeholdernamespace.Battle.UI
         {
             if (currentBoardEntity != null)
             {
-                currentBoardEntity.Stats.updateStatHandler -= RefreshProfile;
+                currentBoardEntity.updateStatHandler -= RefreshProfile;
             }
             currentBoardEntity = boardEntity;
             if (boardEntity == null)
@@ -42,7 +42,7 @@ namespace Placeholdernamespace.Battle.UI
             }
             else
             {
-                currentBoardEntity.Stats.updateStatHandler += RefreshProfile;
+                currentBoardEntity.updateStatHandler += RefreshProfile;
                 gameObject.SetActive(true);
                 processBoardEntity(boardEntity);
             }

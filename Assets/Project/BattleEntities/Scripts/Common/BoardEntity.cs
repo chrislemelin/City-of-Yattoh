@@ -10,11 +10,18 @@ using Placeholdernamespace.Battle.Interaction;
 using Placeholdernamespace.Battle.UI;
 using Placeholdernamespace.Battle.Entities.Skills;
 using Placeholdernamespace.Battle.Calculator;
+using UnityEngine.UI;
 
 namespace Placeholdernamespace.Battle.Entities
 {
     public abstract class BoardEntity : MonoBehaviour, ISelectable
     {
+        public delegate void UpdateState(object sender);
+        public event UpdateState updateStatHandler;
+
+        [SerializeField]
+        private GameObject healthBar;
+
         [SerializeField]
         protected Team team;
         public Team Team
@@ -69,14 +76,18 @@ namespace Placeholdernamespace.Battle.Entities
 
         public virtual void Init(TurnManager turnManager, TileManager tileManager, BoardEntitySelector boardEntitySelector, BattleCalculator battleCalculator)
         {
+            healthBar = Instantiate(healthBar);
+            healthBar.transform.SetParent(FindObjectOfType<Canvas>().gameObject.transform);
+            healthBar.GetComponent<UIFollow>().target = gameObject;
+            healthBar.transform.SetAsFirstSibling();
             this.turnManager = turnManager;
             this.tileManager = tileManager;
             this.boardEntitySelector = boardEntitySelector;
+            stats.updateStatHandler += UpdateUi;
             stats.Start();
 
-
-
             turnManager.AddBoardEntity(this);
+            UpdateUi();
         }
 
         public abstract void StartMyTurn();
@@ -84,6 +95,19 @@ namespace Placeholdernamespace.Battle.Entities
         public virtual void OnSelect()
         {
             boardEntitySelector.setSelectedBoardEntity(this);
+        }
+
+        public void UpdateUi()
+        {
+            if (updateStatHandler != null)
+            {
+                updateStatHandler(this);
+            }
+            if(healthBar != null)
+            {
+                float newHealth = (float)stats.GetMutableStat(StatType.Health).Value / (float)stats.GetStatInstance().getValue(StatType.Health);
+                healthBar.GetComponent<UIBar>().SetValue(newHealth);
+            }
         }
     }
 

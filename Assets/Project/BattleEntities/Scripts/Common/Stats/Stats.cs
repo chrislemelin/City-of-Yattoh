@@ -11,7 +11,7 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
     [System.Serializable]
     public class Stats
     {
-        public delegate void UpdateState(object sender);
+        public delegate void UpdateState();
         public event UpdateState updateStatHandler;
         private List<StatModifier> modifiers = new List<StatModifier>();
 
@@ -84,7 +84,7 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
                 mutableStats[type] = new Stat(mutableStats[type], value);
                 if (updateStatHandler != null)
                 {
-                    updateStatHandler(this);
+                    updateStatHandler();
                 }
             }
     

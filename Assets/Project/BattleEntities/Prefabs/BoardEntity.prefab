@@ -188,6 +188,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 562850e52a28c1f4f95fafc53f2f9637, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  healthBar: {fileID: 1075659018159238, guid: a0ae54a5f3f969d418b6a279f613a09d, type: 2}
   team: 0
   stats:
     baseStats:
@@ -223,7 +224,7 @@ MonoBehaviour:
         type: 0
         value: 2
         display: 0
-  name: Test Character
+  name: Player1
   speed: 1
 --- !u!114 &114910173449349550
 MonoBehaviour:
