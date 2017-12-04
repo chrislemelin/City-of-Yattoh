@@ -54,12 +54,16 @@ namespace Placeholdernamespace.Battle.Interaction
         private void buildMoveOptions()
         {
             if (selectedBoardEntity is CharacterBoardEntity)
-            {             
-                tileSelectionManager.SelectTile(selectedBoardEntity, selectedBoardEntity.MoveSet(), sendMoveToBoardEntity, null, null);
+            {
                 if (TurnManager.CurrentBoardEntity == selectedBoardEntity)
                 {
+                    tileSelectionManager.SelectTile(selectedBoardEntity, selectedBoardEntity.MoveSet(), sendMoveToBoardEntity, null, null);               
                     skillSelector.SetBoardEntity((CharacterBoardEntity)selectedBoardEntity);
                     skillSelector.SetSkills(selectedBoardEntity.Skills);
+                }
+                else
+                {
+                    tileSelectionManager.SelectTile(selectedBoardEntity, new List<Move>() , sendMoveToBoardEntity, null, null);
                 }
             }
         }

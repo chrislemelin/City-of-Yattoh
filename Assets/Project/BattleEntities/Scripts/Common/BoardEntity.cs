@@ -20,6 +20,13 @@ namespace Placeholdernamespace.Battle.Entities
         public event UpdateState updateStatHandler;
 
         [SerializeField]
+        private Sprite profileImage;
+        public Sprite ProfileImage
+        {
+            get { return profileImage; }
+        }
+
+        [SerializeField]
         private GameObject healthBar;
 
         [SerializeField]

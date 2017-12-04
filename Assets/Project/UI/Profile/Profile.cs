@@ -10,6 +10,8 @@ namespace Placeholdernamespace.Battle.UI
     public class Profile : MonoBehaviour
     {
         [SerializeField]
+        private GameObject profilePic;
+        [SerializeField]
         private GameObject titleGameObject;
         [SerializeField]
         private GameObject textGameObject;
@@ -51,6 +53,7 @@ namespace Placeholdernamespace.Battle.UI
 
         private void processBoardEntity(BoardEntity boardEntity)
         {
+            UpdateProfilePic(boardEntity.ProfileImage);
             foreach (GameObject g in texts)
             {
                 Destroy(g);
@@ -89,6 +92,12 @@ namespace Placeholdernamespace.Battle.UI
             movementStat.GetComponent<TextMeshProUGUI>().text = text;
             movementStat.transform.SetParent(panel.transform, false);
             texts.Add(movementStat);
+        }
+
+        private void UpdateProfilePic(Sprite sprite)
+        {
+            profilePic.GetComponent<Image>().sprite = sprite;
+            profilePic.SetActive(sprite != null);
         }
 
     }
