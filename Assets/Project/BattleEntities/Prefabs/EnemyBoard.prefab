@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4914905680874010}
   - component: {fileID: 114868530270863054}
+  - component: {fileID: 114249362209101460}
   m_Layer: 0
   m_Name: EnemyBoard
   m_TagString: Untagged
@@ -41,6 +42,7 @@ GameObject:
   - component: {fileID: 114653560778829354}
   - component: {fileID: 114910173449349550}
   - component: {fileID: 114622698875298742}
+  - component: {fileID: 95973210416752412}
   m_Layer: 0
   m_Name: BoardEntitySprite
   m_TagString: Untagged
@@ -120,6 +122,34 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2.56, y: 2.56}
   m_EdgeRadius: 0
+--- !u!95 &95973210416752412
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1844718460837428}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 70138188a240f3e419692a39d12a9f84, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114249362209101460
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1542313980632146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7b288e98e3ca174ca2584c28cb48cf2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114622698875298742
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -158,6 +188,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 562850e52a28c1f4f95fafc53f2f9637, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  profileImage: {fileID: 0}
   healthBar: {fileID: 1075659018159238, guid: a0ae54a5f3f969d418b6a279f613a09d, type: 2}
   team: 1
   stats:

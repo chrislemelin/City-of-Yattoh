@@ -1,4 +1,6 @@
 ﻿using Placeholdernamespace.Battle.Entities;
+using Placeholdernamespace.Battle.Entities.AttributeStats;
+using Placeholdernamespace.Battle.Entities.Skills;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,39 +10,48 @@ namespace Placeholdernamespace.Battle.Calculator
 
     public class BattleCalculator : MonoBehaviour
     {
-        public void DoDamage(CharacterBoardEntity source, CharacterBoardEntity target, DamagePackageInternal damage)
+        public void DoDamage(CharacterBoardEntity source, CharacterBoardEntity target, DamagePackage damage)
         {
-            int newHealth = target.Stats.GetMutableStat(Entities.AttributeStats.StatType.Health).Value - (int)damage.damage;
-            if(newHealth < 0)
+            int newHealth = HealthAfterDamage(source, target, damage);
+            SkillReport skillReport = ExecuteSkillHelper(source, target, damage);
+            foreach (StatType type in skillReport.SourceAfter.Keys)
+            {
+                source.Stats.SetMutableStat(type, skillReport.SourceAfter[type].Value);
+            }
+            foreach (StatType type in skillReport.TargetAfter.Keys)
+            {
+                target.Stats.SetMutableStat(type, skillReport.TargetAfter[type].Value);
+            }           
+        }
+
+        public SkillReport ExecuteSkillHelper(CharacterBoardEntity source, CharacterBoardEntity target, DamagePackage damage)
+        {
+            Dictionary<StatType, Stat> sourceBefore = source.Stats.MutableStats;
+            Dictionary<StatType, Stat> sourceAfter = source.Stats.MutableStats;
+
+            Dictionary<StatType, Stat> targetBefore = target.Stats.MutableStats;
+            Dictionary<StatType, Stat> targetAfter = target.Stats.MutableStats;
+
+            int newTargetHealth = HealthAfterDamage(source, target, damage);
+            
+            targetAfter[StatType.Health] = new Stat(targetAfter[StatType.Health], newTargetHealth);
+
+            return new SkillReport(sourceBefore, sourceAfter, targetBefore, targetAfter);
+
+        }
+
+        private int HealthAfterDamage(CharacterBoardEntity source, CharacterBoardEntity target, DamagePackage damage)
+        {
+            int newHealth = target.Stats.GetMutableStat(Entities.AttributeStats.StatType.Health).Value - damage.Damage;
+            if (newHealth < 0)
             {
                 // dat bibba dead
                 newHealth = 0;
             }
-            target.Stats.SetMutableStat(Entities.AttributeStats.StatType.Health, newHealth);
+            return newHealth;
         }
-        
+
     }
 
-    public enum DamageType { physical, pure};
-
-    public class DamagePackageInternal
-    {
-        public float damage;
-        public float Damage
-        {
-            get { return damage; }
-        }
-
-        public DamageType type;
-        public DamageType Type
-        {
-            get { return type; }
-        }
-
-        public DamagePackageInternal(float damage, DamageType type)
-        {
-            this.damage = damage;
-            this.type = type;
-        }
-    }
+   
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 /// <summary>
@@ -19,10 +20,20 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
         /// these are the stats that can change without modifiers, things like health and movement points
         /// </summary>
         private static HashSet<StatType> mutableStatSet = new HashSet<StatType>() { StatType.Health, StatType.Movement, StatType.AP };
-        public static HashSet<StatType> MutableStats
+        public static HashSet<StatType> MutableStatSet
         {
             get { return mutableStatSet; }
         }
+
+        private Dictionary<StatType, Stat> mutableStats = new Dictionary<StatType, Stat>();
+        public Dictionary<StatType, Stat> MutableStats
+        {
+            get
+            {
+                return mutableStats.ToDictionary(entry => entry.Key, entry =>  new Stat (entry.Value));
+            }
+        }
+
 
         [SerializeField]
         private StatInstance baseStats;
@@ -40,7 +51,7 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
             }
             mutableStats[StatType.AP] = new Stat(GetStatInstance().GetStat(StatType.AP), 0);
 
-            //smodifiers.Add(new StatModifier(StatType.Movement, StatModifierType.Mult, 1.5f));
+            //modifiers.Add(new StatModifier(StatType.Movement, StatModifierType.Mult, 1.5f));
 
         }
 
@@ -55,7 +66,6 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
 
         }
 
-        private Dictionary<StatType, Stat> mutableStats = new Dictionary<StatType, Stat>();
 
         public void NewTurn()
         {

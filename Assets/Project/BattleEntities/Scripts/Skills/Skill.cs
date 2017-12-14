@@ -1,5 +1,6 @@
 ﻿using Placeholdernamespace.Battle.Calculator;
 using Placeholdernamespace.Battle.Env;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,11 +29,19 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
         public abstract List<Tile> TileSet();
 
-        public abstract void Action(Tile t);
+        public abstract void Action(Tile t, Action callback = null);
 
         public virtual bool IsActive()
         {
             return TileSet().Count > 0 && CanAffortAPCost();
+        }
+
+        public SkillReport TheoreticalAction(Tile t)
+        {
+            DamagePackageInternal damagePackage = GenerateDamagePackage();
+            DamagePackage damage = new DamagePackage(damagePackage);
+            SkillReport report = battleCalculator.ExecuteSkillHelper(boardEntity, (CharacterBoardEntity)t.BoardEntity, damage);
+            return report;
         }
 
         protected Dictionary<SkillModifierType, int> getSkillModifiers(Dictionary<SkillModifierType, int> dict)
@@ -40,7 +49,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             Dictionary<SkillModifierType, float> floatDict = new Dictionary<SkillModifierType, float>();
             List<SkillModifier> modifiers = new List<SkillModifier>();
 
-            modifiers.Add(new SkillModifier(SkillModifierType.Power, SkillModifierApplication.Add, 2));
+            //modifiers.Add(new SkillModifier(SkillModifierType.Power, SkillModifierApplication.Add, 2));
 
             foreach(SkillModifierType type in dict.Keys)
             {
@@ -74,7 +83,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
         protected List<Tile> TeamTiles(List<Tile> tiles, Team? team)
         {
-            tiles.RemoveAll(t => t.BoardEntity == null || team == null && t.BoardEntity.Team != team);
+            tiles.RemoveAll(t => t.BoardEntity == null || team != null && t.BoardEntity.Team == team);
             return tiles;
         }
 
@@ -95,7 +104,47 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             Dictionary<SkillModifierType, int> effectiveStats = getSkillModifiers(dict);
             return effectiveStats[type];
         }
+
+        /// <summary>
+        /// override this to generate damage package
+        /// </summary>
+        /// <returns></returns>
+        protected DamagePackageInternal GenerateDamagePackage()
+        {
+            int basePower = boardEntity.Stats.GetStatInstance().getValue(AttributeStats.StatType.Strength);
+            Dictionary<SkillModifierType, int> baseStats = new Dictionary<SkillModifierType, int>();
+            baseStats[SkillModifierType.Power] = basePower;
+            Dictionary<SkillModifierType, int> effectiveStats = getSkillModifiers(baseStats);
+
+            int effectivePower = effectiveStats[SkillModifierType.Power];
+            return new DamagePackageInternal(effectivePower, DamageType.physical);
+        }
+
+
     }
 
-  
+    public enum DamageType { physical, pure };
+
+    public class DamagePackageInternal
+    {
+        public float damage;
+        public float Damage
+        {
+            get { return damage; }
+        }
+
+        public DamageType type;
+        public DamageType Type
+        {
+            get { return type; }
+        }
+
+        public DamagePackageInternal(float damage, DamageType type)
+        {
+            this.damage = damage;
+            this.type = type;
+        }
+    }
+
+
 }
