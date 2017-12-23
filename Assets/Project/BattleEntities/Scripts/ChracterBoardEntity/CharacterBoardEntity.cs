@@ -33,6 +33,9 @@ namespace Placeholdernamespace.Battle.Entities
             get { return basicAttack; }
         }
 
+        [SerializeField]
+        private EnemyAIBasic enemyAIBasic;
+
         //private SkillSelector skillSelector;
         private Tile target = null;
         private List<Tile> path;
@@ -42,9 +45,10 @@ namespace Placeholdernamespace.Battle.Entities
         public void Init(TurnManager turnManager, TileManager tileManager, BoardEntitySelector boardEntitySelector, BattleCalculator battleCalculator)
         {
             base.Init(turnManager, tileManager, boardEntitySelector, battleCalculator);
-
-
-
+            if(enemyAIBasic != null)
+            {
+                enemyAIBasic.Init(tileManager, this);
+            }
             basicAttack = new BasicAttack();
             basicAttack.Init(tileManager, this, battleCalculator);
             skills.Add(basicAttack);

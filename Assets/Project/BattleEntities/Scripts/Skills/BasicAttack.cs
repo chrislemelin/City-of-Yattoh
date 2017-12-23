@@ -16,19 +16,9 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             APCost = 1;
         }
 
-        public override List<Tile> TileSet()
+        protected override List<Tile> TileSetHelper(Position p)
         {
-            return TileSetHelper(boardEntity.GetTile().Position);
-        }
-
-        public List<Tile> TheoreticalTileSet(Position p)
-        {
-            return TileSetHelper(p);
-        }
-
-        private List<Tile> TileSetHelper(Position p)
-        {
-            return TeamTiles(tileManager.GetAllTilesNear(p), boardEntity.Team);
+            return TeamTiles(tileManager.GetAllAdjacentTiles(p), boardEntity.Team);
         }
 
         public override void Action(Tile t, Action callback = null)
@@ -45,7 +35,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             }
         }   
 
-        private DamagePackageInternal GenerateDamagePackage()
+        protected DamagePackageInternal GenerateDamagePackage()
         {
             int basePower = boardEntity.Stats.GetStatInstance().getValue(AttributeStats.StatType.Strength);
             Dictionary<SkillModifierType, int> baseStats = new Dictionary<SkillModifierType, int>();

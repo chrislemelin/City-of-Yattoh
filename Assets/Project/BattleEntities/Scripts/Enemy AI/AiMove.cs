@@ -12,45 +12,66 @@ namespace Placeholdernamespace.Battle.Entities.AI
         /// <summary>
         /// is it in attack range of a weak unit?
         /// </summary>
-        private int targetScore;
+        private int targetScore = int.MaxValue;
 
         /// <summary>
-        /// is it getting closer to a weak unit?
+        /// how far away from nearest target, if it cannot attack anyone this turn
         /// </summary>
-        private int movementScore;
+        private int movementScore = 0;
+
+        /// <summary>
+        /// how much ap will this entire turn cost
+        /// </summary>
+        private int apCost = 0;
+
+        /// <summary>
+        /// how many movement points will this entire turn cost?
+        /// </summary>
+        private int movementCost = 0;
 
         /// <summary>
         /// true if this move killed someone
         /// </summary>
         private bool scoredKill = false;
 
-        private List<Action> actions;
+        private List<Action> actions = new List<Action>();
         public List<Action> Actions
         {
             get { return actions; }
         }
 
-        public AiMove(int targetScore, int movementScore, List<Action> actions)
+        public AiMove()
+        {
+        }
+
+        public AiMove(int targetScore, int movementScore)
         {
             this.targetScore = targetScore;
             this.movementScore = movementScore;
-            this.actions = actions;
         }
 
-        public void AddAttackAction(BasicAttack skill, Tile t)
+        public void AddAttackAction(Skill skill, Tile t, Action callBack)
         {
             SkillReport report = skill.TheoreticalAction(t);
             if(report.TargetAfter[AttributeStats.StatType.Health].Value == 0 )
             {
                 scoredKill = true;
             }
-            actions.Add(() => skill.Action(t));
+            apCost += skill.GetAPCost();
+            actions.Add(() => skill.Action(t, callBack));
+        }
+
+        public void AddMoveAction(CharacterBoardEntity boardEntity, Move move, Action callBack)
+        {
+            movementCost += move.movementCost;
+            actions.Add(() => boardEntity.ExecuteMove(move, callBack));           
         }
 
         /// <summary>
         /// logic is as follows
         /// this actions kills someone
         /// otherwise try to get to the weakest target and attack
+        /// will move the smallest distance possible for attacks
         /// othersise move towards closest target
         /// </summary>
         /// <param name="obj"></param>
@@ -68,10 +89,17 @@ namespace Placeholdernamespace.Battle.Entities.AI
                 returnInt = targetScore.CompareTo(objMove.targetScore);
                 if (returnInt != 0)
                 {
-                    return -returnInt;
+                    return returnInt;
                 }
+
+                returnInt = movementCost.CompareTo(objMove.movementCost);
+                if (returnInt != 0 && targetScore != int.MaxValue)
+                {
+                    return returnInt;                   
+                }
+
                 returnInt = movementScore.CompareTo(objMove.movementScore);
-                return -returnInt;
+                return returnInt;
             }
             else
             {

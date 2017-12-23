@@ -237,6 +237,38 @@ namespace Placeholdernamespace.Battle.Env
             }
             return tiles;
         }
+        
+        /// <summary>
+        /// another dfs, kms
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="team"></param>
+        /// <returns></returns>
+        public BoardEntity NearestBoardEntity(Position start, Team? team, BoardEntity ignore = null)
+        {
+            Queue<Tile> tiles = new Queue<Tile>();
+            HashSet<Tile> visitedTiles = new HashSet<Tile>();
+            tiles.Enqueue(GetTile(start));
+            while(tiles.Count > 0)
+            {
+                Tile t = tiles.Dequeue();
+                List<Tile> neighbors = GetAllAdjacentTiles(t.Position);
+                foreach(Tile newTile in neighbors)
+                {
+                    if(!visitedTiles.Contains(newTile))
+                    {
+                        if(newTile.BoardEntity != null && ((team == null || newTile.BoardEntity.Team == team) && newTile.BoardEntity != ignore))
+                        {
+                            return newTile.BoardEntity;                           
+                        }
+                        visitedTiles.Add(newTile);
+                        tiles.Enqueue(newTile);
+                    }
+                }
+            }
+
+            return null;
+        }
 
         /// <summary>
         /// gets all moves that can be reached with a cost of 'range'

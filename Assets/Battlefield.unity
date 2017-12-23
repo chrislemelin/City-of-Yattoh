@@ -146,6 +146,7 @@ MonoBehaviour:
   battleCalulator: {fileID: 1628515528}
   boardEntitySelector: {fileID: 1628515524}
   Player1: {fileID: 1542313980632146, guid: 0eb0069ee09924d4ea2cf73aa6d36f1c, type: 2}
+  Player2: {fileID: 1542313980632146, guid: 97c9e7decfb9f7443b789e8c71239ee1, type: 2}
   Enemy1: {fileID: 1542313980632146, guid: dc1706b01bd92ce4ba12027fa3e2d522, type: 2}
 --- !u!4 &204167442
 Transform:
@@ -1265,7 +1266,7 @@ Prefab:
     - target: {fileID: 114005518541179598, guid: b30664250331bc84abe0fc8fe9d8b0c0,
         type: 2}
       propertyPath: map
-      value: "o|o|o o o o o o o o o\r\no o o o o o o o o\r\no o\r o|o o|o o o\no o
+      value: "o o|o o o o o o o o o\r\no o o o o o o o o\r\no o\r o|o o|o o o\no o
         o|o o|o\r\n\r\no o o o o"
       objectReference: {fileID: 0}
     - target: {fileID: 4346274044053494, guid: b30664250331bc84abe0fc8fe9d8b0c0, type: 2}

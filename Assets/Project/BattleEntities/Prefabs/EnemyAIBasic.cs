@@ -12,51 +12,56 @@ namespace Placeholdernamespace.Battle.Entities.AI
 {
     public class EnemyAIBasic : MonoBehaviour
     {
+        private TileManager tileManager;
         private List<Action> actionQueue;
-        CharacterBoardEntity boardEntity;
+        CharacterBoardEntity characterBoardEntity;
         Skill skill;
 
-        public void Start()
+        public void Init(TileManager tileManager, CharacterBoardEntity characterBoardEntity)
         {
-            boardEntity = GetComponent<CharacterBoardEntity>();
+            this.tileManager = tileManager;
+            this.characterBoardEntity = characterBoardEntity;
         }
 
         public void ExecuteTurn()
         {
-            List<Move> moves = boardEntity.MoveSet();
-            BasicAttack skill = boardEntity.BasicAttack;
+            List<Move> moves = characterBoardEntity.MoveSet();
+            Skill skill = characterBoardEntity.BasicAttack;
             List<AiMove> aiMoves = new List<AiMove>();
             Dictionary<Move, List<BoardEntity>> moveToTargets = new Dictionary<Move, List<BoardEntity>>(); 
+           
             foreach(Move m in moves)
             {
                 List<Tile> tiles = skill.TheoreticalTileSet(m.destination.Position);
 
                 List<BoardEntity> entities = new List<BoardEntity>();
-                Action moveAction = new Action(() => boardEntity.ExecuteMove(m, DoNextAction));
-                AiMove aiMove = new AiMove(int.MinValue, 0, new List<Action>() { moveAction });
+                BoardEntity nearest = tileManager.NearestBoardEntity(m.destination.Position, Team.Player);
+                int movementScore = tileManager.DFS(m.destination.Position, nearest.GetTile().Position, characterBoardEntity.Team).Count;
+                AiMove aiMove = new AiMove(int.MaxValue, movementScore);
+                aiMove.AddMoveAction(characterBoardEntity, m, DoNextAction);
 
                 aiMoves.Add(aiMove);
                 foreach(Tile t in tiles)
                 {
                     if(t.BoardEntity != null)
                     {
-                        Action attackAction = new Action(() => skill.Action(t, DoNextAction));                    
-                        aiMove = new AiMove(targetScore(t.BoardEntity), 0, new List<Action>() { moveAction});
-                        aiMove.AddAttackAction(skill, t);
+                        aiMove = new AiMove(targetScore(t.BoardEntity), 0);
+                        aiMove.AddMoveAction(characterBoardEntity, m, DoNextAction);
+                        aiMove.AddAttackAction(skill, t, DoNextAction);
                         aiMoves.Add(aiMove);
                     }
                 }
                 moveToTargets[m] = entities;
             }
 
-            List<Tile> differentTiles = skill.TheoreticalTileSet(boardEntity.Position);
+            // dont move, only attack
+            List<Tile> differentTiles = skill.TheoreticalTileSet(characterBoardEntity.Position);
             foreach (Tile t in differentTiles)
             {
                 if (t.BoardEntity != null)
                 {
-                    Action attackAction = new Action(() => skill.Action(t, DoNextAction));
-                    AiMove aiMove = new AiMove(targetScore(t.BoardEntity), 0, new List<Action>() { });
-                    aiMove.AddAttackAction(skill, t);
+                    AiMove aiMove = new AiMove(targetScore(t.BoardEntity), 0);
+                    aiMove.AddAttackAction(skill, t, DoNextAction);
                     aiMoves.Add(aiMove);
                 }
             }
@@ -82,7 +87,7 @@ namespace Placeholdernamespace.Battle.Entities.AI
 
         private int targetScore(BoardEntity boardEntity)
         {
-            return -boardEntity.Stats.GetMutableStat(AttributeStats.StatType.Health).Value;
+            return boardEntity.Stats.GetMutableStat(AttributeStats.StatType.Health).Value;
         }
     }
 }

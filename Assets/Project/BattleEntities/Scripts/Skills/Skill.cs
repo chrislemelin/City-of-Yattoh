@@ -27,7 +27,17 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             this.battleCalculator = battleCalculator;
         }
 
-        public abstract List<Tile> TileSet();
+        public List<Tile> TileSet()
+        {
+            return TileSetHelper(boardEntity.GetTile().Position);
+        }
+
+        public List<Tile> TheoreticalTileSet(Position p)
+        {
+            return TileSetHelper(p);
+        }
+
+        protected abstract List<Tile> TileSetHelper(Position p);
 
         public abstract void Action(Tile t, Action callback = null);
 
@@ -92,7 +102,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             return (boardEntity.Stats.GetMutableStat(AttributeStats.StatType.AP).Value >= GetAPCost());
         }
 
-        protected int GetAPCost()
+        public int GetAPCost()
         {
             return GetSkillModifier(SkillModifierType.EnergyCost, APCost);
         }

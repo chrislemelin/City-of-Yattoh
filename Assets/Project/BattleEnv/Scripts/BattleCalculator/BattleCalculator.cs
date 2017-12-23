@@ -12,7 +12,6 @@ namespace Placeholdernamespace.Battle.Calculator
     {
         public void DoDamage(CharacterBoardEntity source, CharacterBoardEntity target, DamagePackage damage)
         {
-            int newHealth = HealthAfterDamage(source, target, damage);
             SkillReport skillReport = ExecuteSkillHelper(source, target, damage);
             foreach (StatType type in skillReport.SourceAfter.Keys)
             {
@@ -42,7 +41,7 @@ namespace Placeholdernamespace.Battle.Calculator
 
         private int HealthAfterDamage(CharacterBoardEntity source, CharacterBoardEntity target, DamagePackage damage)
         {
-            int newHealth = target.Stats.GetMutableStat(Entities.AttributeStats.StatType.Health).Value - damage.Damage;
+            int newHealth = target.Stats.GetMutableStat(StatType.Health).Value - damage.Damage;
             if (newHealth < 0)
             {
                 // dat bibba dead
