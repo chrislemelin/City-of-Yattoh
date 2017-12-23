@@ -198,6 +198,7 @@ namespace Placeholdernamespace.Battle.Env
             Dictionary<Tile, Tile> path = new Dictionary<Tile, Tile>();
 
             Queue<Tile> queue = new Queue<Tile>();
+            HashSet<Tile> visitedTiles = new HashSet<Tile>();
             queue.Enqueue(startTile);
             while (queue.Count != 0)
             {
@@ -207,10 +208,6 @@ namespace Placeholdernamespace.Battle.Env
                 neighbors.RemoveAll(
                     x => path.ContainsKey(x)
                 );
-                if(team != null)
-                {
-                    neighbors.RemoveAll(x => (x.BoardEntity != null && x.BoardEntity.Team != team));
-                }
 
                 foreach (Tile nextTile in neighbors)
                 {
@@ -231,8 +228,12 @@ namespace Placeholdernamespace.Battle.Env
                 }
                 foreach (Tile nextTile in neighbors)
                 {
-                    path.Add(nextTile, currentTile);
-                    queue.Enqueue(nextTile);
+                    if (team == null || nextTile.BoardEntity == null || nextTile.BoardEntity.Team == team)
+                    {
+                        path.Add(nextTile, currentTile);
+                        queue.Enqueue(nextTile);
+                    }
+                          
                 }
             }
             return tiles;
