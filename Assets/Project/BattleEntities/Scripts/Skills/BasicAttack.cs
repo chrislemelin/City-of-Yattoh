@@ -26,8 +26,8 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             DamagePackageInternal damagePackage = GenerateDamagePackage();
             DamagePackage package = new DamagePackage(damagePackage);
 
-            battleCalculator.DoDamage(boardEntity, (CharacterBoardEntity)t.BoardEntity, package);
-            boardEntity.Stats.SubtractAPPoints(APCost);
+            battleCalculator.DoDamage(boardEntity, this, (CharacterBoardEntity)t.BoardEntity, package);
+            boardEntity.Stats.SubtractAPPoints(GetAPCost());
             boardEntity.GetComponentInChildren<Animator>().SetInteger("Attack", AnimatorUtils.GetAttackDirectionCode(boardEntity.Position, t.Position));
             if (callback != null)
             {

@@ -47,9 +47,9 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
             baseStats.UseDefaults();
             foreach (StatType type in mutableStatSet)
             {
-                mutableStats[type] = new Stat(GetStatInstance().GetStat(type));
+                mutableStats[type] = new Stat(GetStatInstance().GetStat(StatType.AP), 0);
             }
-            mutableStats[StatType.AP] = new Stat(GetStatInstance().GetStat(StatType.AP), 0);
+            mutableStats[StatType.Health] = new Stat(GetStatInstance().GetStat(StatType.Health));
 
             //modifiers.Add(new StatModifier(StatType.Movement, StatModifierType.Mult, 1.5f));
 
@@ -69,7 +69,7 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
 
         public void NewTurn()
         {
-            SetMutableStat(StatType.Movement, GetStatInstance().GetStat(StatType.Movement).Value);
+            SetMutableStat(StatType.Movement, 0);
             int currentAP = GetMutableStat(StatType.AP).Value;
             int newAP = currentAP + GetStatInstance().getValue(StatType.APGain);
             SetMutableStat(StatType.AP, newAP);
@@ -85,6 +85,11 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
             {
                 return null;
             }
+        }
+
+        public Stat GetNonMuttableStat(StatType type)
+        {
+            return GetStatInstance().GetStat(type);
         }
 
         public void SetMutableStat(StatType type, int value)

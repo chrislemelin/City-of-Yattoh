@@ -75,7 +75,6 @@ namespace Placeholdernamespace.Battle.UI
                 string text = boardEntity.Stats.StatToString(type);
                 AddText(text);
             }
-            //TextMesh mesh = GetComponent<MeshRenderer>().w
         }
 
         private void AddTitle(string text)

@@ -50,7 +50,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         {
             DamagePackageInternal damagePackage = GenerateDamagePackage();
             DamagePackage damage = new DamagePackage(damagePackage);
-            SkillReport report = battleCalculator.ExecuteSkillHelper(boardEntity, (CharacterBoardEntity)t.BoardEntity, damage);
+            SkillReport report = battleCalculator.ExecuteSkillHelper(boardEntity, this, (CharacterBoardEntity)t.BoardEntity, damage);
             return report;
         }
 

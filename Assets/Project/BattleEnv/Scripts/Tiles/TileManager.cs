@@ -277,15 +277,20 @@ namespace Placeholdernamespace.Battle.Env
         /// <param name="start"></param>
         /// <param name="range"></param>
         /// <returns></returns>
-        public List<Move> DFSMoves(Position start, int range, Team? team = null)
+        public List<Move> DFSMoves(Position start, CharacterBoardEntity character, int apLimit = 2, Team? team = null)
         {
+            int movementStats = character.Stats.GetStatInstance().getValue(Entities.AttributeStats.StatType.Movement);
+            int movementPoints = character.Stats.GetMutableStat(Entities.AttributeStats.StatType.Movement).Value;
+
+            int range = movementPoints + movementStats * character.Stats.GetMutableStat(Entities.AttributeStats.StatType.AP).Value;
+
             List<Move> tiles = new List<Move>();
             Tile startTile = GetTile(start);
             HashSet<Tile> visitedTiles = new HashSet<Tile>();
             List<Move> visitingTiles = new List<Move>();
             visitingTiles.Add(new Move { destination = startTile, movementCost = 0 });
 
-            for (int step = 1; step <= range; step++)
+            while(visitingTiles.Count > 0)
             {
                 List<Move> newVisitingTiles = new List<Move>();
                 foreach (Move move in visitingTiles)
@@ -308,13 +313,28 @@ namespace Placeholdernamespace.Battle.Env
                         {
                             List<Tile> newPath = new List<Tile>(move.path);
                             newPath.Add(processingTile);
-                            newVisitingTiles.Add(new Move
+                            Move newMove = new Move
                             {
                                 destination = processingTile,
                                 movementCost = move.movementCost + 1,
                                 path = newPath
-                            });
-                            visitedTiles.Add(processingTile);
+                            };
+                            int cost = newMove.movementCost - movementPoints;
+                            if(cost <= 0)
+                            {
+                                newMove.apCost = 0;
+                            }
+                            else
+                            {
+                                newMove.apCost = Mathf.CeilToInt(((float)cost) / ((float)(movementStats)));
+                            }
+                            newMove.movementPointsAfterMove = movementPoints + (newMove.apCost * movementStats) - newMove.movementCost;
+
+                            if((newMove.apCost <= apLimit) && (newMove.apCost <= character.Stats.GetMutableStat(Entities.AttributeStats.StatType.AP).Value))
+                            {
+                                newVisitingTiles.Add(newMove);
+                                visitedTiles.Add(processingTile);
+                            }
 
                         }
                     }

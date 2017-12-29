@@ -16,9 +16,9 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         /// </summary>
         /// <param name="package"></param>
         /// <returns></returns>
-        public DamagePackage TakeDamage(DamagePackage package)
+        public TakeDamageReturn TakeDamage(Skill skill, DamagePackage package)
         {
-            return package;
+            return TakeDamageReturn.Normal;
         }
 
         /// <summary>
@@ -42,4 +42,6 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         }
 
     }
+
+   
 }

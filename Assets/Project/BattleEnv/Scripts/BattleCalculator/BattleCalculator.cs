@@ -1,5 +1,6 @@
 ﻿using Placeholdernamespace.Battle.Entities;
 using Placeholdernamespace.Battle.Entities.AttributeStats;
+using Placeholdernamespace.Battle.Entities.Passives;
 using Placeholdernamespace.Battle.Entities.Skills;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,20 +11,23 @@ namespace Placeholdernamespace.Battle.Calculator
 
     public class BattleCalculator : MonoBehaviour
     {
-        public void DoDamage(CharacterBoardEntity source, CharacterBoardEntity target, DamagePackage damage)
+        public void DoDamage(CharacterBoardEntity source, Skill skill, CharacterBoardEntity target, DamagePackage damage)
         {
-            SkillReport skillReport = ExecuteSkillHelper(source, target, damage);
-            foreach (StatType type in skillReport.SourceAfter.Keys)
+            SkillReport skillReport = ExecuteSkillHelper(source, skill, target, damage);
+            if (skillReport != null)
             {
-                source.Stats.SetMutableStat(type, skillReport.SourceAfter[type].Value);
+                foreach (StatType type in skillReport.SourceAfter.Keys)
+                {
+                    source.Stats.SetMutableStat(type, skillReport.SourceAfter[type].Value);
+                }
+                foreach (StatType type in skillReport.TargetAfter.Keys)
+                {
+                    target.Stats.SetMutableStat(type, skillReport.TargetAfter[type].Value);
+                }
             }
-            foreach (StatType type in skillReport.TargetAfter.Keys)
-            {
-                target.Stats.SetMutableStat(type, skillReport.TargetAfter[type].Value);
-            }           
         }
 
-        public SkillReport ExecuteSkillHelper(CharacterBoardEntity source, CharacterBoardEntity target, DamagePackage damage)
+        public SkillReport ExecuteSkillHelper(CharacterBoardEntity source, Skill skill, CharacterBoardEntity target, DamagePackage damage)
         {
             Dictionary<StatType, Stat> sourceBefore = source.Stats.MutableStats;
             Dictionary<StatType, Stat> sourceAfter = source.Stats.MutableStats;
@@ -31,11 +35,29 @@ namespace Placeholdernamespace.Battle.Calculator
             Dictionary<StatType, Stat> targetBefore = target.Stats.MutableStats;
             Dictionary<StatType, Stat> targetAfter = target.Stats.MutableStats;
 
-            int newTargetHealth = HealthAfterDamage(source, target, damage);
-            
-            targetAfter[StatType.Health] = new Stat(targetAfter[StatType.Health], newTargetHealth);
+            TakeDamageReturn usingTakeDamageReturn = TakeDamageReturn.Normal;
+            List<Passive> passives = target.Passives;
+            foreach(Passive passive in passives)
+            {
+                TakeDamageReturn currentReturn = passive.TakeDamage(skill, damage);
+                usingTakeDamageReturn = (TakeDamageReturn)Mathf.Max((int)currentReturn, (int)usingTakeDamageReturn);
+            }
 
-            return new SkillReport(sourceBefore, sourceAfter, targetBefore, targetAfter);
+            switch(usingTakeDamageReturn)
+            {
+                case TakeDamageReturn.Normal:
+                    int newTargetHealth = HealthAfterDamage(source, target, damage);
+                    targetAfter[StatType.Health] = new Stat(targetAfter[StatType.Health], newTargetHealth);
+                    return new SkillReport(sourceBefore, sourceAfter, targetBefore, targetAfter);
+
+                case TakeDamageReturn.NoDamage:
+                    return null;                    
+
+                case TakeDamageReturn.Reflect:
+                    return null;
+            }
+
+            return null;
 
         }
 
@@ -52,5 +74,8 @@ namespace Placeholdernamespace.Battle.Calculator
 
     }
 
-   
+    public enum TakeDamageReturn
+    {
+        Normal, NoDamage, Reflect
+    }
 }

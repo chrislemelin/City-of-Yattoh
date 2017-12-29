@@ -28,6 +28,12 @@ namespace Placeholdernamespace.Battle.Interaction
         [SerializeField]
         private Profile profile;
 
+        [SerializeField]
+        private List<Color> ApCostColors;
+
+        [SerializeField]
+        private Color hoverColor;
+
         private BoardEntity selectedBoardEntity;
         public BoardEntity SelectedBoardEntity
         {
@@ -57,7 +63,27 @@ namespace Placeholdernamespace.Battle.Interaction
             {
                 if (TurnManager.CurrentBoardEntity == selectedBoardEntity)
                 {
-                    tileSelectionManager.SelectTile(selectedBoardEntity, selectedBoardEntity.MoveSet(), sendMoveToBoardEntity, null, null);               
+                    List<Move> moveSet = selectedBoardEntity.MoveSet();
+                    HashSet<Move> usedMoves = new HashSet<Move>();
+                    List<TileSelectOption> options = new List<TileSelectOption>();
+                    foreach (Move m in moveSet)
+                    {
+                        Color col = ApCostColors[0];
+                        if(m.apCost < ApCostColors.Count)
+                        {
+                            col = ApCostColors[m.apCost];
+                        }
+                        options.Add(new TileSelectOption()
+                        {
+                            Selection = m.destination,
+                            OnHover = m.path,
+                            HighlightColor = col,
+                            HoverColor = hoverColor,
+                            ReturnObject = m
+                        });
+                    }                  
+
+                    tileSelectionManager.SelectTile(selectedBoardEntity, options, sendMoveToBoardEntity);               
                     skillSelector.SetBoardEntity((CharacterBoardEntity)selectedBoardEntity);
                     skillSelector.SetSkills(selectedBoardEntity.Skills);
                 }

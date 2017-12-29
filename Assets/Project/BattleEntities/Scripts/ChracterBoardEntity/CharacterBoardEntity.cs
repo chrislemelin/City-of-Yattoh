@@ -56,7 +56,7 @@ namespace Placeholdernamespace.Battle.Entities
 
         public override List<Move> MoveSet()
         {
-            return tileManager.DFSMoves(GetTile().Position, Stats.GetMutableStat(StatType.Movement).Value, team);
+            return tileManager.DFSMoves(GetTile().Position, this, team: team);
         }
     
         private void checkAtTarget()
@@ -130,7 +130,9 @@ namespace Placeholdernamespace.Battle.Entities
         {
             if (move != null)
             {
-                stats.SubtractMovementPoints(move.movementCost);
+                //stats.SubtractMovementPoints(move.movementCost);
+                stats.SetMutableStat(StatType.Movement, move.movementPointsAfterMove);
+                stats.SubtractAPPoints(move.apCost);
                 path = move.path;
                 if (path.Count > 0)
                 {

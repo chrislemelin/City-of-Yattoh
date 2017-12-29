@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 114868530270863054}
   - component: {fileID: 114631525846542012}
   m_Layer: 0
-  m_Name: p2
+  m_Name: BoardEntity 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -203,7 +203,7 @@ MonoBehaviour:
         display: 1
       maxHealth:
         type: 6
-        value: 1
+        value: 5
         display: 1
       movement:
         type: 0
