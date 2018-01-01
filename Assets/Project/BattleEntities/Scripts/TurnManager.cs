@@ -5,6 +5,8 @@ using System;
 using System.Linq;
 using Placeholdernamespace.Battle.Entities;
 using Placeholdernamespace.Battle.Entities.AttributeStats;
+using Placeholdernamespace.Battle.UI;
+using Placeholdernamespace.Battle.Interaction;
 
 namespace Placeholdernamespace.Battle.Managers
 {
@@ -26,10 +28,17 @@ namespace Placeholdernamespace.Battle.Managers
         private List<BoardEntity> enities = new List<BoardEntity>();
         private List<BoardEntity> turnQueue = new List<BoardEntity>();
         private int queueLength = 5;
+        private Profile profile;
+        private BoardEntitySelector boardEntitySelector;
 
         public void startGame()
         {
             NextTurn();
+        }
+
+        public void init(BoardEntitySelector boardEntitySelector)
+        {
+            this.boardEntitySelector = boardEntitySelector;
         }
 
         public void AddBoardEntity(BoardEntity boardEntity)
@@ -51,6 +60,7 @@ namespace Placeholdernamespace.Battle.Managers
             {
                 ReCalcQueue();
             }
+            boardEntitySelector.setSelectedBoardEntity(null);
             currentBoardEntity = turnQueue[0];
             turnQueue.RemoveAt(0);
             UpdateGui();

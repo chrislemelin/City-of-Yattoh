@@ -51,7 +51,15 @@ namespace Placeholdernamespace.Battle.UI
 
         }
 
-        private void processBoardEntity(BoardEntity boardEntity)
+        public void PreviewMove(BoardEntity boardEntity, Move move)
+        {
+            Stats stats = boardEntity.Stats.GetCopy();
+            stats.SubtractAPPoints(move.apCost);
+            stats.SetMutableStat(StatType.Movement, move.movementPointsAfterMove);
+            processBoardEntity(boardEntity, stats);
+        }
+
+        private void processBoardEntity(BoardEntity boardEntity, Stats previewStats = null)
         {
             UpdateProfilePic(boardEntity.ProfileImage);
             foreach (GameObject g in texts)
@@ -59,7 +67,7 @@ namespace Placeholdernamespace.Battle.UI
                 Destroy(g);
             }
             AddTitle(boardEntity.Name);
-            EvaluateStats(boardEntity);
+            EvaluateStats(boardEntity, previewStats);
         }
 
         private void RefreshProfile(object sender)
@@ -67,14 +75,38 @@ namespace Placeholdernamespace.Battle.UI
             processBoardEntity(currentBoardEntity);
         }
 
-        private void EvaluateStats(BoardEntity boardEntity)
+        private void EvaluateStats(BoardEntity boardEntity, Stats previewStats = null)
         {
             foreach(StatType type in displayOrder)
             {
                 Stat stat = boardEntity.Stats.GetStatInstance().GetStat(type);
                 string text = boardEntity.Stats.StatToString(type);
+                if(previewStats != null)
+                {
+                    Color? col = GetStatChangeColor(boardEntity, previewStats, type);
+                    if(col != null)
+                    {
+                        text += ColorText((Color)col, " -> " + previewStats.StatValueString(type));
+                    }
+                }
                 AddText(text);
             }
+        }
+        
+        private Color? GetStatChangeColor(BoardEntity boardEntity, Stats previewStats, StatType type)
+        {
+            int before = boardEntity.Stats.GetDefaultStat(type).Value;
+            int after = previewStats.GetDefaultStat(type).Value;
+            if(before > after)
+            {
+                return Color.red;
+            }
+            if(after > before)
+            {
+                return Color.green;
+            }
+            return null;      
+
         }
 
         private void AddTitle(string text)
@@ -99,5 +131,9 @@ namespace Placeholdernamespace.Battle.UI
             profilePic.SetActive(sprite != null);
         }
 
+        private string ColorText(Color col, string text)
+        {
+            return "<#" + ColorUtility.ToHtmlStringRGB(col) + ">" + text + "</color>";
+        }
     }
 }

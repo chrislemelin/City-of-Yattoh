@@ -47,7 +47,8 @@ namespace Placeholdernamespace.Battle.Interaction
         }
 
         public void setSelectedBoardEntity(BoardEntity boardEntity)
-        {             
+        {
+            tileSelectionManager.CancelSelection();
             profile.UpdateProfile(boardEntity);
             selectedBoardEntity = boardEntity;
             buildMoveOptions();
@@ -79,10 +80,17 @@ namespace Placeholdernamespace.Battle.Interaction
                             OnHover = m.path,
                             HighlightColor = col,
                             HoverColor = hoverColor,
-                            ReturnObject = m
+                            ReturnObject = m,
+                            OnHoverAction = (() => profile.PreviewMove(selectedBoardEntity, m))
                         });
-                    }                  
-
+                    }
+                    
+                    options.Add(new TileSelectOption()
+                    {
+                        Selection = selectedBoardEntity.GetTile(),
+                        OnHoverAction = (() => profile.UpdateProfile(selectedBoardEntity))
+                    });
+                    
                     tileSelectionManager.SelectTile(selectedBoardEntity, options, sendMoveToBoardEntity);               
                     skillSelector.SetBoardEntity((CharacterBoardEntity)selectedBoardEntity);
                     skillSelector.SetSkills(selectedBoardEntity.Skills);

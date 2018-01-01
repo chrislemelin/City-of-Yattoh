@@ -10,19 +10,8 @@ using UnityEngine;
 
 namespace Placeholdernamespace.Battle.Entities.AI
 {
-    public class EnemyAIBasic : MonoBehaviour
+    public class EnemyAIBasic : EnemyAi
     {
-        private TileManager tileManager;
-        private List<Action> actionQueue;
-        CharacterBoardEntity characterBoardEntity;
-        Skill skill;
-
-        public void Init(TileManager tileManager, CharacterBoardEntity characterBoardEntity)
-        {
-            this.tileManager = tileManager;
-            this.characterBoardEntity = characterBoardEntity;
-        }
-
         public void ExecuteTurn()
         {
             List<Move> moves = characterBoardEntity.MoveSet();

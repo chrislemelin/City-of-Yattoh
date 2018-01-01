@@ -47,7 +47,7 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
             baseStats.UseDefaults();
             foreach (StatType type in mutableStatSet)
             {
-                mutableStats[type] = new Stat(GetStatInstance().GetStat(StatType.AP), 0);
+                mutableStats[type] = new Stat(GetStatInstance().GetStat(type), 0);
             }
             mutableStats[StatType.Health] = new Stat(GetStatInstance().GetStat(StatType.Health));
 
@@ -66,6 +66,19 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
 
         }
 
+        public Stats GetCopy()
+        {
+            // a clone for the different previews,
+            Stats stats = new Stats();
+            stats.modifiers = new List<StatModifier>();
+            foreach(StatModifier mod in modifiers)
+            {
+                stats.modifiers.Add(mod);
+            }
+            stats.baseStats = baseStats;
+            stats.mutableStats = MutableStats;
+            return stats;
+        }
 
         public void NewTurn()
         {
@@ -90,6 +103,19 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
         public Stat GetNonMuttableStat(StatType type)
         {
             return GetStatInstance().GetStat(type);
+        }
+
+        /// <summary>
+        /// get mutable stat if it is mutable, else gets the non mutable stat
+        /// </summary>
+        /// <returns></returns>
+        public Stat GetDefaultStat(StatType type)
+        {
+            if(mutableStats.ContainsKey(type))
+            {
+                return GetMutableStat(type);
+            }
+            return GetNonMuttableStat(type);
         }
 
         public void SetMutableStat(StatType type, int value)
@@ -129,7 +155,12 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
 
         public string StatToString(StatType type)
         {
-            if(type == StatType.Movement || type == StatType.Health || type == StatType.AP)
+            return StatTypeToString(type) + ":" + StatValueString(type);            
+        }
+
+        public string StatValueString(StatType type)
+        {
+            if(mutableStats.ContainsKey(type))
             {
                 return MutableStatString(GetMutableStat(type), GetStatInstance().GetStat(type));
             }
@@ -141,12 +172,12 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
 
         private string StatString(Stat stat)
         {
-            return (StatTypeToString(stat.Type) + ":" + stat.Value);
+            return (stat.Value+"");
         }
 
         private string MutableStatString(Stat stat, Stat maxStat)
         {
-            return (StatTypeToString(stat.Type) + ":" + stat.Value + "/" + maxStat.Value);
+            return (stat.Value + "/" + maxStat.Value);
         }
 
         public static String StatTypeToString(StatType type)

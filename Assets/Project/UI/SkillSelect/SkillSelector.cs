@@ -74,6 +74,7 @@ namespace Placeholdernamespace.Battle.Interaction
             tileSelectionManager.CancelSelection();
             ClearButtonList();
             buildCancelSkillButton();
+            
             tileSelectionManager.SelectTile(boardEntity, skill.TileSet(), ExecuteSkill, Color.blue, Color.cyan);
         }
 
