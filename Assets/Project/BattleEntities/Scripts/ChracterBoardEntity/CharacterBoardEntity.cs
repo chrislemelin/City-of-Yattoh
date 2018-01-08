@@ -120,8 +120,8 @@ namespace Placeholdernamespace.Battle.Entities
             stats.NewTurn();
             if(team == Team.Enemy)
             {
-                GetComponent<EnemyAIBasic>().ExecuteTurn();
-                turnManager.NextTurn();
+                GetComponent<EnemyAIBasic>().ExecuteTurn(turnManager.NextTurn);
+                //turnManager.NextTurn();
             }
             
         }

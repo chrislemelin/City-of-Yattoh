@@ -7,13 +7,14 @@ using Placeholdernamespace.Battle.Entities;
 using Placeholdernamespace.Battle.Entities.AttributeStats;
 using Placeholdernamespace.Battle.UI;
 using Placeholdernamespace.Battle.Interaction;
+using TMPro;
 
 namespace Placeholdernamespace.Battle.Managers
 {
     public class TurnManager : MonoBehaviour
     {
 
-        public GUIText display;
+        public TextMeshProUGUI display;
 
         public delegate void NewTurnHandler(object sender, EventArgs e);
         public event NewTurnHandler OnNewTurn;
@@ -30,15 +31,17 @@ namespace Placeholdernamespace.Battle.Managers
         private int queueLength = 5;
         private Profile profile;
         private BoardEntitySelector boardEntitySelector;
+        private TileSelectionManager tileSelectionManager;
 
         public void startGame()
         {
             NextTurn();
         }
 
-        public void init(BoardEntitySelector boardEntitySelector)
+        public void init(BoardEntitySelector boardEntitySelector, TileSelectionManager tileSelectionManager)
         {
             this.boardEntitySelector = boardEntitySelector;
+            this.tileSelectionManager = tileSelectionManager;
         }
 
         public void AddBoardEntity(BoardEntity boardEntity)
@@ -56,6 +59,7 @@ namespace Placeholdernamespace.Battle.Managers
 
         public void NextTurn()
         {
+            tileSelectionManager.CancelSelection();
             if (turnQueue.Count == 0)
             {
                 ReCalcQueue();
@@ -77,9 +81,9 @@ namespace Placeholdernamespace.Battle.Managers
         private void UpdateGui()
         {
             string newText = "";
-            foreach (BoardEntity entity in turnQueue)
+            foreach (BoardEntity entity in QueueDisplayHelper())
             {
-                newText += entity.name + '\n';
+                newText += entity.Name + '\n';
             }
             if (display != null)
             {
@@ -89,10 +93,37 @@ namespace Placeholdernamespace.Battle.Managers
 
         private void ReCalcQueue()
         {
-            turnQueue.Clear();
-            turnQueue.AddRange(enities);
-            turnQueue.OrderBy(x => x.Stats.GetStatInstance().GetStat(StatType.Speed));
-            UpdateGui();
+            turnQueue = ReCalcQueueHelper();
+        }
+
+        private List<BoardEntity> ReCalcQueueHelper()
+        {
+            List<BoardEntity> returnQueue = new List<BoardEntity>();
+            returnQueue.AddRange(enities);
+            returnQueue.OrderBy(x => x.Stats.GetStatInstance().GetStat(StatType.Speed));
+            return returnQueue;
+        }
+
+        private List<BoardEntity> QueueDisplayHelper()
+        {
+            List<BoardEntity> returnQueue = new List<BoardEntity>();
+            while(returnQueue.Count < queueLength)
+            {
+                if(turnQueue.Count > returnQueue.Count)
+                {
+                    returnQueue.AddRange(turnQueue);
+                }
+                else
+                {
+                    List<BoardEntity> helper = ReCalcQueueHelper();
+                    returnQueue.AddRange(helper);
+                }
+            }
+            if(returnQueue.Count > queueLength)
+            {
+                returnQueue.RemoveAt(queueLength);
+            }
+            return returnQueue;
         }
     }
 }

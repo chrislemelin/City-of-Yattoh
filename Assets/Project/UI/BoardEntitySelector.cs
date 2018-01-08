@@ -50,6 +50,7 @@ namespace Placeholdernamespace.Battle.Interaction
         {
             tileSelectionManager.CancelSelection();
             profile.UpdateProfile(boardEntity);
+     
             selectedBoardEntity = boardEntity;
             buildMoveOptions();
             if(boardEntity == null)

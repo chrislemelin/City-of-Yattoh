@@ -14,6 +14,7 @@ namespace Placeholdernamespace.Battle.Interaction
         private Dictionary<Tile, TileSelectOption> possibleTiles = new Dictionary<Tile, TileSelectOption>();
 
         public bool active = true;
+        private bool tileSelectOptionsContainBE = false;
         private bool skillSelectorActive;
         public List<PathOnClick> glowpath = new List<PathOnClick>();
 
@@ -36,7 +37,7 @@ namespace Placeholdernamespace.Battle.Interaction
 
         public void TileClicked(PathOnClick pathOnClick)
         {
-            if (selectionCallBack != null)
+            if (selectionCallBack != null && active)
             {
                 BoardEntity tempSelectedEntity = selectedEntity;
                 selectedEntity = null;
@@ -60,17 +61,19 @@ namespace Placeholdernamespace.Battle.Interaction
                 else
                 {
                     tempSelectOption(null);
+                    active = false;
                     if (pathOnClick != null && pathOnClick != tempSelectedEntity.GetTile().PathOnClick)
                     {
                         pathOnClick.OnMouseUp();
                     }
+                    active = true;
                 }                                    
             }
         }
 
         public void CancelSelection()
         {
-            profile.UpdateProfile(selectedEntity);
+            //profile.UpdateProfile(selectedEntity);
             TileClicked(null);
         }
 
@@ -159,7 +162,7 @@ namespace Placeholdernamespace.Battle.Interaction
                 if (boardEntity != null)
                 {
                     selectedEntity = boardEntity;
-                    glow(selectedEntity.GetTile().PathOnClick);
+                    glow(selectedEntity.GetTile().PathOnClick, defaultHoverColor);
                 }
 
                 // highlight possible moves
@@ -194,12 +197,16 @@ namespace Placeholdernamespace.Battle.Interaction
             }
         }
 
-        private void glow(PathOnClick pathOnClick)
+        private void glow(PathOnClick pathOnClick, Color? overrideColor = null)
         {
-            Color? hoverColor = defaultBoardEntityHighlightColor;
-            if(possibleTiles.ContainsKey(pathOnClick.Tile))
+            Color? hoverColor = overrideColor;
+            if (hoverColor == null)
             {
-                hoverColor = possibleTiles[pathOnClick.Tile].HoverColor;
+                hoverColor = defaultBoardEntityHighlightColor;
+                if (possibleTiles.ContainsKey(pathOnClick.Tile))
+                {
+                    hoverColor = possibleTiles[pathOnClick.Tile].HoverColor;
+                }
             }
             if(hoverColor != null)
             {
@@ -210,19 +217,10 @@ namespace Placeholdernamespace.Battle.Interaction
 
         private void unGlow(PathOnClick tile)
         {
-            if(possibleTiles.ContainsKey(tile.Tile))
-            {
-                Color? hoverColor = possibleTiles[tile.Tile].HoverColor;
-                if (hoverColor != null)
-                {
-                    tile.GlowManager.TurnOff(this);
-                }
-                unGlowBoardEntity(tile);
-            }
-            else
-            {
-                unGlowBoardEntity(tile);
-            }
+    
+            tile.GlowManager.TurnOff(this);
+            unGlowBoardEntity(tile);
+            
         }
 
         private void glowBoardEntity(PathOnClick tile)
@@ -284,6 +282,7 @@ namespace Placeholdernamespace.Battle.Interaction
             glowpath = newPath;
 
         }
+
     }
 
     public class TileSelectOption

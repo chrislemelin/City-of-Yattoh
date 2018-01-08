@@ -12,8 +12,11 @@ namespace Placeholdernamespace.Battle.Entities.AI
 {
     public class EnemyAIBasic : EnemyAi
     {
-        public void ExecuteTurn()
+        private Action callBack;
+
+        public void ExecuteTurn(Action callBack)
         {
+            this.callBack = callBack;
             List<Move> moves = characterBoardEntity.MoveSet();
             Skill skill = characterBoardEntity.BasicAttack;
             List<AiMove> aiMoves = new List<AiMove>();
@@ -71,6 +74,11 @@ namespace Placeholdernamespace.Battle.Entities.AI
                 Action a = actionQueue[0];
                 actionQueue.RemoveAt(0);
                 a();
+            }
+            else
+            {
+                if (callBack != null)
+                    callBack();
             }
         }
 

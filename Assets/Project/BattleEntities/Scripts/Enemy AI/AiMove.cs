@@ -53,7 +53,7 @@ namespace Placeholdernamespace.Battle.Entities.AI
         public void AddAttackAction(Skill skill, Tile t, Action callBack)
         {
             SkillReport report = skill.TheoreticalAction(t);
-            if(report.TargetAfter[AttributeStats.StatType.Health].Value == 0 )
+            if(report.TargetAfter.MutableStats[AttributeStats.StatType.Health].Value == 0 )
             {
                 scoredKill = true;
             }

@@ -8,13 +8,12 @@ using UnityEngine.UI;
 using UnityEngine.Animations;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using TMPro;
 
+public class DialogueManager : MonoBehaviour {
 
-
-public class DialogueManager: MonoBehaviour {
-
-	public Text NameText;
-	public Text DialogueText;
+	public TextMeshProUGUI NameText;
+	public TextMeshProUGUI DialogueText;
     public GameObject DisplayPanel;
     public GameObject OptionButtonPrefab;
 
@@ -23,7 +22,7 @@ public class DialogueManager: MonoBehaviour {
     private List<GameObject> optionsButtons = new List<GameObject>();
 	private DialogueFrame currentFrame;
 
-    private const string CLOSE_STATE = "Base Layer.DialougeBox_Close";
+    private const string CLOSE_STATE = "Base Layer.DialogueBox_Close";
 
 	public void Start()
 	{
@@ -58,7 +57,13 @@ public class DialogueManager: MonoBehaviour {
 	private void endDialogue()
 	{
 		animator.SetBool ("isOpen", false);
-	}
+        DialogueText.gameObject.SetActive(false);
+        foreach(GameObject button in optionsButtons)
+        {
+            Destroy(button);
+        }
+
+    }
 
     private IEnumerator executeFrameCoroutines()
     {

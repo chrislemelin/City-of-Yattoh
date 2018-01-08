@@ -105,9 +105,10 @@ namespace Placeholdernamespace.Battle.Interaction
         {
             if(tile != null)
             {
+                skillSelected();
                 selectedSkill.Action(tile.Selection);
                 selectedSkill = null;
-                skillSelected();
+                
             }
             else
             {

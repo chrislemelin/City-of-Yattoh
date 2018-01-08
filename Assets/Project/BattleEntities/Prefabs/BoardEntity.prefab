@@ -225,8 +225,9 @@ MonoBehaviour:
         type: 0
         value: 2
         display: 0
-  name: 1234567890123456
+  name: Jaz
   speed: 1
+  enemyAIBasic: {fileID: 0}
 --- !u!114 &114910173449349550
 MonoBehaviour:
   m_ObjectHideFlags: 1

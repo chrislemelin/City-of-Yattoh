@@ -80,6 +80,14 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
             return stats;
         }
 
+        public void SetStats(Stats stats)
+        {
+            modifiers = stats.modifiers;
+            baseStats = stats.baseStats;
+            mutableStats = stats.mutableStats;
+
+        }
+
         public void NewTurn()
         {
             SetMutableStat(StatType.Movement, 0);

@@ -8,32 +8,31 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 {
     public class SkillReport {
 
-        private Dictionary<StatType, Stat> sourceBefore;
-        public Dictionary<StatType, Stat> SourceBefore
+        private Stats sourceBefore;
+        public Stats SourceBefore
         {
             get { return sourceBefore; }
         }
 
-        private Dictionary<StatType, Stat> sourceAfter;
-        public Dictionary<StatType, Stat> SourceAfter
+        private Stats sourceAfter;
+        public Stats SourceAfter
         {
             get { return sourceAfter; }
         }
 
-        private Dictionary<StatType, Stat> targetBefore;
-        public Dictionary<StatType, Stat> TargetBefore
+        private Stats targetBefore;
+        public Stats TargetBefore
         {
             get { return targetBefore; }
         }
 
-        private Dictionary<StatType, Stat> targetAfter;
-        public Dictionary<StatType, Stat> TargetAfter
+        private Stats targetAfter;
+        public Stats TargetAfter
         {
             get { return targetAfter; }
         }
 
-        public SkillReport(Dictionary<StatType, Stat> sourceBefore, Dictionary<StatType, Stat> sourceAfter,
-            Dictionary<StatType, Stat> targetBefore, Dictionary<StatType, Stat> targetAfter)
+        public SkillReport(Stats sourceBefore, Stats sourceAfter, Stats targetBefore, Stats targetAfter)
         {
             this.sourceBefore = sourceBefore;
             this.sourceAfter = sourceAfter;

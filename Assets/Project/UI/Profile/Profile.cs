@@ -18,8 +18,6 @@ namespace Placeholdernamespace.Battle.UI
         [SerializeField]
         private GameObject panel;
 
-
-        public GameObject obj;
         private List<StatType> displayOrder = new List<StatType>() { StatType.Health, StatType.AP, StatType.Movement, StatType.Strength, StatType.Armour, StatType.Speed, StatType.Inteligence };
 
         private List<GameObject> texts = new List<GameObject>();
@@ -27,7 +25,7 @@ namespace Placeholdernamespace.Battle.UI
 
         public void Start()
         {
-            gameObject.SetActive(false);
+            //gameObject.SetActive(false);
             //GetComponent<VerticalLayoutGroup>()
         }
 

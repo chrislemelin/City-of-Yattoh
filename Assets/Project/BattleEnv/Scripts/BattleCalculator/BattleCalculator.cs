@@ -14,26 +14,28 @@ namespace Placeholdernamespace.Battle.Calculator
         public void DoDamage(CharacterBoardEntity source, Skill skill, CharacterBoardEntity target, DamagePackage damage)
         {
             SkillReport skillReport = ExecuteSkillHelper(source, skill, target, damage);
+            //source.Stats = skillReport.SourceAfter;
+
             if (skillReport != null)
             {
-                foreach (StatType type in skillReport.SourceAfter.Keys)
+                foreach (StatType type in skillReport.SourceAfter.MutableStats.Keys)
                 {
-                    source.Stats.SetMutableStat(type, skillReport.SourceAfter[type].Value);
+                    source.Stats.SetMutableStat(type, skillReport.SourceAfter.MutableStats[type].Value);
                 }
-                foreach (StatType type in skillReport.TargetAfter.Keys)
+                foreach (StatType type in skillReport.TargetAfter.MutableStats.Keys)
                 {
-                    target.Stats.SetMutableStat(type, skillReport.TargetAfter[type].Value);
+                    target.Stats.SetMutableStat(type, skillReport.TargetAfter.MutableStats[type].Value);
                 }
             }
         }
 
         public SkillReport ExecuteSkillHelper(CharacterBoardEntity source, Skill skill, CharacterBoardEntity target, DamagePackage damage)
         {
-            Dictionary<StatType, Stat> sourceBefore = source.Stats.MutableStats;
-            Dictionary<StatType, Stat> sourceAfter = source.Stats.MutableStats;
+            Stats sourceBefore = source.Stats.GetCopy();
+            Stats sourceAfter = source.Stats.GetCopy();
 
-            Dictionary<StatType, Stat> targetBefore = target.Stats.MutableStats;
-            Dictionary<StatType, Stat> targetAfter = target.Stats.MutableStats;
+            Stats targetBefore = target.Stats.GetCopy();
+            Stats targetAfter = target.Stats.GetCopy();
 
             TakeDamageReturn usingTakeDamageReturn = TakeDamageReturn.Normal;
             List<Passive> passives = target.Passives;
@@ -47,7 +49,7 @@ namespace Placeholdernamespace.Battle.Calculator
             {
                 case TakeDamageReturn.Normal:
                     int newTargetHealth = HealthAfterDamage(source, target, damage);
-                    targetAfter[StatType.Health] = new Stat(targetAfter[StatType.Health], newTargetHealth);
+                    targetAfter.SetMutableStat(StatType.Health, newTargetHealth);
                     return new SkillReport(sourceBefore, sourceAfter, targetBefore, targetAfter);
 
                 case TakeDamageReturn.NoDamage:
