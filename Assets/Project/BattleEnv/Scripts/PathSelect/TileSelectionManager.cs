@@ -1,4 +1,5 @@
 ﻿using Placeholdernamespace.Battle.Entities;
+using Placeholdernamespace.Battle.Entities.AttributeStats;
 using Placeholdernamespace.Battle.Env;
 using Placeholdernamespace.Battle.Managers;
 using Placeholdernamespace.Battle.UI;
@@ -210,7 +211,7 @@ namespace Placeholdernamespace.Battle.Interaction
             }
             if(hoverColor != null)
             {
-                pathOnClick.GlowManager.TurnOn(this, (Color)hoverColor);
+                pathOnClick.ColorEffectManager.TurnOn(this, (Color)hoverColor);
             }
             glowBoardEntity(pathOnClick);
         }
@@ -218,7 +219,7 @@ namespace Placeholdernamespace.Battle.Interaction
         private void unGlow(PathOnClick tile)
         {
     
-            tile.GlowManager.TurnOff(this);
+            tile.ColorEffectManager.TurnOff(this);
             unGlowBoardEntity(tile);
             
         }
@@ -228,15 +229,15 @@ namespace Placeholdernamespace.Battle.Interaction
             BoardEntity boardEntity = tile.Tile.BoardEntity;
             if (boardEntity != null)
             {
-                boardEntity.GetComponentInChildren<GlowManager>().TurnOn(this, defaultBoardEntityHighlightColor);
+                //boardEntity.GetComponentInChildren<GlowManager>().TurnOn(this, defaultBoardEntityHighlightColor);
             }
         }
 
         public void GlowBoardEntity(BoardEntity boardEntity)
         {
             if (boardEntity != null)
-            {
-                boardEntity.GetComponentInChildren<GlowManager>().TurnOn(this, defaultBoardEntityHighlightColor);
+            {                
+                //boardEntity.GetComponentInChildren<GlowManager>().TurnOn(this, defaultBoardEntityHighlightColor);
             }
         }
 
@@ -245,7 +246,7 @@ namespace Placeholdernamespace.Battle.Interaction
             BoardEntity boardEntity = tile.Tile.BoardEntity;
             if (boardEntity != null)
             {
-                boardEntity.GetComponentInChildren<GlowManager>().TurnOff(this);
+                //boardEntity.GetComponentInChildren<GlowManager>().TurnOff(this);
             }
         }
 
@@ -253,7 +254,7 @@ namespace Placeholdernamespace.Battle.Interaction
         {
             if (boardEntity != null)
             {
-                boardEntity.GetComponentInChildren<GlowManager>().TurnOff(this);
+                //boardEntity.GetComponentInChildren<GlowManager>().TurnOff(this);
             }
         }
 
@@ -293,6 +294,7 @@ namespace Placeholdernamespace.Battle.Interaction
         public Color? HighlightColor;
         public object ReturnObject;
         public Action OnHoverAction;
+        public Stats DisplayStats;
 
     }
 }

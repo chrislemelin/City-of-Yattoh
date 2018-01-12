@@ -15,6 +15,11 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
         public delegate void UpdateState();
         public event UpdateState updateStatHandler;
         private List<StatModifier> modifiers = new List<StatModifier>();
+        private BoardEntity boardEntity;
+        public BoardEntity BoardEntity
+        {
+            get { return boardEntity; }
+        }
 
         /// <summary>
         /// these are the stats that can change without modifiers, things like health and movement points
@@ -42,8 +47,9 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
             get { return baseStats; }
         }
 
-        public void Start()
+        public void Start(BoardEntity boardEntity)
         {
+            this.boardEntity = boardEntity;
             baseStats.UseDefaults();
             foreach (StatType type in mutableStatSet)
             {
@@ -77,6 +83,7 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
             }
             stats.baseStats = baseStats;
             stats.mutableStats = MutableStats;
+            stats.boardEntity = boardEntity;
             return stats;
         }
 

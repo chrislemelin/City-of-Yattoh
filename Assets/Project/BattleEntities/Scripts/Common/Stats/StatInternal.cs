@@ -13,7 +13,6 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats.Internal
     [System.Serializable]
     public class StatInternal
     {
-        [SerializeField]
         private StatType type;
         public StatType Type
         {

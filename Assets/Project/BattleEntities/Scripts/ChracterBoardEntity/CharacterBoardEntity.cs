@@ -52,13 +52,28 @@ namespace Placeholdernamespace.Battle.Entities
             basicAttack = new BasicAttack();
             basicAttack.Init(tileManager, this, battleCalculator);
             skills.Add(basicAttack);
+
+
+            List<SkillModifier> skillModifiers = new List<SkillModifier>();
+            skillModifiers.Add(new SkillModifier(SkillModifierType.Power, SkillModifierApplication.Add, 1));
+            passives.Add(new PassiveGeneric("Damage Buff", "Increases damage on skills by one", skillModifiers));
         }
 
         public override List<Move> MoveSet()
         {
             return tileManager.DFSMoves(GetTile().Position, this, team: team);
         }
-    
+        
+        public List<SkillModifier> GetSkillModifier(Skill skill)
+        {
+            List<SkillModifier> skillModifiers = new List<SkillModifier>();
+            foreach(Passive passive in passives)
+            {
+                skillModifiers.AddRange(passive.GetSkillModifiers(skill));
+            }
+            return skillModifiers;
+        }
+
         private void checkAtTarget()
         {
             if (transform.position == target.transform.position)

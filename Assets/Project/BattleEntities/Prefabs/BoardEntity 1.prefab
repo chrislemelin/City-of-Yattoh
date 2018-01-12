@@ -194,35 +194,27 @@ MonoBehaviour:
   stats:
     baseStats:
       armour:
-        type: 5
         value: 1
-        display: 1
+        display: 0
       inteligence:
-        type: 0
-        value: 2
-        display: 1
+        value: 1
+        display: 0
       maxHealth:
-        type: 6
-        value: 5
-        display: 1
-      movement:
-        type: 0
-        value: 4
-        display: 1
-      speed:
-        type: 0
-        value: 5
-        display: 1
-      strength:
-        type: 0
-        value: 3
-        display: 1
-      ap:
-        type: 0
         value: 8
-        display: 1
+        display: 0
+      movement:
+        value: 3
+        display: 0
+      speed:
+        value: 4
+        display: 0
+      strength:
+        value: 4
+        display: 0
+      ap:
+        value: 8
+        display: 0
       apGain:
-        type: 0
         value: 2
         display: 0
   name: 1234567890123456

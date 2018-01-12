@@ -204,7 +204,7 @@ namespace Placeholdernamespace.Battle.Env
             {
                 Tile currentTile = queue.Dequeue();
 
-                List<Tile> neighbors = GetAllTilesNear(currentTile.Position, 1, sortByDistance: true);
+                List<Tile> neighbors = GetAllAdjacentTiles(currentTile.Position);
                 neighbors.RemoveAll(
                     x => path.ContainsKey(x)
                 );
@@ -217,7 +217,6 @@ namespace Placeholdernamespace.Battle.Env
                         path.Add(nextTile, currentTile);
 
                         Tile lastTile = endTile;
-                        tiles.Insert(0, endTile);
                         while (lastTile != startTile)
                         {
                             tiles.Insert(0, path[lastTile]);
@@ -344,10 +343,27 @@ namespace Placeholdernamespace.Battle.Env
                     tiles.Add(move);
                 }
                 visitingTiles = newVisitingTiles;
+                
+            }
+
+            foreach (Move t in tiles)
+            {
+                if (t.destination.Position.Equals(new Position(1, 0)))
+                {
+                    int a = 0;
+                }
             }
 
             //cannot end on an already occupied tile
             tiles.RemoveAll(x => (x.destination.BoardEntity));
+
+            for (int count = 0; count < tiles.Count; count ++)
+            {
+                if (tiles[count].destination.Position.Equals(new Position(1, 0)))
+                {
+                    int a = 0;
+                }
+            }
 
             return tiles;
         }

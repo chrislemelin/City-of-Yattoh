@@ -1,5 +1,7 @@
 ﻿using Placeholdernamespace.Battle.Entities;
 using Placeholdernamespace.Battle.Entities.AttributeStats;
+using Placeholdernamespace.Battle.Entities.Passives;
+using Placeholdernamespace.Common.UI;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -16,11 +18,17 @@ namespace Placeholdernamespace.Battle.UI
         [SerializeField]
         private GameObject textGameObject;
         [SerializeField]
-        private GameObject panel;
+        private GameObject profilePanel;
+
+        [SerializeField]
+        private GameObject passivePanel;
+        [SerializeField]
+        private GameObject passiveGameObject;
 
         private List<StatType> displayOrder = new List<StatType>() { StatType.Health, StatType.AP, StatType.Movement, StatType.Strength, StatType.Armour, StatType.Speed, StatType.Inteligence };
 
         private List<GameObject> texts = new List<GameObject>();
+        private List<GameObject> passives = new List<GameObject>();
         private BoardEntity currentBoardEntity;
 
         public void Start()
@@ -29,7 +37,7 @@ namespace Placeholdernamespace.Battle.UI
             //GetComponent<VerticalLayoutGroup>()
         }
 
-        public void UpdateProfile(BoardEntity boardEntity)
+        public void UpdateProfile(BoardEntity boardEntity, Stats previewStats = null)
         {
             if (currentBoardEntity != null)
             {
@@ -44,7 +52,7 @@ namespace Placeholdernamespace.Battle.UI
             {
                 currentBoardEntity.updateStatHandler += RefreshProfile;
                 gameObject.SetActive(true);
-                processBoardEntity(boardEntity);
+                processBoardEntity(boardEntity, previewStats);
             }
 
         }
@@ -64,13 +72,34 @@ namespace Placeholdernamespace.Battle.UI
             {
                 Destroy(g);
             }
+            foreach (GameObject g in passives)
+            {
+                Destroy(g);
+            }
             AddTitle(boardEntity.Name);
             EvaluateStats(boardEntity, previewStats);
+            if (boardEntity is CharacterBoardEntity)
+            {
+                AddPassives(((CharacterBoardEntity)boardEntity).Passives);
+            }
         }
 
         private void RefreshProfile(object sender)
         {
             processBoardEntity(currentBoardEntity);
+        }
+
+        private void AddPassives(List<Passive> passives)
+        {
+            foreach(Passive passive in passives)
+            {
+                GameObject passiveObject = Instantiate(passiveGameObject);
+                passiveObject.GetComponent<TooltipSpawner>().Init(passive.GetTitle, passive.GetDescription);
+                passiveObject.transform.SetParent(passivePanel.transform);
+                this.passives.Add(passiveObject);
+
+            }
+            
         }
 
         private void EvaluateStats(BoardEntity boardEntity, Stats previewStats = null)
@@ -87,7 +116,7 @@ namespace Placeholdernamespace.Battle.UI
                         text += ColorText((Color)col, " -> " + previewStats.StatValueString(type));
                     }
                 }
-                AddText(text);
+                AddText(text, stat.ToolTip);
             }
         }
         
@@ -111,15 +140,16 @@ namespace Placeholdernamespace.Battle.UI
         {
             GameObject titleName = Instantiate(titleGameObject);   
             titleName.GetComponent<TextMeshProUGUI>().text = text;
-            titleName.transform.SetParent(panel.transform, false);
+            titleName.transform.SetParent(profilePanel.transform, false);
             texts.Add(titleName);
         }
 
-        private void AddText(string text)
+        private void AddText(string text, string tooltip = null)
         {
             GameObject movementStat = Instantiate(textGameObject);
+            movementStat.GetComponent<TooltipSpawner>().Init(() => { return ""; }, () => { return tooltip; });
             movementStat.GetComponent<TextMeshProUGUI>().text = text;
-            movementStat.transform.SetParent(panel.transform, false);
+            movementStat.transform.SetParent(profilePanel.transform, false);
             texts.Add(movementStat);
         }
 

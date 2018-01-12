@@ -23,6 +23,10 @@ namespace Placeholdernamespace.Battle.Entities.AI
         /// how much ap will this entire turn cost
         /// </summary>
         private int apCost = 0;
+        public int ApCost
+        {
+            get { return apCost; }
+        }
 
         /// <summary>
         /// how many movement points will this entire turn cost?
@@ -64,6 +68,7 @@ namespace Placeholdernamespace.Battle.Entities.AI
         public void AddMoveAction(CharacterBoardEntity boardEntity, Move move, Action callBack)
         {
             movementCost += move.movementCost;
+            apCost += move.apCost;
             actions.Add(() => boardEntity.ExecuteMove(move, callBack));           
         }
 
@@ -92,13 +97,13 @@ namespace Placeholdernamespace.Battle.Entities.AI
                     return returnInt;
                 }
 
-                returnInt = movementCost.CompareTo(objMove.movementCost);
-                if (returnInt != 0 && targetScore != int.MaxValue)
+                returnInt = movementScore.CompareTo(objMove.movementScore);
+                if (returnInt != 0)
                 {
                     return returnInt;                   
                 }
 
-                returnInt = movementScore.CompareTo(objMove.movementScore);
+                returnInt = movementCost.CompareTo(objMove.movementCost);
                 return returnInt;
             }
             else

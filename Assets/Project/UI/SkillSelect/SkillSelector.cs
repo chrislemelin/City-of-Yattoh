@@ -2,6 +2,7 @@
 using Placeholdernamespace.Battle.Entities.Skills;
 using Placeholdernamespace.Battle.Env;
 using Placeholdernamespace.Battle.Interaction;
+using Placeholdernamespace.Battle.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,6 +25,7 @@ namespace Placeholdernamespace.Battle.Interaction
         private List<Skill> skills;
         private Skill selectedSkill;
         private Action skillSelected;
+        private Profile profile;
 
         public Skill SelectedSkill
         {
@@ -33,11 +35,12 @@ namespace Placeholdernamespace.Battle.Interaction
         private TileSelectionManager tileSelectionManager;
         private Action selectionCancel;    
 
-        public void Init(TileSelectionManager tileSelectionManager, Action selectionCancel, Action skillSelected)
+        public void Init(TileSelectionManager tileSelectionManager, Action selectionCancel, Action skillSelected, Profile profile)
         {
             this.tileSelectionManager = tileSelectionManager;
             this.selectionCancel = selectionCancel;
             this.skillSelected = skillSelected;
+            this.profile = profile;
         }
 
         public void SetBoardEntity(CharacterBoardEntity boardEntity)
@@ -74,8 +77,15 @@ namespace Placeholdernamespace.Battle.Interaction
             tileSelectionManager.CancelSelection();
             ClearButtonList();
             buildCancelSkillButton();
+            List<TileSelectOption> tileSelectOptions = skill.TileOptionSet();
+            foreach(TileSelectOption option in tileSelectOptions)
+            {
+                option.OnHoverAction = () => profile.UpdateProfile(option.DisplayStats.BoardEntity, option.DisplayStats);
+            }
+
+            tileSelectionManager.SelectTile(boardEntity, tileSelectOptions, ExecuteSkill);
             
-            tileSelectionManager.SelectTile(boardEntity, skill.TileSet(), ExecuteSkill, Color.blue, Color.cyan);
+            //tileSelectionManager.SelectTile(boardEntity, skill.TileSet(), ExecuteSkill, Color.blue, Color.cyan);
         }
 
         private void buildSkillButton(Skill skill)
@@ -103,12 +113,14 @@ namespace Placeholdernamespace.Battle.Interaction
 
         private void ExecuteSkill(TileSelectOption tile)
         {
+            profile.UpdateProfile(null);
             if(tile != null)
             {
-                skillSelected();
                 selectedSkill.Action(tile.Selection);
                 selectedSkill = null;
-                
+                skillSelected();
+
+
             }
             else
             {

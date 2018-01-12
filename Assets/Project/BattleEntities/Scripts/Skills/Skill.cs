@@ -1,5 +1,7 @@
 ﻿using Placeholdernamespace.Battle.Calculator;
 using Placeholdernamespace.Battle.Env;
+using Placeholdernamespace.Battle.Interaction;
+using Placeholdernamespace.Battle.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,6 +10,14 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 {
     public abstract class Skill
     {
+        [SerializeField]
+        protected Color? selectColor = Color.cyan;
+        [SerializeField]
+        protected Color? highlightColor = Color.blue;
+
+        [SerializeField]
+        protected static Profile profile;
+
         protected string title;
         protected TileManager tileManager;
         protected CharacterBoardEntity boardEntity;
@@ -30,6 +40,11 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         public List<Tile> TileSet()
         {
             return TileSetHelper(boardEntity.GetTile().Position);
+        }
+
+        public virtual List<TileSelectOption> TileOptionSet()
+        {
+            return new List<TileSelectOption>();
         }
 
         public List<Tile> TheoreticalTileSet(Position p)
@@ -57,7 +72,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         protected Dictionary<SkillModifierType, int> getSkillModifiers(Dictionary<SkillModifierType, int> dict)
         {
             Dictionary<SkillModifierType, float> floatDict = new Dictionary<SkillModifierType, float>();
-            List<SkillModifier> modifiers = new List<SkillModifier>();
+            List<SkillModifier> modifiers = boardEntity.GetSkillModifier(this);
 
             //modifiers.Add(new SkillModifier(SkillModifierType.Power, SkillModifierApplication.Add, 2));
 

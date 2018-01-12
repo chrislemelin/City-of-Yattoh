@@ -91,7 +91,7 @@ namespace Placeholdernamespace.Battle.Entities
             this.tileManager = tileManager;
             this.boardEntitySelector = boardEntitySelector;
             stats.updateStatHandler += UpdateUi;
-            stats.Start();
+            stats.Start(this);
 
             turnManager.AddBoardEntity(this);
             UpdateUi();

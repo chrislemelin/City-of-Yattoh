@@ -1,4 +1,5 @@
 ﻿using Placeholdernamespace.Battle.Entities;
+using Placeholdernamespace.Battle.Entities.AttributeStats;
 using Placeholdernamespace.Battle.Env;
 using Placeholdernamespace.Battle.Interaction;
 using Placeholdernamespace.Battle.Managers;
@@ -39,11 +40,11 @@ namespace Placeholdernamespace.Battle.Interaction
         {
             get { return selectedBoardEntity; }
         }
-        
+
         public void Init()
         {
             tileSelectionManager.Init(profile);
-            skillSelector.Init(tileSelectionManager, buildMoveOptions, ()=> setSelectedBoardEntity(null));
+            skillSelector.Init(tileSelectionManager, () => {setSelectedBoardEntity(selectedBoardEntity); buildMoveOptions();}, ()=> setSelectedBoardEntity(null),profile);
         }
 
         public void setSelectedBoardEntity(BoardEntity boardEntity)
@@ -70,6 +71,9 @@ namespace Placeholdernamespace.Battle.Interaction
                     List<TileSelectOption> options = new List<TileSelectOption>();
                     foreach (Move m in moveSet)
                     {
+                        Stats displaystats = selectedBoardEntity.Stats.GetCopy();
+                        displaystats.SubtractAPPoints(m.apCost);
+                        displaystats.SetMutableStat(StatType.Movement, m.movementPointsAfterMove);
                         Color col = ApCostColors[0];
                         if(m.apCost < ApCostColors.Count)
                         {
@@ -82,7 +86,7 @@ namespace Placeholdernamespace.Battle.Interaction
                             HighlightColor = col,
                             HoverColor = hoverColor,
                             ReturnObject = m,
-                            OnHoverAction = (() => profile.PreviewMove(selectedBoardEntity, m))
+                            OnHoverAction = (() => profile.UpdateProfile(selectedBoardEntity, displaystats))
                         });
                     }
                     

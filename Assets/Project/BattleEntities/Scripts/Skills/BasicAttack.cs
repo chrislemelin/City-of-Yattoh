@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Placeholdernamespace.Battle.Calculator;
 using System;
+using Placeholdernamespace.Battle.Interaction;
 
 namespace Placeholdernamespace.Battle.Entities.Skills
 {
@@ -21,6 +22,25 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             return TeamTiles(tileManager.GetAllAdjacentTiles(p), boardEntity.Team);
         }
 
+        public override List<TileSelectOption> TileOptionSet()
+        {
+            List<Tile> tiles = TileSetHelper(boardEntity.Position);
+            List<TileSelectOption> tileOptions = new List<TileSelectOption>();           
+            foreach(Tile t in tiles)
+            {
+                SkillReport report = GetSkillReport(t);
+                tileOptions.Add(new TileSelectOption
+                {
+                    Selection = t,
+                    OnHover = new List<Tile>() { t },
+                    HighlightColor = selectColor,
+                    HoverColor = highlightColor,
+                    DisplayStats = report.TargetAfter,
+                });
+            }
+            return tileOptions;
+        }
+
         public override void Action(Tile t, Action callback = null)
         {
             DamagePackageInternal damagePackage = GenerateDamagePackage();
@@ -34,6 +54,13 @@ namespace Placeholdernamespace.Battle.Entities.Skills
                 callback();
             }
         }   
+
+        private SkillReport GetSkillReport(Tile t)
+        {
+            DamagePackageInternal damagePackage = GenerateDamagePackage();
+            DamagePackage package = new DamagePackage(damagePackage);
+            return battleCalculator.ExecuteSkillHelper(boardEntity, this, (CharacterBoardEntity)t.BoardEntity, package);
+        }
 
         protected DamagePackageInternal GenerateDamagePackage()
         {

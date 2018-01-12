@@ -194,35 +194,27 @@ MonoBehaviour:
   stats:
     baseStats:
       armour:
-        type: 0
-        value: 1
+        value: 0
         display: 0
       inteligence:
-        type: 0
-        value: 4
-        display: 0
-      maxHealth:
-        type: 0
-        value: 6
-        display: 0
-      movement:
-        type: 0
         value: 3
         display: 0
-      speed:
-        type: 0
+      maxHealth:
+        value: 8
+        display: 0
+      movement:
         value: 2
         display: 0
+      speed:
+        value: 3
+        display: 0
       strength:
-        type: 0
         value: 3
         display: 0
       ap:
-        type: 0
         value: 8
         display: 0
       apGain:
-        type: 0
         value: 2
         display: 0
   name: Enemy1
