@@ -9,7 +9,7 @@ namespace Placeholdernamespace.Common.UI
 {
     public class TooltipSpawner : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
-        public float waitTime;
+        public float waitTime = 2;
 
         private float enterTime;
 
@@ -39,7 +39,7 @@ namespace Placeholdernamespace.Common.UI
 
         void Update()
         {
-            if(spawnedTooltip == null && hover && (Time.time - enterTime) > waitTime)
+            if(spawnedTooltip == null && hover && (Time.time - enterTime) > waitTime && (getDescription() != null || getTitle() != null))
             {
                 spawnedTooltip = Instantiate(tooltip);
                 spawnedTooltip.GetComponent<Tooltip>().setDescription(getDescription());
@@ -53,8 +53,8 @@ namespace Placeholdernamespace.Common.UI
             if(!placed && spawnedTooltip != null && spawnedTooltipRect.rect.width != 0)
             {
                 Vector3 mousePos = Input.mousePosition;
-                float x = mousePos.x - (spawnedTooltip.GetComponent<RectTransform>().rect.width / 2);
-                float y = mousePos.y - spawnedTooltip.GetComponent<RectTransform>().rect.height / 2;
+                float x = mousePos.x - (spawnedTooltipRect.rect.width / 2);
+                float y = mousePos.y - spawnedTooltipRect.rect.height / 2;
                 spawnedTooltip.transform.position = new Vector3(x, y);
                 placed = true;
             }

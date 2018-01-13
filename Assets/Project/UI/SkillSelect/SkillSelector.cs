@@ -3,6 +3,7 @@ using Placeholdernamespace.Battle.Entities.Skills;
 using Placeholdernamespace.Battle.Env;
 using Placeholdernamespace.Battle.Interaction;
 using Placeholdernamespace.Battle.UI;
+using Placeholdernamespace.Common.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -91,17 +92,18 @@ namespace Placeholdernamespace.Battle.Interaction
         private void buildSkillButton(Skill skill)
         {
             bool interactable = skill.IsActive();
-            GameObject skillButton = buildSkillButton(skill.Title, () => { SetSelectedSkill(skill); }, interactable);
+            GameObject skillButton = buildSkillButton(skill.Title, () => { SetSelectedSkill(skill); }, skill.GetDescription, interactable);
         }
 
         private void buildCancelSkillButton()
         {
-            buildSkillButton("Cancel", () => { tileSelectionManager.CancelSelection(); ExecuteSkill(null); });
+            buildSkillButton("Cancel", () => { tileSelectionManager.CancelSelection(); ExecuteSkill(null); },() => { return null; } );
         }
 
-        private GameObject buildSkillButton(string title, Action onClick, bool interactable = true)
+        private GameObject buildSkillButton(string title, Action onClick, Func<String> getDescription, bool interactable = true)
         {
             GameObject skillButton = Instantiate(skillOptionButton);
+            skillButton.GetComponent<TooltipSpawner>().Init(() => { return null; }, getDescription);
             skillButton.GetComponent<Button>().interactable = interactable;
             skillButton.GetComponentInChildren<Text>().text = title;
             skillButton.transform.SetParent(skillOptionContainer.transform);

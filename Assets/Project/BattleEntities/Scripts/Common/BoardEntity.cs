@@ -87,6 +87,7 @@ namespace Placeholdernamespace.Battle.Entities
             healthBar.transform.SetParent(FindObjectOfType<Canvas>().gameObject.transform);
             healthBar.GetComponent<UIFollow>().target = gameObject;
             healthBar.transform.SetAsFirstSibling();
+            healthBar.transform.position = new Vector3(100000, 100000);
             this.turnManager = turnManager;
             this.tileManager = tileManager;
             this.boardEntitySelector = boardEntitySelector;

@@ -23,6 +23,9 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         protected CharacterBoardEntity boardEntity;
         protected BattleCalculator battleCalculator;
 
+        [SerializeField]
+        protected string description;
+
         protected int APCost;
 
         public string Title
@@ -134,7 +137,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         /// override this to generate damage package
         /// </summary>
         /// <returns></returns>
-        protected DamagePackageInternal GenerateDamagePackage()
+        protected virtual DamagePackageInternal GenerateDamagePackage()
         {
             int basePower = boardEntity.Stats.GetStatInstance().getValue(AttributeStats.StatType.Strength);
             Dictionary<SkillModifierType, int> baseStats = new Dictionary<SkillModifierType, int>();
@@ -145,7 +148,10 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             return new DamagePackageInternal(effectivePower, DamageType.physical);
         }
 
-
+        public virtual string GetDescription()
+        {
+            return description;
+        }
     }
 
     public enum DamageType { physical, pure };

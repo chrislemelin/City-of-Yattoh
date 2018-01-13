@@ -71,6 +71,34 @@ namespace Placeholdernamespace.Battle.Env
             }
         }
 
+        public List<Tile> GetAllAdjacentTilesNear(Position position, int range, bool ignoreWalls = false)
+        {
+            HashSet<Tile> returnTiles = new HashSet<Tile>();
+            HashSet<Tile> processingTiles = new HashSet<Tile>();
+            processingTiles.Add(GetTile(position));
+            for(int a = 0; a < range; a ++)
+            {
+                HashSet<Tile> newProcessingTiles = new HashSet<Tile>();
+                foreach(Tile t in processingTiles)
+                {
+                    List<Tile> newTiles = GetAllAdjacentTiles(t.Position, ignoreWalls);
+                    foreach(Tile newTile in newTiles)
+                    {
+                        if (!returnTiles.Contains(newTile) && GetTile(position)!= newTile)
+                        {
+                            newProcessingTiles.Add(newTile);
+                            returnTiles.Add(newTile);
+                        }
+                    }
+                    
+                }
+                processingTiles = newProcessingTiles;
+            }
+            return returnTiles.ToList();
+
+
+        }
+
         public List<Tile> GetAllAdjacentTiles(Position position, bool ignoreWalls = false)
         {
             Tile startingTile = GetTile(position);

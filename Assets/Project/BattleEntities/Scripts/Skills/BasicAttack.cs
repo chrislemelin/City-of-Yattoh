@@ -11,15 +11,19 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 {
     public class BasicAttack : Skill
     {
+        [SerializeField]
+        private int range = 2;
+
         public BasicAttack()
-        {
+        {            
             title = "Basic Attack";
+            description = "Deal STRENGTH damage to one enemy " + range +" squares away";
             APCost = 1;
         }
 
         protected override List<Tile> TileSetHelper(Position p)
-        {
-            return TeamTiles(tileManager.GetAllAdjacentTiles(p), boardEntity.Team);
+        {            
+            return TeamTiles(tileManager.GetAllAdjacentTilesNear(p, range), boardEntity.Team);
         }
 
         public override List<TileSelectOption> TileOptionSet()
@@ -62,7 +66,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             return battleCalculator.ExecuteSkillHelper(boardEntity, this, (CharacterBoardEntity)t.BoardEntity, package);
         }
 
-        protected DamagePackageInternal GenerateDamagePackage()
+        protected override DamagePackageInternal GenerateDamagePackage()
         {
             int basePower = boardEntity.Stats.GetStatInstance().getValue(AttributeStats.StatType.Strength);
             Dictionary<SkillModifierType, int> baseStats = new Dictionary<SkillModifierType, int>();
@@ -73,5 +77,6 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             return new DamagePackageInternal(effectivePower, DamageType.physical);
         }
 
+        
     }
 }
