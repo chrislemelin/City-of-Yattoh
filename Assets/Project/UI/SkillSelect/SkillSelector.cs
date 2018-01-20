@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace Placeholdernamespace.Battle.Interaction
 {
@@ -92,7 +93,7 @@ namespace Placeholdernamespace.Battle.Interaction
         private void buildSkillButton(Skill skill)
         {
             bool interactable = skill.IsActive();
-            GameObject skillButton = buildSkillButton(skill.Title, () => { SetSelectedSkill(skill); }, skill.GetDescription, interactable);
+            GameObject skillButton = buildSkillButton(skill.GetTitle(), () => { SetSelectedSkill(skill); }, skill.GetDescription, interactable);
         }
 
         private void buildCancelSkillButton()
@@ -105,7 +106,7 @@ namespace Placeholdernamespace.Battle.Interaction
             GameObject skillButton = Instantiate(skillOptionButton);
             skillButton.GetComponent<TooltipSpawner>().Init(() => { return null; }, getDescription);
             skillButton.GetComponent<Button>().interactable = interactable;
-            skillButton.GetComponentInChildren<Text>().text = title;
+            skillButton.GetComponentInChildren<TextMeshProUGUI>().text = title;
             skillButton.transform.SetParent(skillOptionContainer.transform);
             skillButton.GetComponent<Button>().onClick.AddListener(() => onClick());
             skillButtons.Add(skillButton);

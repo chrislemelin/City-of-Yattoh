@@ -25,6 +25,12 @@ namespace Placeholdernamespace.Battle.UI
         [SerializeField]
         private GameObject passiveGameObject;
 
+        [SerializeField]
+        private Color posColor = Color.green;
+
+        [SerializeField]
+        private Color negColor = Color.red;
+
         private List<StatType> displayOrder = new List<StatType>() { StatType.Health, StatType.AP, StatType.Movement, StatType.Strength, StatType.Armour, StatType.Speed, StatType.Inteligence };
 
         private List<GameObject> texts = new List<GameObject>();
@@ -126,11 +132,11 @@ namespace Placeholdernamespace.Battle.UI
             int after = previewStats.GetDefaultStat(type).Value;
             if(before > after)
             {
-                return Color.red;
+                return negColor;
             }
             if(after > before)
             {
-                return Color.green;
+                return posColor;
             }
             return null;      
 

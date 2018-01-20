@@ -10,9 +10,9 @@ public class UIFollow : MonoBehaviour {
 
     private void Update()
     {
-        if(Camera.current != null)
+        if(Camera.main != null)
         {
-            height = Camera.current.pixelHeight;
+            height = Camera.main.pixelHeight;
         }
         if(height != -1)
         {

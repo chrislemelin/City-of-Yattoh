@@ -14,6 +14,9 @@ namespace Placeholdernamespace.Common.UI
         private float enterTime;
 
         [SerializeField]
+        private int fontSize = 12;
+
+        [SerializeField]
         private GameObject tooltip;
 
         private bool placed = false;
@@ -44,6 +47,7 @@ namespace Placeholdernamespace.Common.UI
                 spawnedTooltip = Instantiate(tooltip);
                 spawnedTooltip.GetComponent<Tooltip>().setDescription(getDescription());
                 spawnedTooltip.GetComponent<Tooltip>().setTitle(getTitle());
+                spawnedTooltip.GetComponent<Tooltip>().setDescriptionFontSize(fontSize);
                 spawnedTooltip.transform.SetParent(FindObjectOfType<Canvas>().transform);
                 spawnedTooltip.transform.SetAsLastSibling();
                 spawnedTooltipRect = spawnedTooltip.GetComponent<RectTransform>();
@@ -53,8 +57,23 @@ namespace Placeholdernamespace.Common.UI
             if(!placed && spawnedTooltip != null && spawnedTooltipRect.rect.width != 0)
             {
                 Vector3 mousePos = Input.mousePosition;
-                float x = mousePos.x - (spawnedTooltipRect.rect.width / 2);
-                float y = mousePos.y - spawnedTooltipRect.rect.height / 2;
+                float x = 0;
+                if(mousePos.x > (Camera.main.pixelWidth/2))
+                {
+                    x = mousePos.x - (spawnedTooltipRect.rect.width / 2);
+                }
+                else
+                {
+                    x = mousePos.x + (spawnedTooltipRect.rect.width / 2);
+                }
+
+                float y = mousePos.y - spawnedTooltipRect.rect.height / 2;                
+
+                if (y - spawnedTooltipRect.rect.height/2 < 0)
+                {
+                    y = spawnedTooltipRect.rect.height/2;
+                }
+  
                 spawnedTooltip.transform.position = new Vector3(x, y);
                 placed = true;
             }
@@ -70,7 +89,6 @@ namespace Placeholdernamespace.Common.UI
             this.getDescription = getDescription;
             this.getTitle = getTitle;
         }
-
       
         public void OnPointerEnter(PointerEventData eventData)
         {
@@ -78,13 +96,8 @@ namespace Placeholdernamespace.Common.UI
             {
                 enterTime = Time.time;
             }
-            hover = true;
-            
-      
-       
+            hover = true; 
         }
-
-
 
         public void OnPointerExit(PointerEventData eventData)
         {

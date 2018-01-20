@@ -65,11 +65,16 @@ namespace Placeholdernamespace.Battle.Managers
                 ReCalcQueue();
             }
             boardEntitySelector.setSelectedBoardEntity(null);
-            currentBoardEntity = turnQueue[0];
+            currentBoardEntity = null;
+            BoardEntity tempcurrentBoardEntity = turnQueue[0];          
             turnQueue.RemoveAt(0);
-            UpdateGui();
-            currentBoardEntity.StartMyTurn();
-
+            
+            CenterText.Instance.DisplayMessage(tempcurrentBoardEntity.Name + "'s Turn", () => {
+                tempcurrentBoardEntity.StartMyTurn();
+                currentBoardEntity = tempcurrentBoardEntity;
+                UpdateGui();
+            });
+           
         }
 
         public void ClearBoardEnities()
@@ -81,9 +86,12 @@ namespace Placeholdernamespace.Battle.Managers
         private void UpdateGui()
         {
             string newText = "";
-            foreach (BoardEntity entity in QueueDisplayHelper())
+            newText += currentBoardEntity.Name;
+
+            List<BoardEntity> displayList = QueueDisplayHelper();
+            foreach (BoardEntity entity in displayList)
             {
-                newText += entity.Name + '\n';
+                newText += " -> " + entity.Name;
             }
             if (display != null)
             {
@@ -100,7 +108,8 @@ namespace Placeholdernamespace.Battle.Managers
         {
             List<BoardEntity> returnQueue = new List<BoardEntity>();
             returnQueue.AddRange(enities);
-            returnQueue.OrderBy(x => x.Stats.GetStatInstance().GetStat(StatType.Speed));
+            returnQueue.OrderBy(x => { return -(x.Stats.GetStatInstance().GetStat(StatType.Speed).Value +
+                (.01 * x.Stats.GetNonMuttableStat(StatType.Movement).Value)); });
             return returnQueue;
         }
 

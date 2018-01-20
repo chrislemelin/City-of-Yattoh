@@ -17,7 +17,7 @@ namespace Placeholdernamespace.Battle.Calculator
 
         private List<int> displayDamages = new List<int>();
 
-        public void DoDamage(CharacterBoardEntity source, Skill skill, CharacterBoardEntity target, DamagePackage damage)
+        public void ExecuteSkillDamage(CharacterBoardEntity source, Skill skill, CharacterBoardEntity target, DamagePackage damage)
         {
             SkillReport skillReport = ExecuteSkillHelper(source, skill, target, damage);            
 
@@ -31,6 +31,12 @@ namespace Placeholdernamespace.Battle.Calculator
                 {
                     target.Stats.SetMutableStat(type, skillReport.TargetAfter.MutableStats[type].Value);
                 }
+            }
+
+            // tell the passives what just happened
+            foreach(Passive passive in source.Passives)
+            {
+                passive.ExecutedSkill(skillReport);
             }
 
             // should put this in an couroutine for later and make more better

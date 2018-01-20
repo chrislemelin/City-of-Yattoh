@@ -75,7 +75,7 @@ namespace Placeholdernamespace.Battle.Entities
         }
 
         [SerializeField]
-        protected string name = "";
+        protected new string name = "";
         public string Name
         {
             get { return name; }
@@ -111,11 +111,21 @@ namespace Placeholdernamespace.Battle.Entities
             {
                 updateStatHandler(this);
             }
-            if(healthBar != null)
+            if (healthBar != null)
             {
                 float newHealth = (float)stats.GetMutableStat(StatType.Health).Value / (float)stats.GetStatInstance().getValue(StatType.Health);
                 healthBar.GetComponent<UIBar>().SetValue(newHealth);
             }
+        }
+
+        public void Hover()
+        {
+            boardEntitySelector.Hover(this);
+        }
+
+        public void ExitHover()
+        {
+            boardEntitySelector.ExitHover();
         }
     }
 

@@ -63,7 +63,7 @@ namespace Placeholdernamespace.Battle.Interaction
                 {
                     tempSelectOption(null);
                     active = false;
-                    if (pathOnClick != null && pathOnClick != tempSelectedEntity.GetTile().PathOnClick)
+                    if (pathOnClick != null && tempSelectedEntity != null && pathOnClick != tempSelectedEntity.GetTile().PathOnClick)
                     {
                         pathOnClick.OnMouseUp();
                     }

@@ -7,21 +7,27 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 {
     public abstract class Buff : Passive
     {
-        private Action<Buff> remove;
+        private Func<Passive, bool> remove;
         protected int stacks = 1;
 
-        public Buff (Action<Buff> remove) : base()
+        public Buff () : base()
+        {
+        }
+
+        public void addRemoveAction(Func<Passive, bool> remove)
         {
             this.remove = remove;
         }
-
 
         protected void PopStack(int value = 1)
         {
             stacks = stacks - value;
             if (stacks <= 0)
             {
-                remove(this);
+                if(remove != null)
+                {
+                    remove((Passive)this);
+                }
             }
         }
 
@@ -35,6 +41,32 @@ namespace Placeholdernamespace.Battle.Entities.Passives
             PopStack(stacks);
         }
 
-        
+        public override string GetDescription()
+        {
+            string descriptionReturn = GetDescriptionHelper();
+            string descriptionExtra = GetDescriptionExtra();
+            if (descriptionExtra != "")
+            {
+                descriptionReturn += "\n" + descriptionExtra;
+            }
+            return descriptionReturn;
+        }
+
+        /// <summary>
+        /// override for function based description
+        /// </summary>
+        /// <returns></returns>
+        protected virtual string GetDescriptionHelper()
+        {
+            return description;
+        }
+
+        private string GetDescriptionExtra()
+        {
+            string returnString = "STACKS: "+stacks;
+            return returnString;
+        }
+
+
     }
 }

@@ -137,6 +137,14 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
         {
             if (mutableStats.ContainsKey(type))
             {
+                if(value < 0)
+                {
+                    value = 0;
+                }
+                if(value > GetNonMuttableStat(type).Value)
+                {
+                    value = GetNonMuttableStat(type).Value;
+                }
                 mutableStats[type] = new Stat(mutableStats[type], value);
                 if (updateStatHandler != null)
                 {
@@ -144,6 +152,13 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
                 }
             }
     
+        }
+
+        public void AddActionPoints(int value)
+        {
+            // if its less than zero something should probably happen here
+            int newValue = GetMutableStat(StatType.AP).Value + value;
+            SetMutableStat(StatType.AP, newValue);
         }
 
         public void SubtractMovementPoints(int value)

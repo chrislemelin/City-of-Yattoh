@@ -27,6 +27,7 @@ namespace Placeholdernamespace.Battle.Entities
             get { return passives; }
         }
 
+
         private BasicAttack basicAttack;
         public BasicAttack BasicAttack
         {
@@ -42,7 +43,7 @@ namespace Placeholdernamespace.Battle.Entities
         private Dictionary<Tile, Move> cachedMoves = new Dictionary<Tile, Move>();
         private Action moveDoneCallback;
 
-        public void Init(TurnManager turnManager, TileManager tileManager, BoardEntitySelector boardEntitySelector, BattleCalculator battleCalculator)
+        public override void Init(TurnManager turnManager, TileManager tileManager, BoardEntitySelector boardEntitySelector, BattleCalculator battleCalculator)
         {
             base.Init(turnManager, tileManager, boardEntitySelector, battleCalculator);
             if(enemyAIBasic != null)
@@ -133,10 +134,22 @@ namespace Placeholdernamespace.Battle.Entities
         public override void StartMyTurn()
         {
             stats.NewTurn();
-            if(team == Team.Enemy)
+            bool skipTurn = false;
+            foreach(Passive passive in passives)
             {
-                GetComponent<EnemyAIBasic>().ExecuteTurn(turnManager.NextTurn);
-                //turnManager.NextTurn();
+                skipTurn = passive.SkipTurn(skipTurn);
+            }
+            if(skipTurn)
+            {
+                turnManager.NextTurn();
+            }
+            else
+            {               
+                if (team == Team.Enemy)
+                {
+                    GetComponent<EnemyAIBasic>().ExecuteTurn(turnManager.NextTurn);
+                    //turnManager.NextTurn();
+                }
             }
             
         }
@@ -155,6 +168,16 @@ namespace Placeholdernamespace.Battle.Entities
                     path.Remove(target);
                 }
             }
+        }
+
+        public void AddPassive(Passive passive)
+        {
+            passives.Add(passive);
+        }
+
+        public void AddBuff(Buff buff)
+        {
+            buff.addRemoveAction(passives.Remove);          
         }
     }
 

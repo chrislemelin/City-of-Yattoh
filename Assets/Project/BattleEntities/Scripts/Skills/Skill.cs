@@ -26,11 +26,69 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         [SerializeField]
         protected string description;
 
-        protected int APCost;
-
-        public string Title
+        protected int? apCost = null;
+        public int GetAPCost()
         {
-            get { return title; }
+            int? value = getSkillModifiers(SkillModifierType.APCost, GetAPCostInternal());
+            if(value == null)
+            {
+                return 0;
+            }
+            return (int)value;
+        }
+        protected virtual int? GetAPCostInternal()
+        {
+            return apCost;
+        }
+
+        protected int? strength = null;
+        public int GetStrength()
+        {
+            int? value = getSkillModifiers(SkillModifierType.Power, GetStrengthInternal());
+            if (value == null)
+            {
+                return 0;
+            }
+            return (int)value;
+        }
+        protected virtual int? GetStrengthInternal()
+        {
+            return strength;
+        }
+
+        protected int? coolDown = null;
+        public int GetCoolDown()
+        {
+            int? value = getSkillModifiers(SkillModifierType.CoolDown, GetCoolDownInternal());
+            if (value == null)
+            {
+                return 0;
+            }
+            return (int)value;
+        }
+        protected virtual int? GetCoolDownInternal()
+        {
+            return coolDown;
+        }
+
+        protected int? range = null;
+        public int GetRange()
+        {
+            int? value = getSkillModifiers(SkillModifierType.Range, GetRangeInternal());
+            if (value == null)
+            {
+                return 0;
+            }
+            return (int)value;
+        }
+        protected int? GetRangeInternal()
+        {
+            return range;
+        }
+
+        public virtual string GetTitle()
+        {
+            return title;
         }
 
         public void Init(TileManager tileManager, CharacterBoardEntity boardEntity, BattleCalculator battleCalculator)
@@ -72,41 +130,36 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             return report;
         }
 
-        protected Dictionary<SkillModifierType, int> getSkillModifiers(Dictionary<SkillModifierType, int> dict)
+        protected int? getSkillModifiers(SkillModifierType type, int? baseValue)
         {
-            Dictionary<SkillModifierType, float> floatDict = new Dictionary<SkillModifierType, float>();
+            float? value = baseValue;
             List<SkillModifier> modifiers = boardEntity.GetSkillModifier(this);
 
-            //modifiers.Add(new SkillModifier(SkillModifierType.Power, SkillModifierApplication.Add, 2));
 
-            foreach(SkillModifierType type in dict.Keys)
+            foreach (SkillModifier mod in modifiers)
             {
-                floatDict[type] = dict[type];
-                foreach (SkillModifier mod in modifiers)
+                if (mod.Application == SkillModifierApplication.Add && mod.Type == type)
                 {
-                    if(mod.Application == SkillModifierApplication.Add && mod.Type == type)
-                    {
-                        floatDict[type] = mod.Apply(floatDict[type], type);
-                    }
-
-                    if (mod.Application == SkillModifierApplication.Mult && mod.Type == type)
-                    {
-                        floatDict[type] = mod.Apply(floatDict[type], type);
-                    }
-
-                    if (mod.Application == SkillModifierApplication.AddNoMult && mod.Type == type)
-                    {
-                        floatDict[type] = mod.Apply(floatDict[type], type);
-                    }
+                    value = mod.Apply(value, type);
                 }
             }
-            Dictionary<SkillModifierType, int> intDict = new Dictionary<SkillModifierType, int>();
-            foreach(SkillModifierType type in floatDict.Keys)
+            foreach (SkillModifier mod in modifiers)
             {
-                intDict[type] = (int)floatDict[type];
+                if (mod.Application == SkillModifierApplication.Mult && mod.Type == type)
+                {
+                    value = mod.Apply(value, type);
+                }
             }
+            foreach (SkillModifier mod in modifiers)
+            {
+                // not really applying the addnomult
+                if (mod.Application == SkillModifierApplication.AddNoMult && mod.Type == type)
+                {
+                    value = mod.Apply(value, type);
+                }            
+            }   
 
-            return intDict;
+            return (int?)value;
         }
 
         protected List<Tile> TeamTiles(List<Tile> tiles, Team? team)
@@ -120,18 +173,6 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             return (boardEntity.Stats.GetMutableStat(AttributeStats.StatType.AP).Value >= GetAPCost());
         }
 
-        public int GetAPCost()
-        {
-            return GetSkillModifier(SkillModifierType.EnergyCost, APCost);
-        }
-
-        protected int GetSkillModifier(SkillModifierType type, int initialValue)
-        {
-            Dictionary<SkillModifierType, int> dict = new Dictionary<SkillModifierType, int>();
-            dict[type] = initialValue;
-            Dictionary<SkillModifierType, int> effectiveStats = getSkillModifiers(dict);
-            return effectiveStats[type];
-        }
 
         /// <summary>
         /// override this to generate damage package
@@ -139,18 +180,61 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         /// <returns></returns>
         protected virtual DamagePackageInternal GenerateDamagePackage()
         {
-            int basePower = boardEntity.Stats.GetStatInstance().getValue(AttributeStats.StatType.Strength);
-            Dictionary<SkillModifierType, int> baseStats = new Dictionary<SkillModifierType, int>();
-            baseStats[SkillModifierType.Power] = basePower;
-            Dictionary<SkillModifierType, int> effectiveStats = getSkillModifiers(baseStats);
 
-            int effectivePower = effectiveStats[SkillModifierType.Power];
-            return new DamagePackageInternal(effectivePower, DamageType.physical);
+            int effectivePower = GetStrength();
+            if(effectivePower != 0)
+            {
+                return new DamagePackageInternal(effectivePower, DamageType.physical);
+            }
+            return null;
         }
 
-        public virtual string GetDescription()
+        public string GetDescription()
+        {
+            string descriptionReturn = GetDescriptionHelper();
+            string descriptionExtra = GetDescriptionExtra();
+            if(descriptionExtra != "")
+            {
+                descriptionReturn += "\n" + descriptionExtra;
+            }
+            return descriptionReturn;
+        }
+
+        /// <summary>
+        /// override for function based description
+        /// </summary>
+        /// <returns></returns>
+        protected virtual string GetDescriptionHelper()
         {
             return description;
+        }
+
+
+        private string GetDescriptionExtra()
+        {
+
+            string returnString = "";
+            returnString = GetDescriptionExtraHelper("STRENGTH: ", GetStrengthInternal, GetStrength, returnString);
+            returnString = GetDescriptionExtraHelper("AP COST: ", GetAPCostInternal, GetAPCost, returnString);
+            returnString = GetDescriptionExtraHelper("COOLDOWN: ", GetCoolDownInternal, GetCoolDown, returnString);
+            return returnString;
+            
+        }
+
+        private string GetDescriptionExtraHelper(String label, Func<int?> valueFunc, Func<int> newValueFunc, string returnString)
+        {
+            int? value = valueFunc();
+            if(value != null)
+            {
+                int? newValue = newValueFunc();
+                returnString += label + " " + value + " ";
+                if(newValue != value)
+                {
+                    returnString += "-> " + newValue;
+                }
+                returnString += "\n";               
+            }
+            return returnString;
         }
     }
 

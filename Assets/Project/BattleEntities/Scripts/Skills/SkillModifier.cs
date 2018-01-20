@@ -28,8 +28,9 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             this.value = value;
         }
 
-        public float Apply(float value, SkillModifierType type)
+        public float? Apply(float? value, SkillModifierType type)
         {
+            // just double checking this modifier is being used on the right skill type
             if (type == this.Type)
             {
                 switch (Application)
@@ -53,7 +54,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
     }
     public enum SkillModifierType
     {
-        Power, Range, Duration, EnergyCost
+        Power, Range, CoolDown, APCost, Duration
     }
 
     public enum SkillModifierApplication

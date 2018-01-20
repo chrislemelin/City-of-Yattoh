@@ -11,19 +11,19 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 {
     public class BasicAttack : Skill
     {
-        [SerializeField]
-        private int range = 2;
 
         public BasicAttack()
         {            
             title = "Basic Attack";
             description = "Deal STRENGTH damage to one enemy " + range +" squares away";
-            APCost = 1;
+            apCost = 1;
+            strength = 4;
+            range = 2;
         }
 
         protected override List<Tile> TileSetHelper(Position p)
         {            
-            return TeamTiles(tileManager.GetAllAdjacentTilesNear(p, range), boardEntity.Team);
+            return TeamTiles(tileManager.GetAllAdjacentTilesNear(p, GetRange()), boardEntity.Team);
         }
 
         public override List<TileSelectOption> TileOptionSet()
@@ -50,8 +50,10 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             DamagePackageInternal damagePackage = GenerateDamagePackage();
             DamagePackage package = new DamagePackage(damagePackage);
 
-            battleCalculator.DoDamage(boardEntity, this, (CharacterBoardEntity)t.BoardEntity, package);
+            battleCalculator.ExecuteSkillDamage(boardEntity, this, (CharacterBoardEntity)t.BoardEntity, package);
+
             boardEntity.Stats.SubtractAPPoints(GetAPCost());
+            
             boardEntity.GetComponentInChildren<Animator>().SetInteger("Attack", AnimatorUtils.GetAttackDirectionCode(boardEntity.Position, t.Position));
             if (callback != null)
             {
@@ -68,12 +70,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
         protected override DamagePackageInternal GenerateDamagePackage()
         {
-            int basePower = boardEntity.Stats.GetStatInstance().getValue(AttributeStats.StatType.Strength);
-            Dictionary<SkillModifierType, int> baseStats = new Dictionary<SkillModifierType, int>();
-            baseStats[SkillModifierType.Power] = basePower;
-            Dictionary<SkillModifierType, int> effectiveStats = getSkillModifiers(baseStats);
-
-            int effectivePower = effectiveStats[SkillModifierType.Power];
+            int effectivePower = GetStrength();
             return new DamagePackageInternal(effectivePower, DamageType.physical);
         }
 

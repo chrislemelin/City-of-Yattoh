@@ -92,7 +92,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         protected virtual List<SkillModifier> GetSkillHelperModifiers()
         {
             return skillModifiers;
-        }
+        }       
 
     }
 

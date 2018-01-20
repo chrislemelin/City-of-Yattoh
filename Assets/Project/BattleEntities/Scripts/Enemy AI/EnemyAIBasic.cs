@@ -29,17 +29,9 @@ namespace Placeholdernamespace.Battle.Entities.AI
                 List<Tile> tiles = skill.TheoreticalTileSet(m.destination.Position);
 
                 List<BoardEntity> entities = new List<BoardEntity>();
-                BoardEntity nearest = tileManager.NearestBoardEntity(m.destination.Position, Team.Player);
-                if (m.destination.Position.Equals(new Position(1, 0)))
-                {
-                    Console.Out.Write("ok");
-                }
+                BoardEntity nearest = tileManager.NearestBoardEntity(m.destination.Position, Team.Player);       
                 int movementScore = tileManager.DFS(m.destination.Position, nearest.GetTile().Position, characterBoardEntity.Team).Count;
-               
-                if(counter++ == 25 )
-                {
-                    Console.Out.Write("ok");
-                }
+   
                 AiMove aiMove = new AiMove(int.MaxValue, movementScore);
                 aiMove.AddMoveAction(characterBoardEntity, m, DoNextAction);
 

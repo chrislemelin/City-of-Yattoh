@@ -33,6 +33,11 @@ namespace Placeholdernamespace.Common.UI
             this.description.text = description;
         }
 
+        public void setDescriptionFontSize(int fontSize)
+        {
+            description.fontSize = fontSize;
+        }
+
         public void OnPointerEnter(PointerEventData eventData)
         {
             hover = true;
