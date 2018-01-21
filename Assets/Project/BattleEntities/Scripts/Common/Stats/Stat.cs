@@ -10,24 +10,11 @@ using Placeholdernamespace.Battle.Entities.AttributeStats.Internal;
 /// </summary>
 namespace Placeholdernamespace.Battle.Entities.AttributeStats
 {
-   
-
-
+  
     [System.Serializable]
     public class Stat
     {
-        private static Dictionary<StatType, string> toolTips = new Dictionary<StatType, string>()
-        {
-            { StatType.AP, "Used to perform actions, everyone gains 2 per turn" },
-            { StatType.Armour, "Negates Physical Damage" },
-            { StatType.Health, "Dies when this reaches zero" },
-            { StatType.Inteligence, "LOL THIS ISNT BEING USED YET DELETE THIS" },
-            { StatType.Movement, "Can spend one ap fill momement, spend one movement to move one square" },
-            { StatType.Speed, "Determines who goes first, movement is the tie breaker" },
-            { StatType.Strength, "Base damage that is dealt with skills" }
-        };
-
-
+       
         [SerializeField]
         private StatType type;
         public StatType Type
@@ -48,19 +35,12 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
             get { return display; }
         }
 
-        private string toolTip;
-        public string ToolTip
-        {
-            get { return toolTip; }
-        }
-
         public Stat(StatInternal statInternal)
         {
             type = statInternal.Type;
             display = statInternal.Display;
             // here to do rounding logic, right now rounding down is happening
             value = (int)statInternal.Value;
-            toolTip = toolTips[type];
         }
 
         public Stat(Stat stat, int newValue)
@@ -68,7 +48,6 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
             type = stat.type;
             display = stat.display;
             value = newValue;
-            toolTip = toolTips[type];
         }      
 
         public Stat(Stat stat)
@@ -76,7 +55,6 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
             type = stat.type;
             value = stat.value;
             display = stat.display;
-            toolTip = toolTips[type];
         }
     }
 }

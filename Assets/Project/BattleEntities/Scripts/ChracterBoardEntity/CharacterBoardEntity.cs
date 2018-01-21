@@ -50,8 +50,7 @@ namespace Placeholdernamespace.Battle.Entities
             {
                 enemyAIBasic.Init(tileManager, this);
             }
-            basicAttack = new BasicAttack();
-            basicAttack.Init(tileManager, this, battleCalculator);
+            basicAttack = new BasicAttack(tileManager, this, battleCalculator);
             skills.Add(basicAttack);
 
 
@@ -135,6 +134,10 @@ namespace Placeholdernamespace.Battle.Entities
         {
             stats.NewTurn();
             bool skipTurn = false;
+            foreach(Skill skill in skills)
+            {
+                skill.StartTurn();
+            }
             foreach(Passive passive in passives)
             {
                 skipTurn = passive.SkipTurn(skipTurn);
@@ -167,6 +170,11 @@ namespace Placeholdernamespace.Battle.Entities
                     target = path[0];
                     path.Remove(target);
                 }
+            }
+            else
+            {
+                if(moveDoneCallback != null)
+                    moveDoneCallback();
             }
         }
 

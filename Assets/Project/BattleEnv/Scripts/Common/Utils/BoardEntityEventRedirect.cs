@@ -19,12 +19,14 @@ namespace Placeholdernamespace.Common.Utils
         {
             CharacterBoardEntity c = GetComponentInParent<CharacterBoardEntity>();
             c.GetTile().GetComponentInChildren<OutlineOnHover>().OnMouseEnter();
+            c.GetTile().GetComponentInChildren<PathOnClick>().OnMouseEnter();
         }
 
         public void OnMouseExit()
         {
             CharacterBoardEntity c = GetComponentInParent<CharacterBoardEntity>();
             c.GetTile().GetComponentInChildren<OutlineOnHover>().OnMouseExit();
+            c.GetTile().GetComponentInChildren<PathOnClick>().OnMouseExit();
         }
     }
 }

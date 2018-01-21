@@ -9,7 +9,7 @@ namespace Placeholdernamespace.Common.UI
 {
     public class TooltipSpawner : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
-        public float waitTime = 2;
+        private float waitTime = 1;
 
         private float enterTime;
 
@@ -89,7 +89,12 @@ namespace Placeholdernamespace.Common.UI
             this.getDescription = getDescription;
             this.getTitle = getTitle;
         }
-      
+
+        public void OnDestroy()
+        {
+            Destroy(spawnedTooltip);
+        }
+
         public void OnPointerEnter(PointerEventData eventData)
         {
             if(!hover)

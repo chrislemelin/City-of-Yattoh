@@ -63,6 +63,7 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
 
         public StatInstance GetStatInstance()
         {
+            baseStats.UseDefaults();
             StatInstance returnStats = new StatInstance(baseStats);
             foreach (StatModifier modifier in modifiers)
             {
@@ -215,7 +216,7 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
             switch(type)
             {
                 case StatType.AP:
-                    return "AP";
+                    return "Action Points";
                 case StatType.APGain:
                     return "AP Gain";
                 case StatType.Armour:
@@ -225,11 +226,32 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
                 case StatType.Inteligence:
                     return "Inteligence";
                 case StatType.Movement:
-                    return "Movement";
+                    return "Movement Points";
                 case StatType.Speed:
                     return "Speed";
                 case StatType.Strength:
                     return "Strength";
+            }
+            return "";
+        }
+        public static string StatTypeToTooltip(StatType type)
+        {
+            switch (type)
+            {
+                case StatType.AP:
+                    return "(AP) Used to perform actions, everyone gains 2 per turn";
+                case StatType.Armour:
+                    return "Negates Physical Damage";
+                case StatType.Health:
+                    return "Dies when this reaches zero";
+                case StatType.Inteligence:
+                    return "LOL THIS ISNT BEING USED YET DELETE THIS";
+                case StatType.Movement:
+                    return "(MP) Can spend one ap fill momement, spend one movement to move one square";
+                case StatType.Speed:
+                    return "Determines who goes first, movement is the tie breaker";
+                case StatType.Strength:
+                    return "Base damage that is dealt with skills";
             }
             return "";
         }

@@ -33,6 +33,7 @@ namespace Placeholdernamespace.Battle.Calculator
                 }
             }
 
+
             // tell the passives what just happened
             foreach(Passive passive in source.Passives)
             {

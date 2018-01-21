@@ -122,7 +122,7 @@ namespace Placeholdernamespace.Battle.UI
                         text += ColorText((Color)col, " -> " + previewStats.StatValueString(type));
                     }
                 }
-                AddText(text, stat.ToolTip);
+                AddText(text, Stats.StatTypeToTooltip(type));
             }
         }
         

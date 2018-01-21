@@ -73,6 +73,10 @@ namespace Placeholdernamespace.Battle.Managers
                 tempcurrentBoardEntity.StartMyTurn();
                 currentBoardEntity = tempcurrentBoardEntity;
                 UpdateGui();
+                if(currentBoardEntity.Team == Team.Player)
+                {
+                    boardEntitySelector.setSelectedBoardEntity(currentBoardEntity);
+                }
             });
            
         }

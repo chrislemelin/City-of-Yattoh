@@ -102,6 +102,12 @@ namespace Placeholdernamespace.Battle.Interaction
             }
         }
 
+        public void ClearTileHover()
+        {
+            NewGlowPath(new List<PathOnClick>());
+            profile.UpdateProfile(selectedEntity);
+        }
+
         private bool ValidityCheck(PathOnClick pathOnClick)
         {
             // tile is not a valid moveable tile

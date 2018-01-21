@@ -12,68 +12,28 @@ namespace Placeholdernamespace.Battle.Entities.Skills
     public class BasicAttack : Skill
     {
 
-        public BasicAttack()
-        {            
-            title = "Basic Attack";
-            description = "Deal STRENGTH damage to one enemy " + range +" squares away";
-            apCost = 1;
-            strength = 4;
-            range = 2;
-        }
-
-        protected override List<Tile> TileSetHelper(Position p)
-        {            
-            return TeamTiles(tileManager.GetAllAdjacentTilesNear(p, GetRange()), boardEntity.Team);
-        }
-
-        public override List<TileSelectOption> TileOptionSet()
+        public BasicAttack(TileManager tileManager, CharacterBoardEntity boardEntity, BattleCalculator battleCalculator):base(tileManager,boardEntity,battleCalculator)
         {
-            List<Tile> tiles = TileSetHelper(boardEntity.Position);
-            List<TileSelectOption> tileOptions = new List<TileSelectOption>();           
-            foreach(Tile t in tiles)
-            {
-                SkillReport report = GetSkillReport(t);
-                tileOptions.Add(new TileSelectOption
-                {
-                    Selection = t,
-                    OnHover = new List<Tile>() { t },
-                    HighlightColor = selectColor,
-                    HoverColor = highlightColor,
-                    DisplayStats = report.TargetAfter,
-                });
-            }
-            return tileOptions;
+            title = "Basic Attack";
+            description = "Deal STRENGTH damage to one enemy";
+            apCost = 1;
+            range = 2;
+            coolDown = 1;
         }
 
-        public override void Action(Tile t, Action callback = null)
+        protected override int? GetStrengthInternal()
+        {
+            return boardEntity.Stats.GetNonMuttableStat(AttributeStats.StatType.Strength).Value;
+        }
+
+        protected override void ActionHelper(Tile t)
         {
             DamagePackageInternal damagePackage = GenerateDamagePackage();
             DamagePackage package = new DamagePackage(damagePackage);
 
             battleCalculator.ExecuteSkillDamage(boardEntity, this, (CharacterBoardEntity)t.BoardEntity, package);
-
-            boardEntity.Stats.SubtractAPPoints(GetAPCost());
-            
             boardEntity.GetComponentInChildren<Animator>().SetInteger("Attack", AnimatorUtils.GetAttackDirectionCode(boardEntity.Position, t.Position));
-            if (callback != null)
-            {
-                callback();
-            }
-        }   
 
-        private SkillReport GetSkillReport(Tile t)
-        {
-            DamagePackageInternal damagePackage = GenerateDamagePackage();
-            DamagePackage package = new DamagePackage(damagePackage);
-            return battleCalculator.ExecuteSkillHelper(boardEntity, this, (CharacterBoardEntity)t.BoardEntity, package);
         }
-
-        protected override DamagePackageInternal GenerateDamagePackage()
-        {
-            int effectivePower = GetStrength();
-            return new DamagePackageInternal(effectivePower, DamageType.physical);
-        }
-
-        
     }
 }

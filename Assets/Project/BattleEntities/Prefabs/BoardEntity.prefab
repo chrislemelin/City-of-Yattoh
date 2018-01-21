@@ -57,7 +57,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1844718460837428}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.1, z: 0}
   m_LocalScale: {x: 0.15, y: 0.2, z: 1}
   m_Children: []
   m_Father: {fileID: 4914905680874010}
@@ -194,35 +194,27 @@ MonoBehaviour:
   stats:
     baseStats:
       armour:
-        type: 0
         value: 1
         display: 0
       inteligence:
-        type: 0
         value: 2
         display: 0
       maxHealth:
-        type: 0
         value: 8
         display: 0
       movement:
-        type: 0
         value: 6
         display: 0
       speed:
-        type: 0
         value: 2
         display: 0
       strength:
-        type: 0
         value: 4
         display: 0
       ap:
-        type: 0
         value: 8
         display: 0
       apGain:
-        type: 0
         value: 2
         display: 0
   name: Jaz

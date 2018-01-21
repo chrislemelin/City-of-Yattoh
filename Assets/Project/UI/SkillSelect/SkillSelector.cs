@@ -28,6 +28,7 @@ namespace Placeholdernamespace.Battle.Interaction
         private Skill selectedSkill;
         private Action skillSelected;
         private Profile profile;
+        private GameObject cancelButton;
 
         public Skill SelectedSkill
         {
@@ -37,11 +38,10 @@ namespace Placeholdernamespace.Battle.Interaction
         private TileSelectionManager tileSelectionManager;
         private Action selectionCancel;    
 
-        public void Init(TileSelectionManager tileSelectionManager, Action selectionCancel, Action skillSelected, Profile profile)
+        public void Init(TileSelectionManager tileSelectionManager, Action selectionCancel, Profile profile)
         {
             this.tileSelectionManager = tileSelectionManager;
             this.selectionCancel = selectionCancel;
-            this.skillSelected = skillSelected;
             this.profile = profile;
         }
 
@@ -90,15 +90,16 @@ namespace Placeholdernamespace.Battle.Interaction
             //tileSelectionManager.SelectTile(boardEntity, skill.TileSet(), ExecuteSkill, Color.blue, Color.cyan);
         }
 
-        private void buildSkillButton(Skill skill)
+        private GameObject buildSkillButton(Skill skill)
         {
             bool interactable = skill.IsActive();
             GameObject skillButton = buildSkillButton(skill.GetTitle(), () => { SetSelectedSkill(skill); }, skill.GetDescription, interactable);
+            return skillButton;
         }
 
         private void buildCancelSkillButton()
         {
-            buildSkillButton("Cancel", () => { tileSelectionManager.CancelSelection(); ExecuteSkill(null); },() => { return null; } );
+            cancelButton = buildSkillButton("Cancel", () => { tileSelectionManager.CancelSelection(); ExecuteSkill(null); },() => { return null; } );
         }
 
         private GameObject buildSkillButton(string title, Action onClick, Func<String> getDescription, bool interactable = true)
@@ -119,18 +120,20 @@ namespace Placeholdernamespace.Battle.Interaction
             profile.UpdateProfile(null);
             if(tile != null)
             {
-                selectedSkill.Action(tile.Selection);
-                selectedSkill = null;
-                skillSelected();
-
-
+                if (cancelButton != null)
+                    cancelButton.GetComponent<Button>().interactable = false;
+                selectedSkill.Action(tile.Selection, ExecuteSkillCallback);
             }
             else
             {
-                ClearButtonList();
-                selectionCancel();
-                selectedSkill = null;
+                ExecuteSkillCallback();
             }
+        }
+        private void ExecuteSkillCallback()
+        {
+            ClearButtonList();
+            selectionCancel();
+            selectedSkill = null;
         }
 
         private void ClearButtonList()
@@ -140,6 +143,7 @@ namespace Placeholdernamespace.Battle.Interaction
                 Destroy(g);
             }
             skillButtons.Clear();
+            cancelButton = null;
         }
 
     }

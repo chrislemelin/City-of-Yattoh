@@ -86,6 +86,18 @@ namespace Placeholdernamespace.Battle.Interaction
             }
         }
 
+        public void OnMouseExit()
+        {
+            if (!pause && !UIHoverListener.isUIOverride)
+            {
+                if (pathSelectManager.IsActive())
+                {
+                    pathSelectManager.ClearTileHover();
+                    
+                }
+            }
+        }
+
 
     }
 }

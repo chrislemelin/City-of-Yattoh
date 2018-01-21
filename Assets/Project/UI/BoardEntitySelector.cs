@@ -44,7 +44,7 @@ namespace Placeholdernamespace.Battle.Interaction
         public void Init()
         {
             tileSelectionManager.Init(profile);
-            skillSelector.Init(tileSelectionManager, () => {setSelectedBoardEntity(selectedBoardEntity); buildMoveOptions();}, ()=> setSelectedBoardEntity(null),profile);
+            skillSelector.Init(tileSelectionManager, () => { setSelectedBoardEntity(selectedBoardEntity); buildMoveOptions(); } ,profile);
         }
 
         public void setSelectedBoardEntity(BoardEntity boardEntity)
@@ -126,15 +126,17 @@ namespace Placeholdernamespace.Battle.Interaction
             {
                 if(tileOption != null)
                 {
-                    ((CharacterBoardEntity)selectedBoardEntity).ExecuteMove((Move)tileOption.ReturnObject);
+                    ((CharacterBoardEntity)selectedBoardEntity).ExecuteMove( (Move)tileOption.ReturnObject, buildMoveOptions);
                 }
                 else
                 {
+                    //buildMoveOptions();
                     ((CharacterBoardEntity)selectedBoardEntity).ExecuteMove(null);
               
                 }
                 if(skillSelector.SelectedSkill == null)
                 {
+                    //buildMoveOptions();
                     //setSelectedBoardEntity(null);
                     //skillSelector.Hide();
                 }

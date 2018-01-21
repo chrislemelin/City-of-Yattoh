@@ -26,6 +26,8 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         [SerializeField]
         protected string description;
 
+        protected int currentCoolDown = 0;
+
         protected int? apCost = null;
         public int GetAPCost()
         {
@@ -91,11 +93,22 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             return title;
         }
 
-        public void Init(TileManager tileManager, CharacterBoardEntity boardEntity, BattleCalculator battleCalculator)
+        public Skill(TileManager tileManager, CharacterBoardEntity boardEntity, BattleCalculator battleCalculator)
         {
             this.tileManager = tileManager;
             this.boardEntity = boardEntity;
             this.battleCalculator = battleCalculator;
+        }
+
+        public void StartTurn()
+        {
+            ReduceCooldowns();
+        }
+
+        public void ReduceCooldowns()
+        {
+            if (currentCoolDown > 0)
+                currentCoolDown--;
         }
 
         public List<Tile> TileSet()
@@ -105,21 +118,74 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
         public virtual List<TileSelectOption> TileOptionSet()
         {
-            return new List<TileSelectOption>();
+            List<Tile> tiles = TileSetHelper(boardEntity.Position);
+            List<TileSelectOption> tileOptions = new List<TileSelectOption>();
+            foreach (Tile t in tiles)
+            {
+                SkillReport report = GetSkillReport(t);
+                tileOptions.Add(new TileSelectOption
+                {
+                    Selection = t,
+                    OnHover = new List<Tile>() { t },
+                    HighlightColor = selectColor,
+                    HoverColor = highlightColor,
+                    DisplayStats = report.TargetAfter,
+                });
+            }
+            return tileOptions;
         }
+
+        protected SkillReport GetSkillReport(Tile t)
+        {
+            DamagePackageInternal damagePackage = GenerateDamagePackage();
+            DamagePackage package = new DamagePackage(damagePackage);
+            return battleCalculator.ExecuteSkillHelper(boardEntity, this, (CharacterBoardEntity)t.BoardEntity, package);
+        }
+
+   
 
         public List<Tile> TheoreticalTileSet(Position p)
         {
             return TileSetHelper(p);
         }
 
-        protected abstract List<Tile> TileSetHelper(Position p);
+        /// <summary>
+        /// override for tile set for which tiles the move can be used one
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        protected virtual List<Tile> TileSetHelper(Position p)
+        {
+            if(range != null)
+                return TeamTiles(tileManager.GetAllAdjacentTilesNear(p, GetRange()), boardEntity.Team);
+            else
+            {
+                //this is probably self casting if range is null
+                List<Tile> returnTiles = new List<Tile>();
+                returnTiles.Add(tileManager.GetTile(p));
+                return returnTiles;
+            }
+                
+        }
 
-        public abstract void Action(Tile t, Action callback = null);
+        public void Action(Tile t, Action callback = null)
+        {
+            ActionHelper(t);
+            currentCoolDown = GetCoolDown();
+            boardEntity.Stats.SubtractAPPoints(GetAPCost());
+
+            if (callback != null)
+            {
+                Core.CallbackDelay(.8f, callback);                
+            }
+        }
+
+        protected abstract void ActionHelper(Tile t);
+
 
         public virtual bool IsActive()
         {
-            return TileSet().Count > 0 && CanAffortAPCost();
+            return TileSet().Count > 0 && CanAffortAPCost() && currentCoolDown == 0;
         }
 
         public SkillReport TheoreticalAction(Tile t)
@@ -180,7 +246,6 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         /// <returns></returns>
         protected virtual DamagePackageInternal GenerateDamagePackage()
         {
-
             int effectivePower = GetStrength();
             if(effectivePower != 0)
             {
@@ -189,13 +254,14 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             return null;
         }
 
+
         public string GetDescription()
         {
             string descriptionReturn = GetDescriptionHelper();
             string descriptionExtra = GetDescriptionExtra();
             if(descriptionExtra != "")
             {
-                descriptionReturn += "\n" + descriptionExtra;
+                descriptionReturn += "\n\n" + descriptionExtra;
             }
             return descriptionReturn;
         }
@@ -209,14 +275,21 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             return description;
         }
 
-
         private string GetDescriptionExtra()
         {
 
             string returnString = "";
+
+            if (currentCoolDown != 0)
+            {
+                returnString += "availible in " + currentCoolDown + " turns \n";
+            }
+
             returnString = GetDescriptionExtraHelper("STRENGTH: ", GetStrengthInternal, GetStrength, returnString);
             returnString = GetDescriptionExtraHelper("AP COST: ", GetAPCostInternal, GetAPCost, returnString);
             returnString = GetDescriptionExtraHelper("COOLDOWN: ", GetCoolDownInternal, GetCoolDown, returnString);
+            returnString = GetDescriptionExtraHelper("RANGE: ", GetRangeInternal, GetRange, returnString);
+            
             return returnString;
             
         }

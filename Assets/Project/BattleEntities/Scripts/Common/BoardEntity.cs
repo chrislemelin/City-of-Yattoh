@@ -57,7 +57,16 @@ namespace Placeholdernamespace.Battle.Entities
         public Position Position
         {
             get { return position; }
-            set { position = value; }
+            set {
+                if (value != null)
+                {
+                    position = value;
+                }
+                else
+                {
+                    position = value;
+                }
+            }
         }
 
 
