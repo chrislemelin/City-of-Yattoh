@@ -1,4 +1,5 @@
 ﻿using Placeholdernamespace.Battle.Entities;
+using Placeholdernamespace.Battle.Entities.Passives;
 using Placeholdernamespace.Battle.Interaction;
 using Placeholdernamespace.Battle.Managers;
 using Placeholdernamespace.Battle.UI;
@@ -31,6 +32,17 @@ namespace Placeholdernamespace.Battle.Env
 
         public void MoveBoardEntity(Position p, BoardEntity entity)
         {
+            Tile oldTile = entity.GetTile();
+            Tile tile = GetTile(p);
+            if(entity is CharacterBoardEntity)
+            {
+                List<PassiveAreaOfInfluence> areas = ((CharacterBoardEntity)entity).GetAreaOfInfluencePassives();
+                foreach(PassiveAreaOfInfluence passive in areas)
+                {
+                    passive.LeaveTile(tile);
+                    passive.EnterTile(tile);                    
+                }
+             }
             entity.GetTile().BoardEntity = null;
             entity.Position = p;
             entity.GetTile().BoardEntity = entity;
@@ -39,10 +51,9 @@ namespace Placeholdernamespace.Battle.Env
 
         public Tile GetTile(Position position)
         {
-            Tile returnObj;
-            if (coordinateToTile.TryGetValue(position, out returnObj))
+            if (coordinateToTile.ContainsKey(position))
             {
-                return returnObj;
+                return coordinateToTile[position];
             }
             else
             {
@@ -71,7 +82,14 @@ namespace Placeholdernamespace.Battle.Env
             }
         }
 
-        public List<Tile> GetAllAdjacentTilesNear(Position position, int range, bool ignoreWalls = false)
+        /// <summary>
+        /// counts a diagonal move as 2 cost
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="range"></param>
+        /// <param name="ignoreWalls"></param>
+        /// <returns></returns>
+        public List<Tile> GetTilesNoDiag(Position position, int range, bool ignoreWalls = false)
         {
             HashSet<Tile> returnTiles = new HashSet<Tile>();
             HashSet<Tile> processingTiles = new HashSet<Tile>();
@@ -81,7 +99,7 @@ namespace Placeholdernamespace.Battle.Env
                 HashSet<Tile> newProcessingTiles = new HashSet<Tile>();
                 foreach(Tile t in processingTiles)
                 {
-                    List<Tile> newTiles = GetAllAdjacentTiles(t.Position, ignoreWalls);
+                    List<Tile> newTiles = GetTilesNoDiag(t.Position, ignoreWalls);
                     foreach(Tile newTile in newTiles)
                     {
                         if (!returnTiles.Contains(newTile) && GetTile(position)!= newTile)
@@ -99,7 +117,13 @@ namespace Placeholdernamespace.Battle.Env
 
         }
 
-        public List<Tile> GetAllAdjacentTiles(Position position, bool ignoreWalls = false)
+        /// <summary>
+        /// counts a diagonal move as 2 cost
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="ignoreWalls"></param>
+        /// <returns></returns>
+        public List<Tile> GetTilesNoDiag(Position position, bool ignoreWalls = false)
         {
             Tile startingTile = GetTile(position);
             List<Tile> returnList = new List<Tile>();
@@ -135,7 +159,15 @@ namespace Placeholdernamespace.Battle.Env
             }
         }
 
-        public List<Tile> GetAllTilesNear(Position position, Position range, bool ignoreWalls = false, bool sortByDistance = false)
+        /// <summary>
+        /// moving on the diagonal cost 1 ap
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="range"></param>
+        /// <param name="ignoreWalls"></param>
+        /// <param name="sortByDistance"></param>
+        /// <returns></returns>
+        public List<Tile> GetAllTilesDiag(Position position, Position range, bool ignoreWalls = false, bool sortByDistance = false)
         {
             Tile startingTile = GetTile(position);
             List<Tile> returnList = new List<Tile>();
@@ -170,20 +202,20 @@ namespace Placeholdernamespace.Battle.Env
             return returnList;
         }
 
-        public List<Tile> GetAllTilesNear(Position position, int range = 1, bool ignoreWalls = false, bool sortByDistance = false)
+        public List<Tile> GetAllTilesDiag(Position position, int range = 1, bool ignoreWalls = false, bool sortByDistance = false)
         {
-            return GetAllTilesNear(position, new Position(range, range), ignoreWalls, sortByDistance);
+            return GetAllTilesDiag(position, new Position(range, range), ignoreWalls, sortByDistance);
         }
 
-        public List<BoardEntity> GetAllNear(Position position, Position Range, bool ignoreWalls = false, bool sortByDistance = false)
+        public List<BoardEntity> GetAllBoardEntityDiag(Position position, Position Range, bool ignoreWalls = false, bool sortByDistance = false)
         {
-            List<Tile> tiles = GetAllTilesNear(position, Range, ignoreWalls, sortByDistance);
+            List<Tile> tiles = GetAllTilesDiag(position, Range, ignoreWalls, sortByDistance);
             return tilesToBoardEntities(tiles);
         }
 
-        public List<BoardEntity> GetAllNear(Position position, int range = 1, bool ignoreWalls = false, bool sortByDistance = false)
+        public List<BoardEntity> GetAllBoardEntityDiag(Position position, int range = 1, bool ignoreWalls = false, bool sortByDistance = false)
         {
-            return GetAllNear(position, new Position(range, range), ignoreWalls, sortByDistance);
+            return GetAllBoardEntityDiag(position, new Position(range, range), ignoreWalls, sortByDistance);
         }
 
         private List<BoardEntity> tilesToBoardEntities(List<Tile> tiles)
@@ -232,7 +264,7 @@ namespace Placeholdernamespace.Battle.Env
             {
                 Tile currentTile = queue.Dequeue();
 
-                List<Tile> neighbors = GetAllAdjacentTiles(currentTile.Position);
+                List<Tile> neighbors = GetTilesNoDiag(currentTile.Position);
                 neighbors.RemoveAll(
                     x => path.ContainsKey(x)
                 );
@@ -280,7 +312,7 @@ namespace Placeholdernamespace.Battle.Env
             while(tiles.Count > 0)
             {
                 Tile t = tiles.Dequeue();
-                List<Tile> neighbors = GetAllAdjacentTiles(t.Position);
+                List<Tile> neighbors = GetTilesNoDiag(t.Position);
                 foreach(Tile newTile in neighbors)
                 {
                     if(!visitedTiles.Contains(newTile))
@@ -322,7 +354,7 @@ namespace Placeholdernamespace.Battle.Env
                 List<Move> newVisitingTiles = new List<Move>();
                 foreach (Move move in visitingTiles)
                 {
-                    List<Tile> neighbors = GetAllAdjacentTiles(move.destination.Position);
+                    List<Tile> neighbors = GetTilesNoDiag(move.destination.Position);
 
                     //cannot pass through other team, unless team is null
                     if (team != null)

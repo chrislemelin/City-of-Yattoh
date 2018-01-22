@@ -1,6 +1,7 @@
 ﻿using Placeholdernamespace.Battle.Env;
 using Placeholdernamespace.Battle.Interaction;
 using Placeholdernamespace.Battle.UI;
+using Placeholdernamespace.Common.Utils;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -40,7 +41,7 @@ namespace Placeholdernamespace.Battle.Interaction
         {
             if (!UIHoverListener.isUIOverride)
             {
-                if (tile.BoardEntity != null && tile.BoardEntity.GetComponentInChildren<GlowManager>() != null)
+                if (tile.BoardEntity != null && tile.BoardEntity.GetComponentInChildren<GlowManager>() != null && !CameraMove.Moving)
                 {
                     tile.BoardEntity.Hover();
                     tile.BoardEntity.GetComponentInChildren<GlowManager>().TurnOn(this, onHoverColor, onlyAddIfStackEmpty: true, putOnColorStack: false);
@@ -51,7 +52,7 @@ namespace Placeholdernamespace.Battle.Interaction
 
         public void OnMouseExit()
         {
-            if (tile.BoardEntity != null && tile.BoardEntity.GetComponentInChildren<GlowManager>() != null)
+            if (tile.BoardEntity != null && tile.BoardEntity.GetComponentInChildren<GlowManager>() != null && !CameraMove.Moving)
             {
                 tile.BoardEntity.ExitHover();
                 tile.BoardEntity.GetComponentInChildren<GlowManager>().TurnOff(this, false);

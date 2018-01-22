@@ -6,6 +6,12 @@ namespace Placeholdernamespace.Common.Utils
 {
     public class CameraMove : MonoBehaviour
     {
+        private static bool moving = false;
+        public static bool Moving
+        {
+            get { return moving; }
+        }
+
         public float xMin = -10, xMax = 100, yMin = -10, yMax = 100;
 
         private bool isPanning;
@@ -17,6 +23,7 @@ namespace Placeholdernamespace.Common.Utils
         {
             if (Input.GetMouseButton(1))
             {
+                moving = true;
                 diff = (Camera.main.ScreenToWorldPoint(Input.mousePosition)) - Camera.main.transform.position;
                 if (isPanning == false)
                 {
@@ -26,6 +33,7 @@ namespace Placeholdernamespace.Common.Utils
             }
             else
             {
+                moving = false;
                 isPanning = false;
             }
             if (isPanning == true)

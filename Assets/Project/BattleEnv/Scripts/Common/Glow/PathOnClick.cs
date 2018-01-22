@@ -1,6 +1,7 @@
 ﻿using Placeholdernamespace.Battle.Env;
 using Placeholdernamespace.Battle.UI;
 using Placeholdernamespace.Common.Interfaces;
+using Placeholdernamespace.Common.Utils;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,7 @@ namespace Placeholdernamespace.Battle.Interaction
         private TileSelectionManager pathSelectManager;
         public Color BoardEntityOnSelectColor;
         public Color TileOnSelectColor;
+        private bool hover;
 
 
         private Tile tile;
@@ -77,23 +79,30 @@ namespace Placeholdernamespace.Battle.Interaction
 
         public void OnMouseEnter()
         {
-            if (!pause && !UIHoverListener.isUIOverride)
+            if (!pause && !UIHoverListener.isUIOverride && !CameraMove.Moving)
             {
                 if (pathSelectManager.IsActive())
                 {
+                    hover = true;
                     pathSelectManager.TileHover(this);
                 }
             }
         }
 
+        public void OnMouseOver()
+        {
+            if (!hover)
+                OnMouseEnter();
+        }
+
         public void OnMouseExit()
         {
-            if (!pause && !UIHoverListener.isUIOverride)
+            if (!pause && !UIHoverListener.isUIOverride && !CameraMove.Moving)
             {
                 if (pathSelectManager.IsActive())
                 {
                     pathSelectManager.ClearTileHover();
-                    
+                    hover = false;                   
                 }
             }
         }

@@ -75,9 +75,9 @@ namespace Placeholdernamespace.Battle.Calculator
             switch(usingTakeDamageReturn)
             {
                 case TakeDamageReturn.Normal:
-                    int newTargetHealth = HealthAfterDamage(source, target, damage);
-                    targetAfter.SetMutableStat(StatType.Health, newTargetHealth);
-                    displayDamages.Add(damage.Damage);
+                    Tuple<int,int> newTargetHealthDamage = HealthAfterDamage(source, target, damage);
+                    targetAfter.SetMutableStat(StatType.Health, newTargetHealthDamage.first);
+                    displayDamages.Add(newTargetHealthDamage.second);
                     return new SkillReport(sourceBefore, sourceAfter, targetBefore, targetAfter);
 
                 case TakeDamageReturn.NoDamage:
@@ -91,15 +91,22 @@ namespace Placeholdernamespace.Battle.Calculator
 
         }
 
-        private int HealthAfterDamage(CharacterBoardEntity source, CharacterBoardEntity target, DamagePackage damage)
+        private Tuple<int, int> HealthAfterDamage(CharacterBoardEntity source, CharacterBoardEntity target, DamagePackage damage)
         {
-            int newHealth = target.Stats.GetMutableStat(StatType.Health).Value - damage.Damage;
+            int tempDamage = damage.Damage;
+            if(damage.Type == DamageType.physical)
+            {
+                tempDamage -= target.Stats.GetNonMuttableStat(StatType.Armour).Value;
+                if (tempDamage < 0)
+                    tempDamage = 0;
+            }
+            int newHealth = target.Stats.GetMutableStat(StatType.Health).Value - tempDamage;
             if (newHealth < 0)
             {
                 // dat bibba dead
                 newHealth = 0;
             }
-            return newHealth;
+            return new Tuple<int, int> (newHealth, tempDamage);
         }
 
     }

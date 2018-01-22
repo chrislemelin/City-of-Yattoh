@@ -27,7 +27,7 @@ public class CenterText : MonoBehaviour {
     private Action callback;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
         if(instance == null)
         {
             instance = this;

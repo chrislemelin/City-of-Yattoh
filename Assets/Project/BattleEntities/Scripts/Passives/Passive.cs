@@ -2,6 +2,7 @@
 using Placeholdernamespace.Battle.Calculator;
 using Placeholdernamespace.Battle.Entities.Skills;
 using System.Collections.Generic;
+using Placeholdernamespace.Battle.Env;
 
 namespace Placeholdernamespace.Battle.Entities.Passives
 {
@@ -21,6 +22,14 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         // if passive should cause the turn to be skipped
         protected bool skip = false;
+
+        public enum PassiveType { None, Buff, Debuff}
+
+        protected PassiveType type;
+        public PassiveType Type
+        {
+            get { return type; }
+        }
 
         public Passive()
         {
@@ -46,6 +55,15 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         public bool SkipTurn(bool skip)
         {
             return this.skip || skip;
+        }
+
+        public bool IsType(bool isType, PassiveType type)
+        {
+            if(this.type == type)
+            {
+                return true;
+            }
+            return isType;
         }
 
         /// <summary>
@@ -93,6 +111,16 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         {
             return skillModifiers;
         }       
+
+        public virtual void LeaveTile(Tile t)
+        {
+
+        }
+
+        public virtual void EnterTile(Tile t)
+        {
+
+        }
 
     }
 

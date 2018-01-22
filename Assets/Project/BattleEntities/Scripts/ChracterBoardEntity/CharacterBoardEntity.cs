@@ -39,7 +39,7 @@ namespace Placeholdernamespace.Battle.Entities
 
         //private SkillSelector skillSelector;
         private Tile target = null;
-        private List<Tile> path;
+        
         private Dictionary<Tile, Move> cachedMoves = new Dictionary<Tile, Move>();
         private Action moveDoneCallback;
 
@@ -53,10 +53,19 @@ namespace Placeholdernamespace.Battle.Entities
             basicAttack = new BasicAttack(tileManager, this, battleCalculator);
             skills.Add(basicAttack);
 
+            passives.Add(new PassiveAreaOfInfluence(battleCalculator, this));
 
             List<SkillModifier> skillModifiers = new List<SkillModifier>();
             skillModifiers.Add(new SkillModifier(SkillModifierType.Power, SkillModifierApplication.Add, 1));
             passives.Add(new PassiveGeneric("Damage Buff", "Increases damage on skills by one", skillModifiers));
+
+            foreach(Passive p in passives)
+            {
+                if(p is PassiveAreaOfInfluence)
+                {
+                    p.EnterTile(GetTile());
+                }
+            }
         }
 
         public override List<Move> MoveSet()
@@ -74,27 +83,17 @@ namespace Placeholdernamespace.Battle.Entities
             return skillModifiers;
         }
 
+        private List<Tile> path = new List<Tile>();
+
         private void checkAtTarget()
         {
             if (transform.position == target.transform.position)
             {
+                Tile leavingTile = GetTile();
                 tileManager.MoveBoardEntity(target.Position, this);
-
-                if (path.Count == 0)
-                {
-                    target = null;
-                    PathOnClick.pause = false;
-                    OutlineOnHover.disabled = false;
-                    if (moveDoneCallback != null)
-                    {
-                        moveDoneCallback();
-                    }
-                }
-                else
-                {
-                    target = path[0];
-                    path.Remove(target);
-                }
+                Tile tempTarget = target;
+                target = null;
+                tempTarget.ExecuteEnterActions(this, leavingTile, ChangeTarget);
             }
         }
 
@@ -111,12 +110,32 @@ namespace Placeholdernamespace.Battle.Entities
             {
                 OutlineOnHover.disabled = true;
                 PathOnClick.pause = true;
-                ExecuteMoveHelper(move);
+
+                stats.SetMutableStat(StatType.Movement, move.movementPointsAfterMove);
+                stats.SubtractAPPoints(move.apCost);
+                path = move.path;
+            }
+
+            ChangeTarget();
+        }
+
+        private void ChangeTarget()
+        {
+            if(path.Count > 0)
+            {
+                target = path[0];
+                path.RemoveAt(0);
             }
             else
             {
-
-                ExecuteMoveHelper(null);
+                // all done moving
+                target = null;
+                PathOnClick.pause = false;
+                OutlineOnHover.disabled = false;
+                if (moveDoneCallback != null)
+                {
+                    moveDoneCallback();
+                }
             }
         }
 
@@ -127,7 +146,6 @@ namespace Placeholdernamespace.Battle.Entities
                 doMovement();
                 checkAtTarget();
             }
-
         }
 
         public override void StartMyTurn()
@@ -153,8 +171,7 @@ namespace Placeholdernamespace.Battle.Entities
                     GetComponent<EnemyAIBasic>().ExecuteTurn(turnManager.NextTurn);
                     //turnManager.NextTurn();
                 }
-            }
-            
+            }           
         }
 
         private void ExecuteMoveHelper(Move move)
@@ -187,6 +204,21 @@ namespace Placeholdernamespace.Battle.Entities
         {
             buff.addRemoveAction(passives.Remove);          
         }
+
+        public List<PassiveAreaOfInfluence> GetAreaOfInfluencePassives()
+        {
+            List<PassiveAreaOfInfluence> passiveAreaOfInfluences = new List<PassiveAreaOfInfluence>();
+            foreach (Passive p in passives)
+            {
+                if (p is PassiveAreaOfInfluence)
+                {
+                    passiveAreaOfInfluences.Add(((PassiveAreaOfInfluence)p));
+                }
+            }
+
+            return passiveAreaOfInfluences;
+        }
+
     }
 
     

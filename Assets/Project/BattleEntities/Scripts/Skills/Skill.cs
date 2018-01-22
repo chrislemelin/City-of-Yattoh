@@ -73,6 +73,8 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             return coolDown;
         }
 
+        public readonly int? RANGE_SELF = null;
+        public readonly int? RANGE_ADJACENT = int.MinValue;
         protected int? range = null;
         public int GetRange()
         {
@@ -140,9 +142,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             DamagePackageInternal damagePackage = GenerateDamagePackage();
             DamagePackage package = new DamagePackage(damagePackage);
             return battleCalculator.ExecuteSkillHelper(boardEntity, this, (CharacterBoardEntity)t.BoardEntity, package);
-        }
-
-   
+        } 
 
         public List<Tile> TheoreticalTileSet(Position p)
         {
@@ -150,22 +150,45 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         }
 
         /// <summary>
-        /// override for tile set for which tiles the move can be used one
+        /// override for tile set for which tiles the move can be used
+        /// </summary>
+        /// <returns></returns>
+        public virtual List<Tile> TileSetHelper(Position p)
+        {
+            if(range == RANGE_SELF)
+            {
+                return TileSetPossible(p);
+            }
+            else
+            {
+                return TeamTiles(TileSetPossible(p), boardEntity.Team);
+            }
+        }
+
+
+        /// <summary>
+        /// which tiles set the skill CAN be casted on ignoring who is on the tile
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
-        protected virtual List<Tile> TileSetHelper(Position p)
+        public virtual List<Tile> TileSetPossible(Position p)
         {
-            if(range != null)
-                return TeamTiles(tileManager.GetAllAdjacentTilesNear(p, GetRange()), boardEntity.Team);
-            else
+            if(range == RANGE_SELF)
             {
-                //this is probably self casting if range is null
                 List<Tile> returnTiles = new List<Tile>();
                 returnTiles.Add(tileManager.GetTile(p));
                 return returnTiles;
             }
-                
+            if(range == RANGE_ADJACENT)
+            {
+                return tileManager.GetAllTilesDiag(p, 1);
+            }
+            else
+            {
+                return tileManager.GetTilesNoDiag(p, GetRange());
+
+            }
+
         }
 
         public void Action(Tile t, Action callback = null)
@@ -180,6 +203,10 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             }
         }
 
+        /// <summary>
+        /// override for the actual execution of skill
+        /// </summary>
+        /// <param name="t"></param>
         protected abstract void ActionHelper(Tile t);
 
 
@@ -277,7 +304,6 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
         private string GetDescriptionExtra()
         {
-
             string returnString = "";
 
             if (currentCoolDown != 0)

@@ -8,12 +8,14 @@ public class ColorEffectManager : MonoBehaviour {
     private SpriteRenderer spriteRenderer;
     private object lastCalled;
     private bool stopOtherGlows = false;
+    private float alpha;
 
     private Stack<Color> colorStack = new Stack<Color>();
 
     public void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        alpha = DefaultColor.a;
     }
 
     /// <summary>
@@ -28,13 +30,14 @@ public class ColorEffectManager : MonoBehaviour {
         {
             if ((this.stopOtherGlows && lastCalled == caller) || !this.stopOtherGlows)
             {
+                Color newCol = new Color(color.r, color.g, color.b, alpha);
                 if (putOnColorStack)
                 {
-                    colorStack.Push(color);
+                    colorStack.Push(newCol);
                 }
                 this.lastCalled = caller;
                 this.stopOtherGlows = stopOtherGlows;
-                spriteRenderer.color = color;
+                spriteRenderer.color = newCol;
             }
         }
 

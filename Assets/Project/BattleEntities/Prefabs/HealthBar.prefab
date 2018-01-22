@@ -151,7 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 1616944961264860}
-  offest: {x: 0, y: -0.05, z: 0}
+  offest: {x: 0, y: -0.03, z: 0}
 --- !u!114 &114491047463545342
 MonoBehaviour:
   m_ObjectHideFlags: 1

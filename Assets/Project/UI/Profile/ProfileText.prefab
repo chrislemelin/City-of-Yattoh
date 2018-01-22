@@ -20,10 +20,10 @@ GameObject:
   m_Component:
   - component: {fileID: 224860581278668270}
   - component: {fileID: 222463824576164430}
-  - component: {fileID: 114510242847342010}
   - component: {fileID: 33251914753024220}
   - component: {fileID: 114795594438195590}
   - component: {fileID: 114797950834277218}
+  - component: {fileID: 114633047975669638}
   m_Layer: 5
   m_Name: ProfileText
   m_TagString: Untagged
@@ -38,19 +38,25 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1261773941492590}
   m_Mesh: {fileID: 0}
---- !u!114 &114510242847342010
+--- !u!114 &114633047975669638
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1261773941492590}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1741964061, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 1679637790, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_HorizontalFit: 2
-  m_VerticalFit: 2
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: 200
+  m_PreferredHeight: -1
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &114795594438195590
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -174,7 +180,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 455db4d34c18c9848939afbf928e20fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waitTime: 2
   fontSize: 18
   tooltip: {fileID: 1752687632968606, guid: 48e21eb8f9d557b448e83b6cd4b96a2c, type: 2}
 --- !u!222 &222463824576164430
