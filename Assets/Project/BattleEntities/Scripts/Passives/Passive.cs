@@ -111,19 +111,15 @@ namespace Placeholdernamespace.Battle.Entities.Passives
             return skillModifiers;
         }       
 
-        public virtual void StartTurn()
+        public virtual void StartTurn(){}
+
+        public virtual void LeaveTile(Tile t){}
+
+        public virtual void EnterTile(Tile t){}
+
+        public virtual CharacterBoardEntity GetRagedBy(CharacterBoardEntity characterBoardEntity)
         {
-
-        }
-
-        public virtual void LeaveTile(Tile t)
-        {
-
-        }
-
-        public virtual void EnterTile(Tile t)
-        {
-
+            return characterBoardEntity;
         }
 
     }

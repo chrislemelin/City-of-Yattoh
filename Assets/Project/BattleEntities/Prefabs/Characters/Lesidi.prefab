@@ -19,10 +19,10 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4914905680874010}
-  - component: {fileID: 114249362209101460}
-  - component: {fileID: 114785801429616296}
+  - component: {fileID: 114631525846542012}
+  - component: {fileID: 114828439413869006}
   m_Layer: 0
-  m_Name: EnemyBoard
+  m_Name: Lesidi
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41,8 +41,8 @@ GameObject:
   - component: {fileID: 50169604986461472}
   - component: {fileID: 114653560778829354}
   - component: {fileID: 114910173449349550}
-  - component: {fileID: 114622698875298742}
-  - component: {fileID: 95973210416752412}
+  - component: {fileID: 114245910978165384}
+  - component: {fileID: 95305796568920940}
   m_Layer: 0
   m_Name: BoardEntitySprite
   m_TagString: Untagged
@@ -70,7 +70,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1542313980632146}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 560.13214, y: 411.7158, z: 0}
+  m_LocalPosition: {x: 0.17365444, y: 1.4509792, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4646218256061062}
@@ -122,7 +122,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2.56, y: 2.56}
   m_EdgeRadius: 0
---- !u!95 &95973210416752412
+--- !u!95 &95305796568920940
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 1
@@ -139,23 +139,23 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114249362209101460
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1542313980632146}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7b288e98e3ca174ca2584c28cb48cf2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &114622698875298742
+--- !u!114 &114245910978165384
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1844718460837428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ffb99f67b59661428a4cf4257aeb964, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114631525846542012
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1542313980632146}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2ffb99f67b59661428a4cf4257aeb964, type: 3}
@@ -177,7 +177,7 @@ MonoBehaviour:
   _glowColor: {r: 2, g: 0, b: 1.7793102, a: 1}
   _outlineWidth: 10
   _alphaThreshold: 0
---- !u!114 &114785801429616296
+--- !u!114 &114828439413869006
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -185,41 +185,41 @@ MonoBehaviour:
   m_GameObject: {fileID: 1542313980632146}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9275d3059f60e114b8e6048874f25b46, type: 3}
+  m_Script: {fileID: 11500000, guid: 7a1eec064c309334583a4fac11496071, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  profileImage: {fileID: 0}
+  profileImage: {fileID: 21300000, guid: d425ca8cbeb23fd4881bea5444243761, type: 3}
   healthBar: {fileID: 1075659018159238, guid: a0ae54a5f3f969d418b6a279f613a09d, type: 2}
-  team: 1
+  team: 0
   stats:
     baseStats:
       armour:
-        value: 1
+        value: 0
         display: 0
       inteligence:
         value: 0
         display: 0
       maxHealth:
-        value: 10
+        value: 1
         display: 0
       movement:
-        value: 3
-        display: 0
-      speed:
-        value: 3
-        display: 0
-      strength:
         value: 4
         display: 0
-      ap:
+      speed:
         value: 2
         display: 0
-      apGain:
-        value: 8
+      strength:
+        value: 0
         display: 0
-  name: Enemy 1
-  speed: 1
-  enemyAIBasic1: {fileID: 114249362209101460}
+      ap:
+        value: 0
+        display: 0
+      apGain:
+        value: 0
+        display: 0
+  name: Lesidi
+  speed: 5
+  enemyAIBasic1: {fileID: 0}
 --- !u!114 &114910173449349550
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -266,7 +266,7 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 916817b872118a444ab4278975b6e979, type: 3}
-  m_Color: {r: 1, g: 0.058823526, b: 0.058823526, a: 0.991}
+  m_Color: {r: 0, g: 0.04827571, b: 1, a: 0.991}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

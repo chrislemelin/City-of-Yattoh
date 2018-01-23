@@ -35,7 +35,7 @@ namespace Placeholdernamespace.Battle.Entities
         }
 
         [SerializeField]
-        private EnemyAIBasic enemyAIBasic;
+        private EnemyAIBasic enemyAIBasic1;
 
         //private SkillSelector skillSelector;
         private Tile target = null;
@@ -43,12 +43,12 @@ namespace Placeholdernamespace.Battle.Entities
         private Dictionary<Tile, Move> cachedMoves = new Dictionary<Tile, Move>();
         private Action moveDoneCallback;
 
-        public override void Init(TurnManager turnManager, TileManager tileManager, BoardEntitySelector boardEntitySelector, BattleCalculator battleCalculator)
+        public override void Init(Position startingPosition, TurnManager turnManager, TileManager tileManager, BoardEntitySelector boardEntitySelector, BattleCalculator battleCalculator)
         {
-            base.Init(turnManager, tileManager, boardEntitySelector, battleCalculator);
-            if(enemyAIBasic != null)
+            base.Init(startingPosition, turnManager, tileManager, boardEntitySelector, battleCalculator);
+            if(enemyAIBasic1 != null)
             {
-                enemyAIBasic.Init(tileManager, this);
+                enemyAIBasic1.Init(tileManager, this);
             }
             basicAttack = new BasicAttack(tileManager, this, battleCalculator);
             skills.Add(basicAttack);
@@ -169,7 +169,8 @@ namespace Placeholdernamespace.Battle.Entities
             {               
                 if (team == Team.Enemy)
                 {
-                    GetComponent<EnemyAIBasic>().ExecuteTurn(turnManager.NextTurn);
+                    BoardEntity boardEntity = GetRagedBy();
+                    enemyAIBasic1.ExecuteTurn(turnManager.NextTurn, ragedBy:boardEntity);
                     //turnManager.NextTurn();
                 }
             }           
@@ -216,8 +217,17 @@ namespace Placeholdernamespace.Battle.Entities
                     passiveAreaOfInfluences.Add(((PassiveAreaOfInfluence)p));
                 }
             }
-
             return passiveAreaOfInfluences;
+        }
+
+        public CharacterBoardEntity GetRagedBy()
+        {
+            CharacterBoardEntity returnEntity = null;
+            foreach(Passive passive in passives)
+            {
+                returnEntity = passive.GetRagedBy(returnEntity);
+            }
+            return returnEntity;
         }
 
     }

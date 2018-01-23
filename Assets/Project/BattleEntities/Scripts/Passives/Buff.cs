@@ -8,10 +8,11 @@ namespace Placeholdernamespace.Battle.Entities.Passives
     public abstract class Buff : Passive
     {
         private Func<Passive, bool> remove;
-        protected int stacks = 1;
+        protected int stacks;
 
-        public Buff () : base()
+        public Buff (int stacks = 1) : base()
         {
+            this.stacks = stacks;
         }
 
         public override void StartTurn()

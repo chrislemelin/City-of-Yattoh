@@ -19,8 +19,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4914905680874010}
-  - component: {fileID: 114868530270863054}
   - component: {fileID: 114631525846542012}
+  - component: {fileID: 114213890369153560}
   m_Layer: 0
   m_Name: Jaz
   m_TagString: Untagged
@@ -139,6 +139,49 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114213890369153560
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1542313980632146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88aea5c45b8f8e544b362632151e5195, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  profileImage: {fileID: 21300000, guid: 971758a4610b6af43be49e6486d8d669, type: 3}
+  healthBar: {fileID: 1075659018159238, guid: a0ae54a5f3f969d418b6a279f613a09d, type: 2}
+  team: 0
+  stats:
+    baseStats:
+      armour:
+        value: 1
+        display: 0
+      inteligence:
+        value: 3
+        display: 0
+      maxHealth:
+        value: 8
+        display: 0
+      movement:
+        value: 4
+        display: 0
+      speed:
+        value: 2
+        display: 0
+      strength:
+        value: 2
+        display: 0
+      ap:
+        value: 8
+        display: 0
+      apGain:
+        value: 2
+        display: 0
+  name: Jaz
+  speed: 1
+  enemyAIBasic1: {fileID: 0}
 --- !u!114 &114245910978165384
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -177,49 +220,6 @@ MonoBehaviour:
   _glowColor: {r: 2, g: 0, b: 1.7793102, a: 1}
   _outlineWidth: 10
   _alphaThreshold: 0
---- !u!114 &114868530270863054
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1542313980632146}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 562850e52a28c1f4f95fafc53f2f9637, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  profileImage: {fileID: 21300000, guid: 971758a4610b6af43be49e6486d8d669, type: 3}
-  healthBar: {fileID: 1075659018159238, guid: a0ae54a5f3f969d418b6a279f613a09d, type: 2}
-  team: 0
-  stats:
-    baseStats:
-      armour:
-        value: 1
-        display: 0
-      inteligence:
-        value: 2
-        display: 0
-      maxHealth:
-        value: 8
-        display: 0
-      movement:
-        value: 4
-        display: 0
-      speed:
-        value: 2
-        display: 0
-      strength:
-        value: 4
-        display: 0
-      ap:
-        value: 8
-        display: 0
-      apGain:
-        value: 2
-        display: 0
-  name: Jaz
-  speed: 1
-  enemyAIBasic: {fileID: 0}
 --- !u!114 &114910173449349550
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -240,6 +240,7 @@ SpriteRenderer:
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -255,6 +256,7 @@ SpriteRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 0
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5

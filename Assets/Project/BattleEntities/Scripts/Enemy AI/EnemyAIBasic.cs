@@ -14,7 +14,7 @@ namespace Placeholdernamespace.Battle.Entities.AI
     {
         private Action callBack;
 
-        public void ExecuteTurn(Action callBack)
+        public void ExecuteTurn(Action callBack, BoardEntity ragedBy = null, HashSet<Tile> tilesAvailibleForMovement= null)
         {
             this.callBack = callBack;
             List<Move> moves = characterBoardEntity.MoveSet();
@@ -29,8 +29,20 @@ namespace Placeholdernamespace.Battle.Entities.AI
                 List<Tile> tiles = skill.TheoreticalTileSet(m.destination.Position);
 
                 List<BoardEntity> entities = new List<BoardEntity>();
-                BoardEntity nearest = tileManager.NearestBoardEntity(m.destination.Position, Team.Player);       
-                int movementScore = tileManager.DFS(m.destination.Position, nearest.GetTile().Position, characterBoardEntity.Team).Count;
+
+                // raged target must be the 'nearest' boardentity
+                Position targetPosition;
+                if(ragedBy != null)
+                {
+                    targetPosition = ragedBy.GetTile().Position;
+                }
+                else
+                {
+                    BoardEntity nearest = tileManager.NearestBoardEntity(m.destination.Position, Team.Player);
+                    targetPosition = nearest.GetTile().Position;
+                }
+
+                int movementScore = tileManager.DFS(m.destination.Position, targetPosition, characterBoardEntity.Team).Count;
    
                 AiMove aiMove = new AiMove(int.MaxValue, movementScore);
                 aiMove.AddMoveAction(characterBoardEntity, m, DoNextAction);
@@ -40,10 +52,14 @@ namespace Placeholdernamespace.Battle.Entities.AI
                 {
                     if(t.BoardEntity != null)
                     {
-                        aiMove = new AiMove(targetScore(t.BoardEntity), 0);
-                        aiMove.AddMoveAction(characterBoardEntity, m, DoNextAction);
-                        aiMove.AddAttackAction(skill, t, DoNextAction);
-                        aiMoves.Add(aiMove);
+                        // must attack the raged target if there is one
+                        if (ragedBy == null || ragedBy == t.BoardEntity)
+                        {
+                            aiMove = new AiMove(targetScore(t.BoardEntity), 0);
+                            aiMove.AddMoveAction(characterBoardEntity, m, DoNextAction);
+                            aiMove.AddAttackAction(skill, t, DoNextAction);
+                            aiMoves.Add(aiMove);
+                        }
                     }
                 }
                 moveToTargets[m] = entities;

@@ -103,7 +103,7 @@ namespace Placeholdernamespace.Battle.Managers
             }
         }
 
-        private void ReCalcQueue()
+        public void ReCalcQueue()
         {
             turnQueue = ReCalcQueueHelper();
         }
@@ -112,8 +112,11 @@ namespace Placeholdernamespace.Battle.Managers
         {
             List<BoardEntity> returnQueue = new List<BoardEntity>();
             returnQueue.AddRange(enities);
-            returnQueue.OrderBy(x => { return -(x.Stats.GetStatInstance().GetStat(StatType.Speed).Value +
-                (.01 * x.Stats.GetNonMuttableStat(StatType.Movement).Value)); });
+            // this should order it so that speed determines the turn order with movement as a tiebreaker
+            returnQueue = returnQueue.OrderBy(x => {
+                return -(x.Stats.GetNonMuttableStat(StatType.Speed).Value)
+                - (.01 * x.Stats.GetNonMuttableStat(StatType.Movement).Value);
+            }).ToList();
             return returnQueue;
         }
 

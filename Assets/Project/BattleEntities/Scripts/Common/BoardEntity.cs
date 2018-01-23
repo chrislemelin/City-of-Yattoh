@@ -90,16 +90,20 @@ namespace Placeholdernamespace.Battle.Entities
             get { return name; }
         }
 
-        public virtual void Init(TurnManager turnManager, TileManager tileManager, BoardEntitySelector boardEntitySelector, BattleCalculator battleCalculator)
+        public virtual void Init(Position startingPosition, TurnManager turnManager, TileManager tileManager, BoardEntitySelector boardEntitySelector, BattleCalculator battleCalculator)
         {
             healthBar = Instantiate(healthBar);
             healthBar.transform.SetParent(FindObjectOfType<Canvas>().gameObject.transform);
             healthBar.GetComponent<UIFollow>().target = gameObject;
             healthBar.transform.SetAsFirstSibling();
             healthBar.transform.position = new Vector3(100000, 100000);
+
             this.turnManager = turnManager;
             this.tileManager = tileManager;
             this.boardEntitySelector = boardEntitySelector;
+
+            tileManager.AddBoardEntity(startingPosition, gameObject);
+
             stats.updateStatHandler += UpdateUi;
             stats.Start(this);
 
@@ -127,6 +131,7 @@ namespace Placeholdernamespace.Battle.Entities
             }
         }
 
+
         public void Hover()
         {
             boardEntitySelector.Hover(this);
@@ -136,6 +141,8 @@ namespace Placeholdernamespace.Battle.Entities
         {
             boardEntitySelector.ExitHover();
         }
+
+
     }
 
     public enum Team { Player, Enemy, Neutral, Environment }
