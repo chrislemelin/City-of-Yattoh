@@ -14,6 +14,11 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         {
         }
 
+        public override void StartTurn()
+        {
+            PopStack(1);
+        }
+
         public void addRemoveAction(Func<Passive, bool> remove)
         {
             this.remove = remove;
@@ -26,7 +31,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
             {
                 if(remove != null)
                 {
-                    remove((Passive)this);
+                    remove(this);
                 }
             }
         }

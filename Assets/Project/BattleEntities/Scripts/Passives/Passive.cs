@@ -12,7 +12,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         protected BoardEntity boardEntity;
 
         protected string title;
-        protected string description;
+        protected string description = "CHANGE THE PASSIVE DESCRIPTION PLS";
         protected Color displayColor;
 
         protected TakeDamageReturn takeDamageReturn = TakeDamageReturn.Normal;
@@ -33,7 +33,6 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         public Passive()
         {
-
         }
 
         public Passive(BattleCalculator battleCalculator, BoardEntity boardEntity)
@@ -111,6 +110,11 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         {
             return skillModifiers;
         }       
+
+        public virtual void StartTurn()
+        {
+
+        }
 
         public virtual void LeaveTile(Tile t)
         {

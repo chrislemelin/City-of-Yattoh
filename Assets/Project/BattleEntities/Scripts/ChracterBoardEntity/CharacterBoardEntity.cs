@@ -158,6 +158,7 @@ namespace Placeholdernamespace.Battle.Entities
             }
             foreach(Passive passive in passives)
             {
+                passive.StartTurn();
                 skipTurn = passive.SkipTurn(skipTurn);
             }
             if(skipTurn)

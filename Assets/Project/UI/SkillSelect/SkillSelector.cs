@@ -82,8 +82,12 @@ namespace Placeholdernamespace.Battle.Interaction
             List<TileSelectOption> tileSelectOptions = skill.TileOptionSet();
             foreach(TileSelectOption option in tileSelectOptions)
             {
-                option.OnHoverAction = () => profile.UpdateProfile(option.DisplayStats.BoardEntity, option.DisplayStats);
+                if (option.DisplayStats != null)
+                {
+                    option.OnHoverAction = () => profile.UpdateProfile(option.DisplayStats.BoardEntity, option.DisplayStats);
+                }
             }
+
 
             tileSelectionManager.SelectTile(boardEntity, tileSelectOptions, ExecuteSkill);
             

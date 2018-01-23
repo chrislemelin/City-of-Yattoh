@@ -39,36 +39,40 @@ namespace Placeholdernamespace.Battle.Interaction
         public void TileClicked(PathOnClick pathOnClick)
         {
             if (selectionCallBack != null && active)
-            {
-                BoardEntity tempSelectedEntity = selectedEntity;
-                selectedEntity = null;
-                ClearGlowPath();
+            {              
+                //checks to see if the selected tile is unselectable
+                if (!(pathOnClick != null && possibleTiles.ContainsKey(pathOnClick.Tile) && !possibleTiles[pathOnClick.Tile].Clickable))
+                {
+                    Action<TileSelectOption> tempSelectOption = selectionCallBack;
+                    selectionCallBack = null;
+                    BoardEntity tempSelectedEntity = selectedEntity;
+                    selectedEntity = null;
+                    ClearGlowPath();
 
-                foreach (Tile t in possibleTiles.Keys)
-                {
-                    unHighlightMovableTile(t.GetComponentInChildren<PathOnClick>());
-                }
-                if (tempSelectedEntity != null)
-                {
-                    unGlow(tempSelectedEntity.GetTile().PathOnClick);
-                }
-
-                Action<TileSelectOption> tempSelectOption = selectionCallBack;
-                selectionCallBack = null;
-                if (pathOnClick!= null && possibleTiles.ContainsKey(pathOnClick.Tile))
-                {
-                    tempSelectOption(possibleTiles[pathOnClick.Tile]);
-                }
-                else
-                {
-                    tempSelectOption(null);
-                    active = false;
-                    if (pathOnClick != null && tempSelectedEntity != null && pathOnClick != tempSelectedEntity.GetTile().PathOnClick)
+                    foreach (Tile t in possibleTiles.Keys)
                     {
-                        pathOnClick.OnMouseUp();
+                        unHighlightMovableTile(t.GetComponentInChildren<PathOnClick>());
                     }
-                    active = true;
-                }                                    
+                    if (tempSelectedEntity != null)
+                    {
+                        unGlow(tempSelectedEntity.GetTile().PathOnClick);
+                    }
+                 
+                    if (pathOnClick != null && possibleTiles.ContainsKey(pathOnClick.Tile))
+                    {
+                        tempSelectOption(possibleTiles[pathOnClick.Tile]);
+                    }
+                    else
+                    {
+                        tempSelectOption(null);
+                        active = false;
+                        if (pathOnClick != null && tempSelectedEntity != null && pathOnClick != tempSelectedEntity.GetTile().PathOnClick)
+                        {
+                            pathOnClick.OnMouseUp();
+                        }
+                        active = true;
+                    }
+                }
             }
         }
 
@@ -294,6 +298,7 @@ namespace Placeholdernamespace.Battle.Interaction
 
     public class TileSelectOption
     {
+        
         public Tile Selection;
         public List<Tile> OnHover = new List<Tile>();
         public Color? HoverColor;
@@ -301,6 +306,7 @@ namespace Placeholdernamespace.Battle.Interaction
         public object ReturnObject;
         public Action OnHoverAction;
         public Stats DisplayStats;
+        public bool Clickable = true;
 
     }
 }

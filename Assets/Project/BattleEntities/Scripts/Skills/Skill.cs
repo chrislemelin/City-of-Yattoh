@@ -24,7 +24,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         protected BattleCalculator battleCalculator;
 
         [SerializeField]
-        protected string description;
+        protected string description = "CHANGE THE SKILL DESCRIPTION PLS";
 
         protected int currentCoolDown = 0;
 
@@ -121,9 +121,11 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         public virtual List<TileSelectOption> TileOptionSet()
         {
             List<Tile> tiles = TileSetHelper(boardEntity.Position);
+            HashSet<Tile> usedTiles = new HashSet<Tile>();
             List<TileSelectOption> tileOptions = new List<TileSelectOption>();
             foreach (Tile t in tiles)
             {
+                usedTiles.Add(t);
                 SkillReport report = GetSkillReport(t);
                 tileOptions.Add(new TileSelectOption
                 {
@@ -134,6 +136,21 @@ namespace Placeholdernamespace.Battle.Entities.Skills
                     DisplayStats = report.TargetAfter,
                 });
             }
+            foreach (Tile t in TileSetPossible(boardEntity.Position))
+            {
+                if (!usedTiles.Contains(t))
+                {
+                    tileOptions.Add(new TileSelectOption
+                    {
+                        Selection = t,
+                        OnHover = new List<Tile>() { t },
+                        HighlightColor = selectColor,
+                        HoverColor = highlightColor,
+                        Clickable = false
+                    });
+                }
+            }
+
             return tileOptions;
         }
 
