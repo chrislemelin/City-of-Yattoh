@@ -16,9 +16,6 @@ namespace Placeholdernamespace.Battle.Entities.Instances
         {
             base.Init(startingPosition, turnManager, tileManager, boardEntitySelector, battleCalculator);
 
-            Passive p = new PassiveAreaOfInfluenceTaunt(battleCalculator, this, tileManager);
-            passives.Add(p);
-            
         }
 
     }

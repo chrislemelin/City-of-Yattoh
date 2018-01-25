@@ -121,6 +121,11 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         public virtual HashSet<Tile> GetTauntTiles() { return new HashSet<Tile>();}
 
+        public virtual bool IsStealthed(bool stealthed)
+        {
+            return stealthed;
+        }
+
         public virtual CharacterBoardEntity GetRagedBy(CharacterBoardEntity characterBoardEntity)
         {
             return characterBoardEntity;

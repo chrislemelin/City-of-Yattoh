@@ -312,14 +312,14 @@ namespace Placeholdernamespace.Battle.Env
             }
             return tiles;
         }
-        
+
         /// <summary>
         /// another dfs, kms
         /// </summary>
         /// <param name="start"></param>
         /// <param name="team"></param>
         /// <returns></returns>
-        public BoardEntity NearestBoardEntity(Position start, Team? team, BoardEntity ignore = null)
+        public BoardEntity NearestBoardEntity(Position start, Team? team, BoardEntity ignore = null, bool includeStealth = false)
         {
             Queue<Tile> tiles = new Queue<Tile>();
             HashSet<Tile> visitedTiles = new HashSet<Tile>();
@@ -332,7 +332,8 @@ namespace Placeholdernamespace.Battle.Env
                 {
                     if(!visitedTiles.Contains(newTile))
                     {
-                        if(newTile.BoardEntity != null && ((team == null || newTile.BoardEntity.Team == team) && newTile.BoardEntity != ignore))
+                        if(newTile.BoardEntity != null && ((team == null || newTile.BoardEntity.Team == team)
+                            && newTile.BoardEntity != ignore) && !((CharacterBoardEntity)newTile.BoardEntity).IsStealthed())
                         {
                             return newTile.BoardEntity;                           
                         }

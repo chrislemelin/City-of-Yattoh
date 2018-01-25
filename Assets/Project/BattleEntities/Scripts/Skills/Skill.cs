@@ -24,6 +24,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         protected CharacterBoardEntity boardEntity;
         protected BattleCalculator battleCalculator;
         protected AnimatorUtils.animationType animationType = AnimatorUtils.animationType.attack;
+        protected string flavorText;
 
         [SerializeField]
         protected string description = "CHANGE THE SKILL DESCRIPTION PLS";
@@ -75,11 +76,15 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             return coolDown;
         }
 
-        public readonly int? RANGE_SELF = null;
-        public readonly int? RANGE_ADJACENT = int.MinValue;
+        public static readonly int? RANGE_SELF = null;
+        public static readonly int? RANGE_ADJACENT = int.MinValue;
         protected int? range = null;
         public int GetRange()
         {
+            if(GetRangeInternal() == RANGE_ADJACENT)
+            {
+                return (int)RANGE_ADJACENT;
+            }
             int? value = getSkillModifiers(SkillModifierType.Range, GetRangeInternal());
             if (value == null)
             {
@@ -87,7 +92,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             }
             return (int)value;
         }
-        protected int? GetRangeInternal()
+        protected virtual int? GetRangeInternal()
         {
             return range;
         }
@@ -174,7 +179,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         /// <returns></returns>
         public virtual List<Tile> TileSetHelper(Position p)
         {
-            if(range == RANGE_SELF)
+            if(GetRangeInternal() == RANGE_SELF)
             {
                 return TileSetPossible(p);
             }
@@ -192,13 +197,13 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         /// <returns></returns>
         public virtual List<Tile> TileSetPossible(Position p)
         {
-            if(range == RANGE_SELF)
+            if(GetRangeInternal() ==  RANGE_SELF)
             {
                 List<Tile> returnTiles = new List<Tile>();
                 returnTiles.Add(tileManager.GetTile(p));
                 return returnTiles;
             }
-            if(range == RANGE_ADJACENT)
+            if(GetRangeInternal() == RANGE_ADJACENT)
             {
                 return tileManager.GetAllTilesDiag(p, 1);
             }
@@ -233,7 +238,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
         public virtual bool IsActive()
         {
-            return TileSet().Count > 0 && CanAffortAPCost() && currentCoolDown == 0;
+            return CanAffortAPCost() && currentCoolDown == 0;
         }
 
         public SkillReport TheoreticalAction(Tile t)
@@ -302,6 +307,10 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             return null;
         }
 
+        public string GetFlavorText()
+        {
+            return flavorText;
+        }
 
         public string GetDescription()
         {
@@ -335,8 +344,16 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             returnString = GetDescriptionExtraHelper("STRENGTH: ", GetStrengthInternal, GetStrength, returnString);
             returnString = GetDescriptionExtraHelper("AP COST: ", GetAPCostInternal, GetAPCost, returnString);
             returnString = GetDescriptionExtraHelper("COOLDOWN: ", GetCoolDownInternal, GetCoolDown, returnString);
-            returnString = GetDescriptionExtraHelper("RANGE: ", GetRangeInternal, GetRange, returnString);
-            
+
+            if (GetRange() == RANGE_ADJACENT)
+            {
+                returnString += "RANGE: Adjacent\n";
+            }
+            else
+            {
+                returnString = GetDescriptionExtraHelper("RANGE: ", GetRangeInternal, GetRange, returnString);
+            }
+
             return returnString;
             
         }

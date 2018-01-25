@@ -53,7 +53,8 @@ namespace Placeholdernamespace.Battle.Interaction
 
         public void setSelectedBoardEntity(BoardEntity boardEntity)
         {
-            if (boardEntity == TurnManager.CurrentBoardEntity)
+            
+            if (boardEntity == TurnManager.CurrentBoardEntity && (boardEntity == null || boardEntity.Team != Team.Enemy ))
             {
                 setHoverEntity(null);
                 selectedBoardEntity = null;

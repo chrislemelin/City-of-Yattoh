@@ -17,8 +17,13 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             title = "Basic Attack";
             description = "Deal STRENGTH damage to one enemy";
             apCost = 1;
-            range = RANGE_ADJACENT;
             coolDown = 1;
+            flavorText = "this is the basic attack";
+        }
+
+        protected override int? GetRangeInternal()
+        {
+            return boardEntity.Range;
         }
 
         protected override int? GetStrengthInternal()

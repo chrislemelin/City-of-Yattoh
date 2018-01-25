@@ -101,7 +101,7 @@ namespace Placeholdernamespace.Battle.UI
             foreach(Passive passive in passives)
             {
                 GameObject passiveObject = Instantiate(passiveGameObject);
-                passiveObject.GetComponent<TooltipSpawner>().Init(passive.GetTitle, passive.GetDescription);
+                passiveObject.GetComponent<TooltipSpawner>().Init(passive.GetTitle, passive.GetDescription, ()=> { return null; });
                 passiveObject.transform.SetParent(passivePanel.transform);
                 this.passives.Add(passiveObject);
 
@@ -154,7 +154,7 @@ namespace Placeholdernamespace.Battle.UI
         private void AddText(string text, string tooltip = null)
         {
             GameObject movementStat = Instantiate(textGameObject);
-            movementStat.GetComponent<TooltipSpawner>().Init(() => { return ""; }, () => { return tooltip; });
+            movementStat.GetComponent<TooltipSpawner>().Init(() => { return ""; }, () => { return tooltip; }, ()=> { return null; });
             movementStat.GetComponent<TextMeshProUGUI>().text = text;
             movementStat.transform.SetParent(profilePanel.transform, false);
             texts.Add(movementStat);

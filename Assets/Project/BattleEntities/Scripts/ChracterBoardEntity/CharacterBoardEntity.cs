@@ -33,12 +33,17 @@ namespace Placeholdernamespace.Battle.Entities
         [SerializeField]
         private float speed = 5;
 
+        protected int? range = Skill.RANGE_ADJACENT;
+        public int? Range
+        {
+            get { return range; }
+        }
+
         protected List<Passive> passives = new List<Passive>();
         public List<Passive> Passives
         {
             get { return passives; }
         }
-
 
         private BasicAttack basicAttack;
         public BasicAttack BasicAttack
@@ -71,12 +76,6 @@ namespace Placeholdernamespace.Battle.Entities
             }
             basicAttack = new BasicAttack(tileManager, this, battleCalculator);
             skills.Add(basicAttack);
-
-            passives.Add(new PassiveAreaOfInfluenceSkill(battleCalculator, this, tileManager));
-
-            List<SkillModifier> skillModifiers = new List<SkillModifier>();
-            skillModifiers.Add(new SkillModifier(SkillModifierType.Power, SkillModifierApplication.Add, 1));
-            passives.Add(new PassiveGeneric("Damage Buff", "Increases damage on skills by one", skillModifiers));
          
         }
 
@@ -225,6 +224,11 @@ namespace Placeholdernamespace.Battle.Entities
             passives.Add(passive);
         }
 
+        public void AddSkill(Skill skill)
+        {
+            skills.Add(skill);
+        }
+
         public void AddBuff(Buff buff)
         {
             buff.addRemoveAction(passives.Remove);          
@@ -252,6 +256,16 @@ namespace Placeholdernamespace.Battle.Entities
                 }
             }
             return returnTauntTiles;
+        }
+
+        public bool IsStealthed()
+        {
+            bool stealthed = false;
+            foreach(Passive p in passives)
+            {
+                stealthed = p.IsStealthed(stealthed);
+            }
+            return stealthed;
         }
 
         public void SetAnimation(AnimatorUtils.animationType type)

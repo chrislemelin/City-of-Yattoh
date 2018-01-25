@@ -23,6 +23,7 @@ namespace Placeholdernamespace.Common.UI
 
         private Func<string> getDescription;
         private Func<string> getTitle;
+        private Func<string> getFlavorText;
 
         private bool hover = false;
         public bool Hover
@@ -32,7 +33,7 @@ namespace Placeholdernamespace.Common.UI
 
 
         private GameObject spawnedTooltip = null;
-        private RectTransform spawnedTooltipRect = null;
+        private RectTransform spawnedTooltipRect = null;     
 
         // Use this for initialization
         void Start()
@@ -47,6 +48,7 @@ namespace Placeholdernamespace.Common.UI
                 spawnedTooltip = Instantiate(tooltip);
                 spawnedTooltip.GetComponent<Tooltip>().setDescription(getDescription());
                 spawnedTooltip.GetComponent<Tooltip>().setTitle(getTitle());
+                spawnedTooltip.GetComponent<Tooltip>().setFlavorText(getFlavorText());
                 spawnedTooltip.GetComponent<Tooltip>().setDescriptionFontSize(fontSize);
                 spawnedTooltip.transform.SetParent(FindObjectOfType<Canvas>().transform);
                 spawnedTooltip.transform.SetAsLastSibling();
@@ -84,8 +86,16 @@ namespace Placeholdernamespace.Common.UI
       
         }
 
-        public void Init(Func<string> getTitle, Func<string> getDescription)
+        public void Init(Func<string> getTitle, Func<string> getDescription, Func<string> getFlavorText = null)
         {
+            if (getFlavorText != null)
+            {
+                this.getFlavorText = getFlavorText;
+            }
+            else
+            {
+                this.getFlavorText = () => { return null; };
+            }
             this.getDescription = getDescription;
             this.getTitle = getTitle;
         }

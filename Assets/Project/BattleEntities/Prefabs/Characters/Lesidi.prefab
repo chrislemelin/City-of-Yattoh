@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 114139175213496152}
   - component: {fileID: 114876492714574670}
   - component: {fileID: 114418294993468522}
+  - component: {fileID: 114560428717004758}
   m_Layer: 5
   m_Name: Character03_2
   m_TagString: Untagged
@@ -93,6 +94,7 @@ GameObject:
   - component: {fileID: 4914905680874010}
   - component: {fileID: 114631525846542012}
   - component: {fileID: 114828439413869006}
+  - component: {fileID: 114023767886800988}
   m_Layer: 0
   m_Name: Lesidi
   m_TagString: Untagged
@@ -229,6 +231,17 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114023767886800988
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1542313980632146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c67de6ac62216c4b9357b98fd0c8d34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114074054411203152
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -324,6 +337,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterBoardEntity: {fileID: 114828439413869006}
+--- !u!114 &114560428717004758
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1083589137289046}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c67de6ac62216c4b9357b98fd0c8d34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114631525846542012
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -422,7 +446,7 @@ MonoBehaviour:
   name: Lesidi
   characterAnimation: {fileID: 114139175213496152}
   charactersprite: {fileID: 1083589137289046}
-  speed: 1.02
+  speed: 1
   enemyAIBasic1: {fileID: 0}
 --- !u!114 &114847573284039022
 MonoBehaviour:

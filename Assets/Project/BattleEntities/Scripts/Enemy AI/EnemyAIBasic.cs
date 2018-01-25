@@ -55,7 +55,7 @@ namespace Placeholdernamespace.Battle.Entities.AI
                     if(t.BoardEntity != null)
                     {
                         // must attack the raged target if there is one
-                        if (ragedBy == null || ragedBy == t.BoardEntity)
+                        if (ragedBy == null || ragedBy == t.BoardEntity && !((CharacterBoardEntity)t.BoardEntity).IsStealthed())
                         {
                             aiMove = new AiMove(targetScore(t.BoardEntity), 0);
                             if (m.destination != characterBoardEntity.GetTile())

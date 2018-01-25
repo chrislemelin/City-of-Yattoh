@@ -100,19 +100,22 @@ namespace Placeholdernamespace.Battle.Interaction
         private GameObject buildSkillButton(Skill skill)
         {
             bool interactable = skill.IsActive();
-            GameObject skillButton = buildSkillButton(skill.GetTitle(), () => { SetSelectedSkill(skill); }, skill.GetDescription, interactable);
+            GameObject skillButton = buildSkillButton(skill.GetTitle(), () => { SetSelectedSkill(skill); }, skill.GetDescription, 
+                skill.GetFlavorText, interactable);
             return skillButton;
         }
 
         private void buildCancelSkillButton()
         {
-            cancelButton = buildSkillButton("Cancel", () => { tileSelectionManager.CancelSelection(); ExecuteSkill(null); },() => { return null; } );
+            cancelButton = buildSkillButton("Cancel", () => { tileSelectionManager.CancelSelection(); ExecuteSkill(null); },() => { return null; },
+                () => { return null; });
         }
 
-        private GameObject buildSkillButton(string title, Action onClick, Func<String> getDescription, bool interactable = true)
+        private GameObject buildSkillButton(string title, Action onClick, Func<String> getDescription,
+            Func<string>getFlavorText, bool interactable = true)
         {
             GameObject skillButton = Instantiate(skillOptionButton);
-            skillButton.GetComponent<TooltipSpawner>().Init(() => { return null; }, getDescription);
+            skillButton.GetComponent<TooltipSpawner>().Init(() => { return null; }, getDescription, getFlavorText);
             skillButton.GetComponent<Button>().interactable = interactable;
             skillButton.GetComponentInChildren<TextMeshProUGUI>().text = title;
             skillButton.transform.SetParent(skillOptionContainer.transform);
