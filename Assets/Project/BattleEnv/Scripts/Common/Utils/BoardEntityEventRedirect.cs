@@ -3,30 +3,47 @@ using System.Collections;
 using Placeholdernamespace.Common.Interfaces;
 using Placeholdernamespace.Battle.Entities;
 using Placeholdernamespace.Battle.Interaction;
+using UnityEngine.EventSystems;
 
 namespace Placeholdernamespace.Common.Utils
 {
-    public class BoardEntityEventRedirect : OnClickRedirect
+    public class BoardEntityEventRedirect : OnClickRedirect, IPointerClickHandler, 
+        IPointerEnterHandler, IPointerExitHandler
     {
+        [SerializeField]
+        CharacterBoardEntity characterBoardEntity;
 
         public override IClickable GetTarget()
         {
-            CharacterBoardEntity c = GetComponentInParent<CharacterBoardEntity>();
-            return ((IClickable)c.GetTile().GetComponentInChildren<PathOnClick>());
+            return ((IClickable)characterBoardEntity.GetTile().GetComponentInChildren<PathOnClick>());
         }
 
-        public void OnMouseEnter()
+        public void OnPointerClick(PointerEventData eventData)
         {
-            CharacterBoardEntity c = GetComponentInParent<CharacterBoardEntity>();
-            c.GetTile().GetComponentInChildren<OutlineOnHover>().OnMouseEnter();
-            c.GetTile().GetComponentInChildren<PathOnClick>().OnMouseEnter();
+            //characterBoardEntity.GetTile().GetComponentInChildren<OutlineOnHover>().OnMousUp();
+            characterBoardEntity.GetTile().GetComponentInChildren<PathOnClick>().OnMouseUpHelper();
         }
 
-        public void OnMouseExit()
+        public void OnPointerEnter(PointerEventData eventData)
         {
-            CharacterBoardEntity c = GetComponentInParent<CharacterBoardEntity>();
-            c.GetTile().GetComponentInChildren<OutlineOnHover>().OnMouseExit();
-            c.GetTile().GetComponentInChildren<PathOnClick>().OnMouseExit();
+            //CharacterBoardEntity c = GetComponentInParent<CharacterBoardEntity>();
+            characterBoardEntity.GetTile().GetComponentInChildren<OutlineOnHover>().OnMouseEnter();
+            characterBoardEntity.GetTile().GetComponentInChildren<PathOnClick>().OnMouseEnterHelper();
+        }
+
+        public void OnMouseOver()
+        {
+            //characterBoardEntity.GetTile().GetComponentInChildren<PathOnClick>().OnMouseOver();
+            //characterBoardEntity.GetTile().GetComponentInChildren<OutlineOnHover>().OnMouseOver();
+
+
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            //CharacterBoardEntity c = GetComponentInParent<CharacterBoardEntity>();
+            characterBoardEntity.GetTile().GetComponentInChildren<OutlineOnHover>().OnMouseExit();
+            characterBoardEntity.GetTile().GetComponentInChildren<PathOnClick>().OnMouseExit();
         }
     }
 }

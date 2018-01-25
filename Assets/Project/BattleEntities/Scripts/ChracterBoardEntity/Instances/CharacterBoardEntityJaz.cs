@@ -5,6 +5,7 @@ using Placeholdernamespace.Battle.Env;
 using Placeholdernamespace.Battle.Interaction;
 using Placeholdernamespace.Battle.Managers;
 using UnityEngine;
+using Placeholdernamespace.Battle.Entities.Passives;
 
 namespace Placeholdernamespace.Battle.Entities.Instances
 {
@@ -14,8 +15,12 @@ namespace Placeholdernamespace.Battle.Entities.Instances
         public override void Init(Position startingPosition, TurnManager turnManager, TileManager tileManager, BoardEntitySelector boardEntitySelector, BattleCalculator battleCalculator)
         {
             base.Init(startingPosition, turnManager, tileManager, boardEntitySelector, battleCalculator);
+
+            Passive p = new PassiveAreaOfInfluenceTaunt(battleCalculator, this, tileManager);
+            passives.Add(p);
             
         }
 
     }
 }
+

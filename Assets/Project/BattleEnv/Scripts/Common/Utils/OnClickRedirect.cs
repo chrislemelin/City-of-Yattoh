@@ -10,9 +10,5 @@ namespace Placeholdernamespace.Common.Utils
 
         public abstract IClickable GetTarget();
 
-        public void OnMouseDown()
-        {
-            GetTarget().OnMouseUp();
-        }
     }
 }

@@ -3,6 +3,7 @@ using Placeholdernamespace.Battle.Entities.Passives;
 using Placeholdernamespace.Battle.Interaction;
 using Placeholdernamespace.Battle.Managers;
 using Placeholdernamespace.Battle.UI;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,9 @@ namespace Placeholdernamespace.Battle.Env
 
         private Dictionary<Tuple<Position, Position>, GameObject> tupleToWall = new Dictionary<Tuple<Position, Position>, GameObject>();
         private Dictionary<Position, Tile> coordinateToTile = new Dictionary<Position, Tile>();
+        private Dictionary<Position, Tile> tempCoordinateToTile = null;
+
+        public event Action UpdatedBoardEntityPosition;
 
         public void Init(TurnManager turnManager, Profile profile)
         {
@@ -33,27 +37,44 @@ namespace Placeholdernamespace.Battle.Env
         public void MoveBoardEntity(Position p, BoardEntity entity)
         {
             Tile oldTile = entity.GetTile();
-            Tile tile = GetTile(p);
-            if(entity is CharacterBoardEntity)
-            {
-                List<PassiveAreaOfInfluence> areas = ((CharacterBoardEntity)entity).GetAreaOfInfluencePassives();
-                foreach(PassiveAreaOfInfluence passive in areas)
-                {
-                    passive.LeaveTile(tile);
-                    passive.EnterTile(tile);                    
-                }
-             }
+            Tile tile = GetTile(p);      
+
             entity.GetTile().BoardEntity = null;
             entity.Position = p;
             entity.GetTile().BoardEntity = entity;
             entity.transform.position = entity.GetTile().transform.position;
+
+            if (entity is CharacterBoardEntity)
+            {
+                foreach (Passive passive in ((CharacterBoardEntity)entity).Passives)
+                {
+                    passive.LeaveTile(tile);
+                    passive.EnterTile(tile);
+                }
+            }
+            if (UpdatedBoardEntityPosition != null)
+                UpdatedBoardEntityPosition();
         }
 
         public Tile GetTile(Position position)
         {
-            if (coordinateToTile.ContainsKey(position))
+            if(position == null)
             {
-                return coordinateToTile[position];
+                int a = 0;
+            }
+            Dictionary<Position, Tile> coords;
+            if(tempCoordinateToTile != null)
+            {
+                coords = tempCoordinateToTile;
+            }
+            else
+            {
+                coords = coordinateToTile;
+            }
+
+            if (coords.ContainsKey(position))
+            {
+                return coords[position];
             }
             else
             {
@@ -183,14 +204,8 @@ namespace Placeholdernamespace.Battle.Env
                     Tile neighbor = this.GetTile(neighborVector);
                     if (neighbor != null)
                     {
-                        if (ignoreWalls)
-                        {
-                            returnList.Add(neighbor);
-                        }
-                        else if (!startingTile.CheckIfBlocked(neighbor))
-                        {
-                            returnList.Add(neighbor);
-                        }
+                        returnList.Add(neighbor);
+
                     }
                 }
             }
@@ -336,8 +351,49 @@ namespace Placeholdernamespace.Battle.Env
         /// <param name="start"></param>
         /// <param name="range"></param>
         /// <returns></returns>
-        public List<Move> DFSMoves(Position start, CharacterBoardEntity character, int apLimit = 2, Team? team = null)
+        public List<Move> DFSMoves(Position start, CharacterBoardEntity character, int apLimit = 2, Team? team = null,
+            bool ignoreTaunt = false)
         {
+            HashSet<Tile> availibleTiles = new HashSet<Tile>();
+            if (!ignoreTaunt)
+            {
+                foreach(CharacterBoardEntity characterBoardEntity in CharacterBoardEntity.AllCharacterBoardEntities)
+                { 
+                    if(characterBoardEntity == character || characterBoardEntity.Team == character.Team)
+                    {
+                        continue;
+                    }
+                    bool add = false;
+                    HashSet<Tile> tauntTiles = characterBoardEntity.GetTauntTiles();
+                    Tile currentCharacterTile = character.GetTile();
+
+                    foreach (Tile t in tauntTiles )
+                    {
+                        if(currentCharacterTile == t)
+                        {
+                            add = true;
+                        }
+                    }
+                    if(add)
+                    {
+                        foreach (Tile t in tauntTiles)
+                        {
+                            availibleTiles.Add(t);
+                        }
+                    }
+
+                }
+            }                  
+
+            if (availibleTiles.Count > 0)
+            {
+                tempCoordinateToTile = new Dictionary<Position, Tile>();
+                foreach (Tile t in availibleTiles)
+                {
+                    tempCoordinateToTile.Add(t.Position, t);
+                }
+            }
+
             int movementStats = character.Stats.GetStatInstance().getValue(Entities.AttributeStats.StatType.Movement);
             int movementPoints = character.Stats.GetMutableStat(Entities.AttributeStats.StatType.Movement).Value;
 
@@ -406,25 +462,10 @@ namespace Placeholdernamespace.Battle.Env
                 
             }
 
-            foreach (Move t in tiles)
-            {
-                if (t.destination.Position.Equals(new Position(1, 0)))
-                {
-                    int a = 0;
-                }
-            }
-
             //cannot end on an already occupied tile
             tiles.RemoveAll(x => (x.destination.BoardEntity));
 
-            for (int count = 0; count < tiles.Count; count ++)
-            {
-                if (tiles[count].destination.Position.Equals(new Position(1, 0)))
-                {
-                    int a = 0;
-                }
-            }
-
+            tempCoordinateToTile = null;
             return tiles;
         }
 
@@ -436,6 +477,8 @@ namespace Placeholdernamespace.Battle.Env
                 boardEntity.GetComponent<BoardEntity>().Position = position;
                 boardEntity.transform.position = tile.transform.position;
                 tile.SetBoardEntity(boardEntity.GetComponent<BoardEntity>());
+                if(UpdatedBoardEntityPosition != null)
+                    UpdatedBoardEntityPosition();
                 return true;
             }
             else

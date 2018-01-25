@@ -19,6 +19,7 @@ namespace Placeholdernamespace.Battle.Interaction
         private TileSelectionManager pathSelectManager;
 
         public static bool disabled = false;
+        private bool hover = false;
 
         private bool IsActive
         {
@@ -43,19 +44,27 @@ namespace Placeholdernamespace.Battle.Interaction
             {
                 if (tile.BoardEntity != null && tile.BoardEntity.GetComponentInChildren<GlowManager>() != null && !CameraMove.Moving)
                 {
-                    tile.BoardEntity.Hover();
-                    tile.BoardEntity.GetComponentInChildren<GlowManager>().TurnOn(this, onHoverColor, onlyAddIfStackEmpty: true, putOnColorStack: false);
+                    hover = true;
+                    //tile.BoardEntity.Hover();
+                    //tile.BoardEntity.GetComponentInChildren<GlowManager>().TurnOn(this, onHoverColor, onlyAddIfStackEmpty: true, putOnColorStack: false);
                 }
                 //glowManager.TurnOn(this, onHoverColor, onlyAddIfStackEmpty: true, putOnColorStack: false);
             }
+        }
+
+        public void OnMouseOver()
+        {
+            if (!hover)
+                OnMouseEnter();
         }
 
         public void OnMouseExit()
         {
             if (tile.BoardEntity != null && tile.BoardEntity.GetComponentInChildren<GlowManager>() != null && !CameraMove.Moving)
             {
+                hover = false;
                 tile.BoardEntity.ExitHover();
-                tile.BoardEntity.GetComponentInChildren<GlowManager>().TurnOff(this, false);
+                //tile.BoardEntity.GetComponentInChildren<GlowManager>().TurnOff(this, false);
             }
             //glowManager.TurnOff(this, false);
         }

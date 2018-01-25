@@ -13,8 +13,8 @@ namespace Placeholdernamespace.Battle.Interaction
         private TileSelectionManager pathSelectManager;
         public Color BoardEntityOnSelectColor;
         public Color TileOnSelectColor;
-        private bool hover;
-
+        private bool hover = false;
+        
 
         private Tile tile;
         public Tile Tile
@@ -62,7 +62,20 @@ namespace Placeholdernamespace.Battle.Interaction
 
         public void OnMouseUp()
         {
-            if (!pause && !UIHoverListener.isUIOverride)
+            if (!UIHoverListener.isUIOverride)
+            {
+                OnMouseUpHelper();
+            }
+        }
+
+        public void TurnHoverOff()
+        {
+            hover = false;
+        }
+
+        public void OnMouseUpHelper()
+        {
+            if (!pause)
             {
                 // pass the select on to the board entity
                 if (tile.BoardEntity != null && !pathSelectManager.IsActive())
@@ -76,18 +89,28 @@ namespace Placeholdernamespace.Battle.Interaction
                 }
             }
         }
-
-        public void OnMouseEnter()
+        
+        public void OnMouseEnterHelper()
         {
-            if (!pause && !UIHoverListener.isUIOverride && !CameraMove.Moving)
+            if (!pause && !CameraMove.Moving)
             {
-                if (pathSelectManager.IsActive())
+                if (pathSelectManager.IsActiveHover())
                 {
                     hover = true;
                     pathSelectManager.TileHover(this);
-                }
+                }              
             }
         }
+
+        public void OnMouseEnter()
+        {
+            if (!UIHoverListener.isUIOverride)
+            {
+                OnMouseEnterHelper();
+
+            }
+        }
+
 
         public void OnMouseOver()
         {

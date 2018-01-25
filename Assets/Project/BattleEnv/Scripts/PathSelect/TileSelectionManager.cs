@@ -18,6 +18,7 @@ namespace Placeholdernamespace.Battle.Interaction
         private bool tileSelectOptionsContainBE = false;
         private bool skillSelectorActive;
         public List<PathOnClick> glowpath = new List<PathOnClick>();
+        private bool isMovement = false;
 
         public Color defaultBoardEntityHighlightColor;
         public Color defaultHighlightColor;
@@ -32,6 +33,15 @@ namespace Placeholdernamespace.Battle.Interaction
         }
 
         public bool IsActive()
+        {
+            if(selectionCallBack != null && isMovement)
+            {
+                return false;
+            }
+            return selectionCallBack != null;
+        }
+
+        public bool IsActiveHover()
         {
             return selectionCallBack != null;
         }
@@ -57,7 +67,7 @@ namespace Placeholdernamespace.Battle.Interaction
                     {
                         unGlow(tempSelectedEntity.GetTile().PathOnClick);
                     }
-                 
+                    
                     if (pathOnClick != null && possibleTiles.ContainsKey(pathOnClick.Tile))
                     {
                         tempSelectOption(possibleTiles[pathOnClick.Tile]);
@@ -66,12 +76,13 @@ namespace Placeholdernamespace.Battle.Interaction
                     {
                         tempSelectOption(null);
                         active = false;
-                        if (pathOnClick != null && tempSelectedEntity != null && pathOnClick != tempSelectedEntity.GetTile().PathOnClick)
+                        if (pathOnClick != null && tempSelectedEntity != null && pathOnClick != tempSelectedEntity.GetTile().PathOnClick && !isMovement)
                         {
-                            pathOnClick.OnMouseUp();
+                            //pathOnClick.OnMouseUp();
                         }
                         active = true;
                     }
+                    isMovement = false;
                 }
             }
         }
@@ -109,7 +120,7 @@ namespace Placeholdernamespace.Battle.Interaction
         public void ClearTileHover()
         {
             NewGlowPath(new List<PathOnClick>());
-            profile.UpdateProfile(selectedEntity);
+            //profile.UpdateProfile(selectedEntity);
         }
 
         private bool ValidityCheck(PathOnClick pathOnClick)
@@ -122,7 +133,8 @@ namespace Placeholdernamespace.Battle.Interaction
             return true;
         }
 
-        public void SelectTile (BoardEntity boardEntity, List<Tile> tiles, Action<TileSelectOption> callBack, Color? highlightColor, Color? hoverColor)
+        public void SelectTile (BoardEntity boardEntity, List<Tile> tiles, Action<TileSelectOption> callBack, Color? highlightColor, Color? hoverColor, 
+            bool isMovement = false)
         {
             Color highlightColorUsing = (Color)(highlightColor != null ? highlightColor : defaultHighlightColor);
             Color hoverColorUsing = (Color)(hoverColor != null ? hoverColor : defaultHoverColor);
@@ -141,7 +153,7 @@ namespace Placeholdernamespace.Battle.Interaction
             SelectTile(boardEntity, options, callBack);
         }
 
-        public void SelectTile(BoardEntity boardEntity, List<Move> moves, Action<TileSelectOption> callBack, Color? highlightColor, Color? hoverColor)
+        public void SelectTile(BoardEntity boardEntity, List<Move> moves, Action<TileSelectOption> callBack, Color? highlightColor, Color? hoverColor, bool isMovement = false)
         {
             Color highlightColorUsing = (Color)(highlightColor!= null ? highlightColor: defaultHighlightColor);
             Color hoverColorUsing = (Color)(hoverColor != null ? hoverColor : defaultHoverColor);
@@ -158,13 +170,14 @@ namespace Placeholdernamespace.Battle.Interaction
                     ReturnObject = m
                 });
             }
-            SelectTile(boardEntity, options, callBack);
+            SelectTile(boardEntity, options, callBack, isMovement);
         }
 
-        public void SelectTile(BoardEntity boardEntity, List<TileSelectOption> options, Action<TileSelectOption> callBack)
+        public void SelectTile(BoardEntity boardEntity, List<TileSelectOption> options, Action<TileSelectOption> callBack, bool isMovement = false)
         {
             if (selectionCallBack == null)
             {
+                this.isMovement = isMovement;
                 selectionCallBack = callBack;
 
                 possibleTiles.Clear();
@@ -285,6 +298,10 @@ namespace Placeholdernamespace.Battle.Interaction
             foreach (PathOnClick item in glowpath)
             {
                 unGlow(item);
+            }
+            if(glowpath.Count> 0)
+            {
+                glowpath[glowpath.Count-1].TurnHoverOff();
             }
             foreach (PathOnClick item in newPath)
             {

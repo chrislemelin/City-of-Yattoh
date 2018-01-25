@@ -15,7 +15,7 @@ namespace Placeholdernamespace.Battle.Calculator
         [SerializeField]
         private GameObject displayDamageObject;
 
-        private List<int> displayDamages = new List<int>();
+        private List<DamageDisplay> displayDamages = new List<DamageDisplay>();
 
         public void ExecuteSkillDamage(CharacterBoardEntity source, Skill skill, CharacterBoardEntity target, DamagePackage damage)
         {
@@ -41,14 +41,15 @@ namespace Placeholdernamespace.Battle.Calculator
             }
 
             // should put this in an couroutine for later and make more better
-            foreach(int displayDamageValue in displayDamages)
+            foreach(DamageDisplay displayDamage in displayDamages)
             {
                 GameObject displayDamageObj = Instantiate(displayDamageObject);
                 GameObject displayDamageObjFollow = displayDamageObj.GetComponent<FloatingText>().textMeshProUGUI.gameObject;
 
                 displayDamageObjFollow.transform.SetParent(FindObjectOfType<Canvas>().gameObject.transform);
                 displayDamageObj.transform.position = target.transform.position;
-                displayDamageObjFollow.GetComponent<TextMeshProUGUI>().text = "-" + displayDamageValue.ToString();
+                displayDamageObjFollow.GetComponent<TextMeshProUGUI>().text = "-" + displayDamage.value;
+                displayDamage.character.SetAnimation(Common.Animator.AnimatorUtils.animationType.damage);
             }
             
         }
@@ -77,7 +78,9 @@ namespace Placeholdernamespace.Battle.Calculator
                 case TakeDamageReturn.Normal:
                     Tuple<int,int> newTargetHealthDamage = HealthAfterDamage(source, target, damage);
                     targetAfter.SetMutableStat(StatType.Health, newTargetHealthDamage.first);
-                    displayDamages.Add(newTargetHealthDamage.second);
+
+                    displayDamages.Add(new DamageDisplay() { value = newTargetHealthDamage.second, character = target });
+                    
                     return new SkillReport(sourceBefore, sourceAfter, targetBefore, targetAfter);
 
                 case TakeDamageReturn.NoDamage:
@@ -114,5 +117,12 @@ namespace Placeholdernamespace.Battle.Calculator
     public enum TakeDamageReturn
     {
         Normal, NoDamage, Reflect
+    }
+
+    public class DamageDisplay
+    {
+        public Color color = Color.red;
+        public int value;
+        public CharacterBoardEntity character;
     }
 }

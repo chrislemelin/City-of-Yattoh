@@ -10,6 +10,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
     {
         protected BattleCalculator battleCalculator;
         protected BoardEntity boardEntity;
+        protected TileManager tileManager;
 
         protected string title;
         protected string description = "CHANGE THE PASSIVE DESCRIPTION PLS";
@@ -35,10 +36,11 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         {
         }
 
-        public Passive(BattleCalculator battleCalculator, BoardEntity boardEntity)
+        public Passive(BattleCalculator battleCalculator, BoardEntity boardEntity, TileManager tileManager)
         {
             this.battleCalculator = battleCalculator;
             this.boardEntity = boardEntity;
+            this.tileManager = tileManager;
         }
 
         /// <summary>
@@ -116,6 +118,8 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         public virtual void LeaveTile(Tile t){}
 
         public virtual void EnterTile(Tile t){}
+
+        public virtual HashSet<Tile> GetTauntTiles() { return new HashSet<Tile>();}
 
         public virtual CharacterBoardEntity GetRagedBy(CharacterBoardEntity characterBoardEntity)
         {

@@ -17,7 +17,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             title = "Basic Attack";
             description = "Deal STRENGTH damage to one enemy";
             apCost = 1;
-            range = 2;
+            range = RANGE_ADJACENT;
             coolDown = 1;
         }
 
@@ -32,8 +32,6 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             DamagePackage package = new DamagePackage(damagePackage);
 
             battleCalculator.ExecuteSkillDamage(boardEntity, this, (CharacterBoardEntity)t.BoardEntity, package);
-            boardEntity.GetComponentInChildren<Animator>().SetInteger("Attack", AnimatorUtils.GetAttackDirectionCode(boardEntity.Position, t.Position));
-
         }
     }
 }

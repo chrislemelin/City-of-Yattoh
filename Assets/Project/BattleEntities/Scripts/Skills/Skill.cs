@@ -2,6 +2,7 @@
 using Placeholdernamespace.Battle.Env;
 using Placeholdernamespace.Battle.Interaction;
 using Placeholdernamespace.Battle.UI;
+using Placeholdernamespace.Common.Animator;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,6 +23,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         protected TileManager tileManager;
         protected CharacterBoardEntity boardEntity;
         protected BattleCalculator battleCalculator;
+        protected AnimatorUtils.animationType animationType = AnimatorUtils.animationType.attack;
 
         [SerializeField]
         protected string description = "CHANGE THE SKILL DESCRIPTION PLS";
@@ -210,6 +212,8 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
         public void Action(Tile t, Action callback = null)
         {
+            boardEntity.SetAnimationDirection(AnimatorUtils.GetAttackDirectionCode(boardEntity.GetTile().Position, t.Position));
+            boardEntity.SetAnimation(AnimatorUtils.animationType.attack);
             ActionHelper(t);
             currentCoolDown = GetCoolDown();
             boardEntity.Stats.SubtractAPPoints(GetAPCost());

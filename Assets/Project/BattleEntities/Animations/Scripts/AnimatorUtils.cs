@@ -16,7 +16,10 @@ namespace Placeholdernamespace.Common.Animator
             { Direction.Left, 3 }
         };
 
-        public static int GetAttackDirectionCode(Position pos, Position target)
+        public enum animationDirection { left, right, up, down }
+        public enum animationType { idle = 0, walking = 1, attack = 2, jump = 3, damage = 4, win = 5, death = 6, skill = 7 };
+
+        public static animationDirection GetAttackDirectionCode(Position pos, Position target)
         {
             Position direction = target - pos;
 
@@ -24,22 +27,22 @@ namespace Placeholdernamespace.Common.Animator
             {
                 if( direction.x > 0)
                 {
-                    return AttackDirection[Direction.Right];
+                    return animationDirection.right;
                 }
                 else
                 {
-                    return AttackDirection[Direction.Left];
+                    return animationDirection.left;
                 }
             }
             else
             {
                 if (direction.y > 0)
                 {
-                    return AttackDirection[Direction.Up];
+                    return animationDirection.up;
                 }
                 else
                 {
-                    return AttackDirection[Direction.Down];
+                    return animationDirection.down;
                 }
             }
        

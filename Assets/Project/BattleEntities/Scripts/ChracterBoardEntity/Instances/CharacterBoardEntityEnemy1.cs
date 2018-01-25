@@ -17,9 +17,9 @@ namespace Placeholdernamespace.Battle.Entities.Instances
         {
             base.Init(startingPosition, turnManager, tileManager, boardEntitySelector, battleCalculator);
 
-            CharacterBoardEntityJaz doYouLikeJaz = FindObjectOfType<CharacterBoardEntityJaz>();
-            Passive passive = new BuffRaged(doYouLikeJaz, 4);
-            AddPassive(passive);
+            //CharacterBoardEntityJaz doYouLikeJaz = FindObjectOfType<CharacterBoardEntityJaz>();
+            //Passive passive = new BuffRaged(doYouLikeJaz, 4);
+            //AddPassive(passive);
            
         }
 

@@ -14,15 +14,14 @@ namespace Placeholdernamespace.Battle.Entities.AI
     {
         private Action callBack;
 
-        public void ExecuteTurn(Action callBack, BoardEntity ragedBy = null, HashSet<Tile> tilesAvailibleForMovement= null)
+        public void ExecuteTurn(Action callBack, BoardEntity ragedBy = null)
         {
             this.callBack = callBack;
             List<Move> moves = characterBoardEntity.MoveSet();
             Skill skill = characterBoardEntity.BasicAttack;
             List<AiMove> aiMoves = new List<AiMove>();
             Dictionary<Move, List<BoardEntity>> moveToTargets = new Dictionary<Move, List<BoardEntity>>();
-
-            int counter = 0;
+            moves.Add(new Move { destination = characterBoardEntity.GetTile() });
 
             foreach(Move m in moves)
             {
@@ -45,7 +44,10 @@ namespace Placeholdernamespace.Battle.Entities.AI
                 int movementScore = tileManager.DFS(m.destination.Position, targetPosition, characterBoardEntity.Team).Count;
    
                 AiMove aiMove = new AiMove(int.MaxValue, movementScore);
-                aiMove.AddMoveAction(characterBoardEntity, m, DoNextAction);
+                if(m.destination != characterBoardEntity.GetTile())
+                {
+                    aiMove.AddMoveAction(characterBoardEntity, m, DoNextAction);
+                }
 
                 aiMoves.Add(aiMove);
                 foreach(Tile t in tiles)
@@ -56,25 +58,16 @@ namespace Placeholdernamespace.Battle.Entities.AI
                         if (ragedBy == null || ragedBy == t.BoardEntity)
                         {
                             aiMove = new AiMove(targetScore(t.BoardEntity), 0);
-                            aiMove.AddMoveAction(characterBoardEntity, m, DoNextAction);
+                            if (m.destination != characterBoardEntity.GetTile())
+                            {
+                                aiMove.AddMoveAction(characterBoardEntity, m, DoNextAction);
+                            }
                             aiMove.AddAttackAction(skill, t, DoNextAction);
                             aiMoves.Add(aiMove);
                         }
                     }
                 }
                 moveToTargets[m] = entities;
-            }
-
-            // dont move, only attack
-            List<Tile> differentTiles = skill.TheoreticalTileSet(characterBoardEntity.Position);
-            foreach (Tile t in differentTiles)
-            {
-                if (t.BoardEntity != null)
-                {
-                    AiMove aiMove = new AiMove(targetScore(t.BoardEntity), 0);
-                    aiMove.AddAttackAction(skill, t, DoNextAction);
-                    aiMoves.Add(aiMove);
-                }
             }
 
             aiMoves.RemoveAll((a) => a.ApCost > characterBoardEntity.Stats.GetMutableStat(AttributeStats.StatType.AP).Value);

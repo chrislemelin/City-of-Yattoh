@@ -43,6 +43,7 @@ namespace Placeholdernamespace.Battle.UI
             //GetComponent<VerticalLayoutGroup>()
         }
 
+
         public void UpdateProfile(BoardEntity boardEntity, Stats previewStats = null)
         {
             if (currentBoardEntity != null)

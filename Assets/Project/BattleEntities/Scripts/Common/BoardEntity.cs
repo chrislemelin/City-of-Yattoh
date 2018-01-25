@@ -43,6 +43,8 @@ namespace Placeholdernamespace.Battle.Entities
         }
 
         protected BoardEntitySelector boardEntitySelector;
+        bool isInit = false;
+
 
         protected TurnManager turnManager;
         protected TileManager tileManager;
@@ -50,10 +52,11 @@ namespace Placeholdernamespace.Battle.Entities
 
         public Tile GetTile()
         {
-            return tileManager.GetTile(position);
+            bool a = isInit;
+            return tileManager.GetTile(Position);
         }
 
-        protected Position position;
+        protected Position position = new Position(1, 1);
         public Position Position
         {
             get { return position; }
@@ -98,6 +101,7 @@ namespace Placeholdernamespace.Battle.Entities
             healthBar.transform.SetAsFirstSibling();
             healthBar.transform.position = new Vector3(100000, 100000);
 
+            isInit = true;
             this.turnManager = turnManager;
             this.tileManager = tileManager;
             this.boardEntitySelector = boardEntitySelector;

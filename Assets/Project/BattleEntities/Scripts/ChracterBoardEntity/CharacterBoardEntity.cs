@@ -13,11 +13,23 @@ using Placeholdernamespace.Battle.Calculator;
 using Placeholdernamespace.Battle.Entities.Skills;
 using Placeholdernamespace.Battle.Entities.Passives;
 using Placeholdernamespace.Battle.Entities.AI;
+using Placeholdernamespace.Common.Animator;
 
 namespace Placeholdernamespace.Battle.Entities
 {
     public class CharacterBoardEntity : BoardEntity
     {
+        [SerializeField]
+        protected CharacterAnimation characterAnimation;
+        [SerializeField]
+        protected GameObject charactersprite;
+
+        private static List<CharacterBoardEntity> allCharacterBoardEntities = new List<CharacterBoardEntity>();
+        public static List<CharacterBoardEntity> AllCharacterBoardEntities
+        {
+            get { return new List<CharacterBoardEntity>(allCharacterBoardEntities); }
+        }
+
         [SerializeField]
         private float speed = 5;
 
@@ -46,6 +58,13 @@ namespace Placeholdernamespace.Battle.Entities
         public override void Init(Position startingPosition, TurnManager turnManager, TileManager tileManager, BoardEntitySelector boardEntitySelector, BattleCalculator battleCalculator)
         {
             base.Init(startingPosition, turnManager, tileManager, boardEntitySelector, battleCalculator);
+
+            if (charactersprite != null)
+            {
+                charactersprite.transform.SetParent(FindObjectOfType<CharacterManagerMarker>().transform);
+            }
+
+            allCharacterBoardEntities.Add(this);
             if(enemyAIBasic1 != null)
             {
                 enemyAIBasic1.Init(tileManager, this);
@@ -53,19 +72,12 @@ namespace Placeholdernamespace.Battle.Entities
             basicAttack = new BasicAttack(tileManager, this, battleCalculator);
             skills.Add(basicAttack);
 
-            passives.Add(new PassiveAreaOfInfluence(battleCalculator, this));
+            passives.Add(new PassiveAreaOfInfluenceSkill(battleCalculator, this, tileManager));
 
             List<SkillModifier> skillModifiers = new List<SkillModifier>();
             skillModifiers.Add(new SkillModifier(SkillModifierType.Power, SkillModifierApplication.Add, 1));
             passives.Add(new PassiveGeneric("Damage Buff", "Increases damage on skills by one", skillModifiers));
-
-            foreach(Passive p in passives)
-            {
-                if(p is PassiveAreaOfInfluence)
-                {
-                    p.EnterTile(GetTile());
-                }
-            }
+         
         }
 
         public override List<Move> MoveSet()
@@ -105,6 +117,10 @@ namespace Placeholdernamespace.Battle.Entities
 
         public void ExecuteMove(Move move, Action action = null)
         {
+            if(characterAnimation != null)
+            {
+                characterAnimation.OnButtonClick(1);
+            }
             moveDoneCallback = action;
             if(move != null)
             {
@@ -123,17 +139,24 @@ namespace Placeholdernamespace.Battle.Entities
         {
             if(path.Count > 0)
             {
+                AnimatorUtils.animationDirection dir = AnimatorUtils.GetAttackDirectionCode(GetTile().Position, path[0].Position);
+                SetAnimationDirection(dir);
                 target = path[0];
                 path.RemoveAt(0);
             }
             else
             {
+                
                 // all done moving
                 target = null;
                 PathOnClick.pause = false;
                 OutlineOnHover.disabled = false;
                 if (moveDoneCallback != null)
                 {
+                    if(characterAnimation != null)
+                    {
+                        characterAnimation.OnButtonClick(0);
+                    }
                     moveDoneCallback();
                 }
             }
@@ -207,18 +230,6 @@ namespace Placeholdernamespace.Battle.Entities
             buff.addRemoveAction(passives.Remove);          
         }
 
-        public List<PassiveAreaOfInfluence> GetAreaOfInfluencePassives()
-        {
-            List<PassiveAreaOfInfluence> passiveAreaOfInfluences = new List<PassiveAreaOfInfluence>();
-            foreach (Passive p in passives)
-            {
-                if (p is PassiveAreaOfInfluence)
-                {
-                    passiveAreaOfInfluences.Add(((PassiveAreaOfInfluence)p));
-                }
-            }
-            return passiveAreaOfInfluences;
-        }
 
         public CharacterBoardEntity GetRagedBy()
         {
@@ -230,7 +241,83 @@ namespace Placeholdernamespace.Battle.Entities
             return returnEntity;
         }
 
+        public HashSet<Tile> GetTauntTiles()
+        {
+            HashSet<Tile> returnTauntTiles = new HashSet<Tile>();
+            foreach (Passive passive in passives)
+            {
+                foreach(Tile tile in passive.GetTauntTiles())
+                {
+                    returnTauntTiles.Add(tile);
+                }
+            }
+            return returnTauntTiles;
+        }
+
+        public void SetAnimation(AnimatorUtils.animationType type)
+        {
+            if (characterAnimation != null)
+            {
+                characterAnimation.OnButtonClick((int)type);
+            }
+        }
+
+        private AnimatorUtils.animationDirection? lastDirection = AnimatorUtils.animationDirection.right;
+
+        public bool ChangeDirection(AnimatorUtils.animationDirection direction)
+        {
+            HashSet<AnimatorUtils.animationDirection> noRotate = new HashSet<AnimatorUtils.animationDirection>
+            {
+                AnimatorUtils.animationDirection.right, AnimatorUtils.animationDirection.down
+            };
+            if(lastDirection == direction)
+            {
+                return true;
+            }
+            if (lastDirection != null)
+            {
+                if (noRotate.Contains((AnimatorUtils.animationDirection)lastDirection) && noRotate.Contains(direction))
+                    return true;
+            }
+            
+            return false;
+        }
+
+        public void SetAnimationDirection(AnimatorUtils.animationDirection direction)
+        {
+            if (characterAnimation != null)
+            {
+                //bool changeDirection = changeDirection(direction);
+                if (direction == AnimatorUtils.animationDirection.left)
+                {
+                    characterAnimation.On_Front_Back(true);
+                    characterAnimation.On_Left_Right(true);
+                }
+                else if (direction == AnimatorUtils.animationDirection.right)
+                {
+                    characterAnimation.On_Front_Back(false);
+                    characterAnimation.On_Left_Right(false);
+                    
+                }
+                else if (direction == AnimatorUtils.animationDirection.up)
+                {
+                    characterAnimation.On_Front_Back(false);
+                    characterAnimation.On_Left_Right(true);
+                }
+                else if (direction == AnimatorUtils.animationDirection.down)
+                {
+                    characterAnimation.On_Front_Back(true);
+                    characterAnimation.On_Left_Right(false);
+                }
+                lastDirection = direction;
+            }
+        }
+
+      
     }
 
+
+ 
+  
     
 }

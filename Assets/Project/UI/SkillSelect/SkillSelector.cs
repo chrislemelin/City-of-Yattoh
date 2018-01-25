@@ -36,13 +36,15 @@ namespace Placeholdernamespace.Battle.Interaction
         }
 
         private TileSelectionManager tileSelectionManager;
-        private Action selectionCancel;    
+        private Action selectionCancel;
+        private Func<BoardEntity> getHoverEntity;
 
-        public void Init(TileSelectionManager tileSelectionManager, Action selectionCancel, Profile profile)
+        public void Init(TileSelectionManager tileSelectionManager, Action selectionCancel, Func<BoardEntity> getHoverEntity, Profile profile)
         {
             this.tileSelectionManager = tileSelectionManager;
             this.selectionCancel = selectionCancel;
             this.profile = profile;
+            this.getHoverEntity = getHoverEntity;
         }
 
         public void SetBoardEntity(CharacterBoardEntity boardEntity)
@@ -84,7 +86,8 @@ namespace Placeholdernamespace.Battle.Interaction
             {
                 if (option.DisplayStats != null)
                 {
-                    option.OnHoverAction = () => profile.UpdateProfile(option.DisplayStats.BoardEntity, option.DisplayStats);
+                    option.OnHoverAction = () => {if (getHoverEntity() == null)
+                        { profile.UpdateProfile(option.DisplayStats.BoardEntity, option.DisplayStats); } };
                 }
             }
 

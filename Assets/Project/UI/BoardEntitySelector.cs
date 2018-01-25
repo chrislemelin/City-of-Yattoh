@@ -41,16 +41,22 @@ namespace Placeholdernamespace.Battle.Interaction
             get { return selectedBoardEntity; }
         }
 
+        // profile that the user is viewing
+        private BoardEntity hoverBoardEntity;
+
         public void Init()
         {
             tileSelectionManager.Init(profile);
-            skillSelector.Init(tileSelectionManager, () => { setSelectedBoardEntity(selectedBoardEntity); buildMoveOptions(); } ,profile);
+            skillSelector.Init(tileSelectionManager, () => { setSelectedBoardEntity(selectedBoardEntity); buildMoveOptions(); } ,
+                getHoverEntity, profile);
         }
 
         public void setSelectedBoardEntity(BoardEntity boardEntity)
         {
             if (boardEntity == TurnManager.CurrentBoardEntity)
             {
+                setHoverEntity(null);
+                selectedBoardEntity = null;
                 tileSelectionManager.CancelSelection();
                 profile.UpdateProfile(boardEntity);
 
@@ -61,16 +67,50 @@ namespace Placeholdernamespace.Battle.Interaction
                     skillSelector.Hide();
                 }
             }
+            else
+            {
+                if (boardEntity == hoverBoardEntity)
+                {
+                    setHoverEntity(null);
+                }
+                else
+                {
+                    setHoverEntity(boardEntity);
+                }
+            }
+        }
+
+        private void setHoverEntity(BoardEntity boardEntity)
+        {
+            profile.UpdateProfile(boardEntity);
+            if (hoverBoardEntity != null)
+            {
+                hoverBoardEntity.GetTile().PathOnClick.ColorEffectManager.TurnOff(this);
+            }
+            hoverBoardEntity = boardEntity;
+            if (hoverBoardEntity != null)
+            {
+                hoverBoardEntity.GetTile().PathOnClick.ColorEffectManager.TurnOn(this, Color.blue);
+            }
+
+        }
+
+        private BoardEntity getHoverEntity()
+        {
+            return hoverBoardEntity;
         }
 
         public void Hover(BoardEntity boardEntity)
         {
-            profile.UpdateProfile(boardEntity);
+            if(getHoverEntity() == null)
+            {
+                profile.UpdateProfile(boardEntity);
+            }
         }
 
         public void ExitHover()
         {
-            profile.UpdateProfile(selectedBoardEntity);
+            //profile.UpdateProfile(selectedBoardEntity);
         }
 
         private void buildMoveOptions()
@@ -88,7 +128,7 @@ namespace Placeholdernamespace.Battle.Interaction
                         displaystats.SubtractAPPoints(m.apCost);
                         displaystats.SetMutableStat(StatType.Movement, m.movementPointsAfterMove);
                         Color col = ApCostColors[0];
-                        if(m.apCost < ApCostColors.Count)
+                        if (m.apCost < ApCostColors.Count)
                         {
                             col = ApCostColors[m.apCost];
                         }
@@ -99,17 +139,31 @@ namespace Placeholdernamespace.Battle.Interaction
                             HighlightColor = col,
                             HoverColor = hoverColor,
                             ReturnObject = m,
-                            OnHoverAction = (() => profile.UpdateProfile(selectedBoardEntity, displaystats))
+                            OnHoverAction = (
+                            () => {
+                                if (getHoverEntity() == null)
+                                {
+                                    profile.UpdateProfile(selectedBoardEntity, displaystats);
+                                } }
+                            )
                         });
                     }
-                    
+
                     options.Add(new TileSelectOption()
                     {
                         Selection = selectedBoardEntity.GetTile(),
-                        OnHoverAction = (() => profile.UpdateProfile(selectedBoardEntity))
+                        HighlightColor = Color.black,
+                        HoverColor = Color.black,
+                        OnHoverAction = (
+                            () => {
+                                if (getHoverEntity() == null)
+                                {
+                                    profile.UpdateProfile(selectedBoardEntity);
+                                }
+                            })
                     });
                     
-                    tileSelectionManager.SelectTile(selectedBoardEntity, options, sendMoveToBoardEntity);               
+                    tileSelectionManager.SelectTile(selectedBoardEntity, options, sendMoveToBoardEntity, isMovement:true);               
                     skillSelector.SetBoardEntity((CharacterBoardEntity)selectedBoardEntity);
                     skillSelector.SetSkills(selectedBoardEntity.Skills);
                 }
@@ -126,13 +180,17 @@ namespace Placeholdernamespace.Battle.Interaction
             {
                 if(tileOption != null)
                 {
+                    setHoverEntity(null);
                     ((CharacterBoardEntity)selectedBoardEntity).ExecuteMove( (Move)tileOption.ReturnObject, buildMoveOptions);
                 }
                 else
                 {
-                    //buildMoveOptions();
-                    ((CharacterBoardEntity)selectedBoardEntity).ExecuteMove(null);
-              
+                    if(skillSelector.SelectedSkill == null)
+                    {
+                        buildMoveOptions();
+                    }
+                    //((CharacterBoardEntity)selectedBoardEntity).ExecuteMove(null);
+
                 }
                 if(skillSelector.SelectedSkill == null)
                 {

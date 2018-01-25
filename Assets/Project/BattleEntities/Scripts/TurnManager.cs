@@ -40,6 +40,7 @@ namespace Placeholdernamespace.Battle.Managers
 
         public void init(BoardEntitySelector boardEntitySelector, TileSelectionManager tileSelectionManager)
         {
+            PathOnClick.pause = true;
             this.boardEntitySelector = boardEntitySelector;
             this.tileSelectionManager = tileSelectionManager;
         }
@@ -59,17 +60,20 @@ namespace Placeholdernamespace.Battle.Managers
 
         public void NextTurn()
         {
+            PathOnClick.pause = true;
             tileSelectionManager.CancelSelection();
             if (turnQueue.Count == 0)
             {
                 ReCalcQueue();
             }
-            boardEntitySelector.setSelectedBoardEntity(null);
             currentBoardEntity = null;
+            boardEntitySelector.setSelectedBoardEntity(null);
+            
             BoardEntity tempcurrentBoardEntity = turnQueue[0];          
             turnQueue.RemoveAt(0);
             
             CenterText.Instance.DisplayMessage(tempcurrentBoardEntity.Name + "'s Turn", () => {
+                PathOnClick.pause = false;
                 tempcurrentBoardEntity.StartMyTurn();
                 currentBoardEntity = tempcurrentBoardEntity;
                 UpdateGui();

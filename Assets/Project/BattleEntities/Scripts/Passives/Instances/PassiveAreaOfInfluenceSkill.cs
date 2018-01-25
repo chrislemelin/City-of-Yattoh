@@ -8,17 +8,19 @@ using UnityEngine;
 
 namespace Placeholdernamespace.Battle.Entities.Passives
 {
-    public class PassiveAreaOfInfluence : Passive
+    public class PassiveAreaOfInfluenceSkill : Passive
     {
         private Skill influenceSkill;
         private List<Tile> influenceTiles = new List<Tile>();
 
-        public PassiveAreaOfInfluence(BattleCalculator battleCalculator, BoardEntity boardEntity): base(battleCalculator, boardEntity)
+        public PassiveAreaOfInfluenceSkill(BattleCalculator battleCalculator, BoardEntity boardEntity, TileManager tileManager): 
+            base(battleCalculator, boardEntity, tileManager)
         {
             if(boardEntity is CharacterBoardEntity)
             {
                 influenceSkill = ((CharacterBoardEntity)boardEntity).BasicAttack;
             }
+            EnterTile(boardEntity.GetTile());
         }
 
         public override void EnterTile(Tile tile)
@@ -46,10 +48,6 @@ namespace Placeholdernamespace.Battle.Entities.Passives
             else
                 callback();
         }
-
-
-
-        
-      
+     
     }
 }
