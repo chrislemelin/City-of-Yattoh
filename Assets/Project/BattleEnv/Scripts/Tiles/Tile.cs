@@ -9,6 +9,8 @@ namespace Placeholdernamespace.Battle.Env
 {
     public class Tile : MonoBehaviour
     {
+        public LayerMask myLayerMask;
+
         private TileManager tileManager = null;
 
         private Position position;
@@ -47,10 +49,11 @@ namespace Placeholdernamespace.Battle.Env
         {
             Vector2 currentPos = transform.position;
             Vector2 tilePos = tile.transform.position;
+            float distance = Vector2.Distance(currentPos, tilePos);
             Vector2 rayDirection = tilePos - currentPos;
 
-            RaycastHit2D hit = Physics2D.Raycast(currentPos, rayDirection);
-            if ((Vector2)hit.transform.position == tilePos)
+            RaycastHit2D hit = Physics2D.Raycast(currentPos, rayDirection, distance, myLayerMask);   
+            if(hit.transform == null)
             {
                 return false;
             }
@@ -114,22 +117,22 @@ namespace Placeholdernamespace.Battle.Env
 
         public List<Tile> GetAllTilesNear(Position range, bool ignoreWalls = false)
         {
-            return tileManager.GetAllTilesDiag(Position, range, ignoreWalls);
+            return tileManager.GetTilesDiag(Position, range, ignoreWalls);
         }
 
         public List<Tile> GetAllTilesNear(int range = 1, bool ignoreWalls = false)
         {
-            return tileManager.GetAllTilesDiag(Position, range, ignoreWalls);
+            return tileManager.GetTilesDiag(Position, range, ignoreWalls);
         }
 
         public List<BoardEntity> GetAllNear(Position range, bool ignoreWalls = false)
         {
-            return tileManager.GetAllBoardEntityDiag(Position, range, ignoreWalls);
+            return tileManager.GetBoardEntityDiag(Position, range, ignoreWalls);
         }
 
         public List<BoardEntity> GetAllNear(int range = 1, bool ignoreWalls = false)
         {
-            return tileManager.GetAllBoardEntityDiag(Position, range, ignoreWalls);
+            return tileManager.GetBoardEntityDiag(Position, range, ignoreWalls);
         }
 
         public void ExecuteEnterActions(BoardEntity boardEntity, Tile t, Action callback)

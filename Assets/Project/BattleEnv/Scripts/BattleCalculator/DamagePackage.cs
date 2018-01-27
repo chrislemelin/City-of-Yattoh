@@ -11,22 +11,30 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             get { return damage; }
         }
 
+        private int piercing;
+        public int Piercing
+        {
+            get { return piercing; }
+        }
+
         private DamageType type;
         public DamageType Type
         {
             get { return type; }
         }   
 
-        public DamagePackage(int damage, DamageType type)
+        public DamagePackage(int damage, DamageType type, int piercing = 0)
         {
             this.damage = damage;
             this.type = type;
+            this.piercing = piercing;
         }
 
         public DamagePackage(DamagePackageInternal internalpackage)
         {
-            damage = (int)internalpackage.damage;
-            type = internalpackage.type;
+            damage = (int)internalpackage.Damage;
+            type = internalpackage.Type;
+            piercing = (int)internalpackage.Piercing;
         }
     }
 }

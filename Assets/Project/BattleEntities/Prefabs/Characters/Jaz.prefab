@@ -271,7 +271,7 @@ MonoBehaviour:
         value: 4
         display: 0
       speed:
-        value: 2
+        value: 8
         display: 0
       strength:
         value: 2

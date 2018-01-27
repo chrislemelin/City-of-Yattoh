@@ -1,4 +1,5 @@
 ﻿using Placeholdernamespace.Battle.Calculator;
+using Placeholdernamespace.Battle.Entities.AttributeStats;
 using Placeholdernamespace.Battle.Env;
 using Placeholdernamespace.Battle.Interaction;
 using Placeholdernamespace.Battle.UI;
@@ -35,7 +36,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         public int GetAPCost()
         {
             int? value = getSkillModifiers(SkillModifierType.APCost, GetAPCostInternal());
-            if(value == null)
+            if (value == null)
             {
                 return 0;
             }
@@ -61,6 +62,21 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             return strength;
         }
 
+        protected int? piercing = null;
+        public int GetPiercing()
+        { 
+            int? value = getSkillModifiers(SkillModifierType.Piercing, GetPiercingInternal());
+            if (value == null)
+            {
+                return 0;
+            }
+            return (int) value;
+        }
+        protected virtual int? GetPiercingInternal()
+        {
+            return piercing;
+        }
+
         protected int? coolDown = null;
         public int GetCoolDown()
         {
@@ -81,11 +97,15 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         protected int? range = null;
         public int GetRange()
         {
+       
+            int? value = getSkillModifiers(SkillModifierType.Range, GetRangeInternal());
             if(GetRangeInternal() == RANGE_ADJACENT)
             {
-                return (int)RANGE_ADJACENT;
+                if (value > 0)
+                    return ((int)getSkillModifiers(SkillModifierType.Range, 1));
+                else
+                    return (int)RANGE_ADJACENT;
             }
-            int? value = getSkillModifiers(SkillModifierType.Range, GetRangeInternal());
             if (value == null)
             {
                 return 0;
@@ -133,38 +153,30 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             foreach (Tile t in tiles)
             {
                 usedTiles.Add(t);
-                SkillReport report = GetSkillReport(t);
+                bool clickable = TileOptionClickable(t);
+                Stats targetAfter = null;
+                if (clickable)
+                    targetAfter = GetSkillReport(t).TargetAfter;
                 tileOptions.Add(new TileSelectOption
                 {
                     Selection = t,
-                    OnHover = new List<Tile>() { t },
+                    OnHover = TileReturnHelper(t),
                     HighlightColor = selectColor,
                     HoverColor = highlightColor,
-                    DisplayStats = report.TargetAfter,
+                    DisplayStats = targetAfter,
+                    Clickable = TileOptionClickable(t),
+                    ReturnObject = TileReturnHelper(t)
+                   
                 });
             }
-            foreach (Tile t in TileSetPossible(boardEntity.Position))
-            {
-                if (!usedTiles.Contains(t))
-                {
-                    tileOptions.Add(new TileSelectOption
-                    {
-                        Selection = t,
-                        OnHover = new List<Tile>() { t },
-                        HighlightColor = selectColor,
-                        HoverColor = highlightColor,
-                        Clickable = false
-                    });
-                }
-            }
+           
 
             return tileOptions;
         }
 
         protected SkillReport GetSkillReport(Tile t)
         {
-            DamagePackageInternal damagePackage = GenerateDamagePackage();
-            DamagePackage package = new DamagePackage(damagePackage);
+            DamagePackage package = GenerateDamagePackage();
             return battleCalculator.ExecuteSkillHelper(boardEntity, this, (CharacterBoardEntity)t.BoardEntity, package);
         } 
 
@@ -172,30 +184,46 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         {
             return TileSetHelper(p);
         }
-
-        /// <summary>
-        /// override for tile set for which tiles the move can be used
-        /// </summary>
-        /// <returns></returns>
-        public virtual List<Tile> TileSetHelper(Position p)
+        
+        public List<Tile> TileSetClickable(Position p)
         {
-            if(GetRangeInternal() == RANGE_SELF)
+            List<Tile> tiles = TileSetHelper(p);
+            List<Tile> newTiles = new List<Tile>();
+            foreach(Tile t in tiles)
             {
-                return TileSetPossible(p);
+                if(TileOptionClickable(t))
+                {
+                    newTiles.Add(t);
+                }
+            }
+            return newTiles;
+        }
+
+        public virtual bool TileOptionClickable(Tile t )
+        {
+            if(t == tileManager.GetTile(boardEntity.Position))
+            {
+                return true;
             }
             else
             {
-                return TeamTiles(TileSetPossible(p), boardEntity.Team);
+                return t.BoardEntity != null;
             }
         }
 
+        public virtual List<Tile> TileReturnHelper(Tile t)
+        {
+            return new List<Tile>(){ t };
+
+   
+        }
 
         /// <summary>
         /// which tiles set the skill CAN be casted on ignoring who is on the tile
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
-        public virtual List<Tile> TileSetPossible(Position p)
+        public virtual List<Tile> TileSetHelper(Position p)
         {
             if(GetRangeInternal() ==  RANGE_SELF)
             {
@@ -205,7 +233,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             }
             if(GetRangeInternal() == RANGE_ADJACENT)
             {
-                return tileManager.GetAllTilesDiag(p, 1);
+                return tileManager.GetTilesDiag(p, 1);
             }
             else
             {
@@ -217,12 +245,19 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
         public void Action(Tile t, Action callback = null)
         {
-            boardEntity.SetAnimationDirection(AnimatorUtils.GetAttackDirectionCode(boardEntity.GetTile().Position, t.Position));
-            boardEntity.SetAnimation(AnimatorUtils.animationType.attack);
-            ActionHelper(t);
-            currentCoolDown = GetCoolDown();
-            boardEntity.Stats.SubtractAPPoints(GetAPCost());
+            Action(new List<Tile>() { t }, callback);
+        }
 
+        public void Action(List<Tile> tiles, Action callback = null)
+        {
+            if (tiles.Count > 0)
+            {
+                boardEntity.SetAnimationDirection(AnimatorUtils.GetAttackDirectionCode(boardEntity.GetTile().Position, tiles[0].Position));
+                boardEntity.SetAnimation(AnimatorUtils.animationType.attack);
+                ActionHelper(tiles);
+                currentCoolDown = GetCoolDown();
+                boardEntity.Stats.SubtractAPPoints(GetAPCost());
+            }
             if (callback != null)
             {
                 Core.CallbackDelay(.8f, callback);                
@@ -233,8 +268,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         /// override for the actual execution of skill
         /// </summary>
         /// <param name="t"></param>
-        protected abstract void ActionHelper(Tile t);
-
+        protected abstract void ActionHelper(List<Tile> t);
 
         public virtual bool IsActive()
         {
@@ -243,9 +277,8 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
         public SkillReport TheoreticalAction(Tile t)
         {
-            DamagePackageInternal damagePackage = GenerateDamagePackage();
-            DamagePackage damage = new DamagePackage(damagePackage);
-            SkillReport report = battleCalculator.ExecuteSkillHelper(boardEntity, this, (CharacterBoardEntity)t.BoardEntity, damage);
+            DamagePackage package = GenerateDamagePackage();
+            SkillReport report = battleCalculator.ExecuteSkillHelper(boardEntity, this, (CharacterBoardEntity)t.BoardEntity, package);
             return report;
         }
 
@@ -281,10 +314,15 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             return (int?)value;
         }
 
-        protected List<Tile> TeamTiles(List<Tile> tiles, Team? team)
+        protected List<BoardEntity> TeamTiles(List<Tile> tiles, Team? team)
         {
-            tiles.RemoveAll(t => t.BoardEntity == null || team != null && t.BoardEntity.Team == team);
-            return tiles;
+            List<BoardEntity> entities = new List<BoardEntity>();
+            foreach(Tile t in tiles)
+            {
+                if(t.BoardEntity != null && (team == null || t.BoardEntity.Team == team))
+                    entities.Add(t.BoardEntity);
+            }
+            return entities;
         }
 
         protected bool CanAffortAPCost()
@@ -297,14 +335,13 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         /// override this to generate damage package
         /// </summary>
         /// <returns></returns>
-        protected virtual DamagePackageInternal GenerateDamagePackage()
+        protected virtual DamagePackage GenerateDamagePackage()
         {
             int effectivePower = GetStrength();
-            if(effectivePower != 0)
-            {
-                return new DamagePackageInternal(effectivePower, DamageType.physical);
-            }
-            return null;
+            int effectivePiercing = GetPiercing();
+ 
+            return new DamagePackage(effectivePower, DamageType.physical , effectivePiercing);
+            
         }
 
         public string GetFlavorText()
@@ -344,6 +381,8 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             returnString = GetDescriptionExtraHelper("STRENGTH: ", GetStrengthInternal, GetStrength, returnString);
             returnString = GetDescriptionExtraHelper("AP COST: ", GetAPCostInternal, GetAPCost, returnString);
             returnString = GetDescriptionExtraHelper("COOLDOWN: ", GetCoolDownInternal, GetCoolDown, returnString);
+            returnString = GetDescriptionExtraHelper("PIERCING: ", GetPiercingInternal, GetPiercing, returnString);
+
 
             if (GetRange() == RANGE_ADJACENT)
             {
@@ -373,6 +412,19 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             }
             return returnString;
         }
+
+        public Team OtherTeam()
+        {
+            if(boardEntity.Team == Team.Enemy)
+            {
+                return Team.Player;
+            }
+            else if(boardEntity.Team == Team.Player)
+            {
+                return Team.Enemy;
+            }
+            return Team.Neutral;
+        }
     }
 
     public enum DamageType { physical, pure };
@@ -391,11 +443,21 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             get { return type; }
         }
 
-        public DamagePackageInternal(float damage, DamageType type)
+        private float piercing;
+        public float Piercing
+        {
+            get { return piercing; }
+        }
+
+        public DamagePackageInternal(float damage, DamageType type, float piercing = 0)
         {
             this.damage = damage;
             this.type = type;
+            this.piercing = piercing;
         }
+
+     
+
     }
 
 

@@ -17,7 +17,7 @@ namespace Placeholdernamespace.Battle.Interaction
         public bool active = true;
         private bool tileSelectOptionsContainBE = false;
         private bool skillSelectorActive;
-        public List<PathOnClick> glowpath = new List<PathOnClick>();
+        public List<Tile> glowpath = new List<Tile>();
         private bool isMovement = false;
 
         public Color defaultBoardEntityHighlightColor;
@@ -65,7 +65,7 @@ namespace Placeholdernamespace.Battle.Interaction
                     }
                     if (tempSelectedEntity != null)
                     {
-                        unGlow(tempSelectedEntity.GetTile().PathOnClick);
+                        unGlow(tempSelectedEntity.GetTile());
                     }
                     
                     if (pathOnClick != null && possibleTiles.ContainsKey(pathOnClick.Tile))
@@ -99,27 +99,23 @@ namespace Placeholdernamespace.Battle.Interaction
             {
                 if (possibleTiles.ContainsKey(pathOnClick.Tile))
                 {
-                    List<PathOnClick> newPath = new List<PathOnClick>();
-                    foreach (Tile t in possibleTiles[pathOnClick.Tile].OnHover)
-                    {
-                        newPath.Add(t.GetComponentInChildren<PathOnClick>());
-                    }
+                    NewGlowPath(possibleTiles[pathOnClick.Tile]);
                     if(possibleTiles[pathOnClick.Tile].OnHoverAction != null)
                     {
                         possibleTiles[pathOnClick.Tile].OnHoverAction();
                     }
-                    NewGlowPath(newPath);
+                    
                 }
             }
             else
             {
-                NewGlowPath(new List<PathOnClick>());                
+                NewGlowPath(null);                
             }
         }
 
         public void ClearTileHover()
         {
-            NewGlowPath(new List<PathOnClick>());
+            NewGlowPath(null);
             //profile.UpdateProfile(selectedEntity);
         }
 
@@ -186,7 +182,7 @@ namespace Placeholdernamespace.Battle.Interaction
                 if (boardEntity != null)
                 {
                     selectedEntity = boardEntity;
-                    glow(selectedEntity.GetTile().PathOnClick, defaultHoverColor);
+                    glow(selectedEntity.GetTile(), defaultHoverColor);
                 }
 
                 // highlight possible moves
@@ -221,29 +217,26 @@ namespace Placeholdernamespace.Battle.Interaction
             }
         }
 
-        private void glow(PathOnClick pathOnClick, Color? overrideColor = null)
+        private void glow(Tile tile, Color? overrideColor = null)
         {
             Color? hoverColor = overrideColor;
             if (hoverColor == null)
             {
                 hoverColor = defaultBoardEntityHighlightColor;
-                if (possibleTiles.ContainsKey(pathOnClick.Tile))
-                {
-                    hoverColor = possibleTiles[pathOnClick.Tile].HoverColor;
-                }
+       
             }
             if(hoverColor != null)
             {
-                pathOnClick.ColorEffectManager.TurnOn(this, (Color)hoverColor);
+                tile.PathOnClick.ColorEffectManager.TurnOn(this, (Color)hoverColor);
             }
-            glowBoardEntity(pathOnClick);
+            //glowBoardEntity(pathOnClick);
         }
 
-        private void unGlow(PathOnClick tile)
+        private void unGlow(Tile tile)
         {
     
-            tile.ColorEffectManager.TurnOff(this);
-            unGlowBoardEntity(tile);
+            tile.PathOnClick.ColorEffectManager.TurnOff(this);
+            //unGlowBoardEntity(tile);
             
         }
 
@@ -283,31 +276,30 @@ namespace Placeholdernamespace.Battle.Interaction
 
         public void ClearGlowPath()
         {
-            NewGlowPath(new List<PathOnClick>());
+            NewGlowPath(null);
         }
 
-        public void NewGlowPath(PathOnClick pathOnClick)
+        public void NewGlowPath(TileSelectOption tileSelectOption)
         {
-            List<PathOnClick> newPath = new List<PathOnClick>();
-            newPath.Add(pathOnClick);
-            NewGlowPath(newPath);
-        }
-
-        public void NewGlowPath(List<PathOnClick> newPath)
-        {
-            foreach (PathOnClick item in glowpath)
+            List<Tile> newTiles = new List<Tile>();
+            if(tileSelectOption != null)
             {
-                unGlow(item);
+                newTiles = tileSelectOption.OnHover;
+            }
+
+            foreach (Tile tile in glowpath)
+            {
+                unGlow(tile);
             }
             if(glowpath.Count> 0)
             {
-                glowpath[glowpath.Count-1].TurnHoverOff();
+                glowpath[glowpath.Count-1].PathOnClick.TurnHoverOff();
             }
-            foreach (PathOnClick item in newPath)
+            foreach (Tile tile in newTiles)
             {
-                glow(item);
+                glow(tile);
             }
-            glowpath = newPath;
+            glowpath = newTiles;
 
         }
 

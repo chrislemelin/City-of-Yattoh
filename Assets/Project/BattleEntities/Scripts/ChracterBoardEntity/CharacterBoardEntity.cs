@@ -45,6 +45,18 @@ namespace Placeholdernamespace.Battle.Entities
             get { return passives; }
         }
 
+        protected List<Talent> talents = new List<Talent>();
+        public List<Talent> Talents
+        {
+            get { return talents; }
+        }
+
+        protected List<TalentTrigger> talentTriggers = new List<TalentTrigger>();
+        public List<TalentTrigger> TalentTriggers
+        {
+            get { return talentTriggers; }
+        }
+
         private BasicAttack basicAttack;
         public BasicAttack BasicAttack
         {
@@ -76,7 +88,17 @@ namespace Placeholdernamespace.Battle.Entities
             }
             basicAttack = new BasicAttack(tileManager, this, battleCalculator);
             skills.Add(basicAttack);
-         
+            /*
+            basicAttack = new BasicAttack(tileManager, this, battleCalculator);
+            skills.Add(basicAttack);
+            basicAttack = new BasicAttack(tileManager, this, battleCalculator);
+            skills.Add(basicAttack);
+            basicAttack = new BasicAttack(tileManager, this, battleCalculator);
+            skills.Add(basicAttack);
+            basicAttack = new BasicAttack(tileManager, this, battleCalculator);
+            skills.Add(basicAttack);
+           */
+
         }
 
         public override List<Move> MoveSet()
@@ -221,7 +243,23 @@ namespace Placeholdernamespace.Battle.Entities
 
         public void AddPassive(Passive passive)
         {
+            if(passive is TalentTrigger)
+            {
+                TalentTriggers.Add((TalentTrigger)passive);
+            }
+            if(passive is Talent)
+            {
+                Talents.Add((Talent)passive);
+            }
             passives.Add(passive);
+        }
+
+        public void TriggerTalents()
+        {
+            foreach(Talent talent in talents)
+            {
+                talent.Activate();
+            }
         }
 
         public void AddSkill(Skill skill)

@@ -118,7 +118,7 @@ namespace Placeholdernamespace.Battle.Interaction
             skillButton.GetComponent<TooltipSpawner>().Init(() => { return null; }, getDescription, getFlavorText);
             skillButton.GetComponent<Button>().interactable = interactable;
             skillButton.GetComponentInChildren<TextMeshProUGUI>().text = title;
-            skillButton.transform.SetParent(skillOptionContainer.transform);
+            skillButton.transform.SetParent(skillOptionContainer.transform, false);
             skillButton.GetComponent<Button>().onClick.AddListener(() => onClick());
             skillButtons.Add(skillButton);
             skillButton.SetActive(true);
@@ -132,7 +132,7 @@ namespace Placeholdernamespace.Battle.Interaction
             {
                 if (cancelButton != null)
                     cancelButton.GetComponent<Button>().interactable = false;
-                selectedSkill.Action(tile.Selection, ExecuteSkillCallback);
+                selectedSkill.Action((List<Tile>)tile.ReturnObject, ExecuteSkillCallback);
             }
             else
             {

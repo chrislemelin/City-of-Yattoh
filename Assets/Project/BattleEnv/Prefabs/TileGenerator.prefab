@@ -85,9 +85,16 @@ MonoBehaviour:
   spacing: 0.05
   height: 5
   width: 5
-  map: "o o o o o o o o o o o\r\no o o o o o o o o\r\no o\r\no\r\n\r\no o o o o"
+  map: 'ooooooooo
+
+    ooooooooo
+
+    ooooooooo
+
+    ooooooooo'
   tile: {fileID: 1436844624653028, guid: 118a5d274e51be2478e6a5c50a295fda, type: 2}
-  wallH: {fileID: 1664082311751302, guid: ddb5a32f5dea62f4b807e38cf1a917dc, type: 2}
+  wall: {fileID: 0}
+  wallH: {fileID: 1446741146456834, guid: ab57db149eebea64ca29bc54d5f6d85b, type: 2}
 --- !u!114 &114130716695976766
 MonoBehaviour:
   m_ObjectHideFlags: 1

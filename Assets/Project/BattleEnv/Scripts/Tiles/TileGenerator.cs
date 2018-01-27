@@ -18,6 +18,7 @@ namespace Placeholdernamespace.Battle.Env
         public string map;
 
         public GameObject tile;
+        public GameObject wall;
         public GameObject wallH;
 
         private Vector3 up;
@@ -28,6 +29,7 @@ namespace Placeholdernamespace.Battle.Env
         //private char WALL_V_SEPERATOR = '|';
         private char[] NEWLINE = { '\0', '\n' };
         private char TILE_NORMAL = 'o';
+        private char WALL = 'x';
 
         public void init()
         {
@@ -50,7 +52,7 @@ namespace Placeholdernamespace.Battle.Env
                 for (int index = 0; index < chars.Length; index++)
                 {
                     char c = chars[index];
-                    int x = index / 2;
+                    int x = index ;
                     if (c == TILE_NORMAL)
                     {
                         Position newPosition = new Position(x, y);
@@ -60,6 +62,18 @@ namespace Placeholdernamespace.Battle.Env
                         newTile.GetComponentInChildren<OutlineOnHover>().Init(pathSelectManager);
                         newTile.GetComponentInChildren<PathOnClick>().Init(pathSelectManager);
                         response.coordinateToTile.Add(newPosition, newTile.GetComponent<Tile>());
+
+                        newTile.transform.SetParent(Board.transform);
+                    }
+                    if( c == WALL)
+                    {
+                        Position newPosition = new Position(x, y);
+                        GameObject newTile = Instantiate(wall);
+                        newTile.transform.position = transform.position + (x * right) + (y * up);
+                        //newTile.GetComponent<Tile>().Init(newPosition, tileManager);
+                        //newTile.GetComponentInChildren<OutlineOnHover>().Init(pathSelectManager);
+                        //newTile.GetComponentInChildren<PathOnClick>().Init(pathSelectManager);
+                        //response.coordinateToTile.Add(newPosition, newTile.GetComponent<Tile>());
 
                         newTile.transform.SetParent(Board.transform);
                     }

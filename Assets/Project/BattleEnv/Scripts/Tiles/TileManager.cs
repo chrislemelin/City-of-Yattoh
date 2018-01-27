@@ -110,8 +110,9 @@ namespace Placeholdernamespace.Battle.Env
         /// <param name="range"></param>
         /// <param name="ignoreWalls"></param>
         /// <returns></returns>
-        public List<Tile> GetTilesNoDiag(Position position, int range, bool ignoreWalls = false)
+        public List<Tile> GetTilesNoDiag(Position position, int range, bool ignoreWalls = false, bool lineOfSight = true)
         {
+            Tile startingTile = GetTile(position);
             HashSet<Tile> returnTiles = new HashSet<Tile>();
             HashSet<Tile> processingTiles = new HashSet<Tile>();
             processingTiles.Add(GetTile(position));
@@ -125,8 +126,12 @@ namespace Placeholdernamespace.Battle.Env
                     {
                         if (!returnTiles.Contains(newTile) && GetTile(position)!= newTile)
                         {
-                            newProcessingTiles.Add(newTile);
-                            returnTiles.Add(newTile);
+                            if(!lineOfSight || !CheckIfBlocked(startingTile.Position, newTile.Position))
+                            {
+                                newProcessingTiles.Add(newTile);
+                                returnTiles.Add(newTile);
+                            }
+
                         }
                     }
                     
@@ -188,8 +193,10 @@ namespace Placeholdernamespace.Battle.Env
         /// <param name="ignoreWalls"></param>
         /// <param name="sortByDistance"></param>
         /// <returns></returns>
-        public List<Tile> GetAllTilesDiag(Position position, Position range, bool ignoreWalls = false, bool sortByDistance = false)
+        public List<Tile> GetTilesDiag(Position position, Position range, bool lineOfSight = false,
+            bool ignoreWalls = false, bool sortByDistance = false)
         {
+
             Tile startingTile = GetTile(position);
             List<Tile> returnList = new List<Tile>();
             for (int x = -range.x; x <= range.x; x++)
@@ -202,9 +209,11 @@ namespace Placeholdernamespace.Battle.Env
                     }
                     Position neighborVector = new Position(x + position.x, y + position.y);
                     Tile neighbor = this.GetTile(neighborVector);
+
                     if (neighbor != null)
                     {
-                        returnList.Add(neighbor);
+                        if(!lineOfSight || !CheckIfBlocked(startingTile.Position, neighbor.Position))
+                            returnList.Add(neighbor);
 
                     }
                 }
@@ -217,20 +226,20 @@ namespace Placeholdernamespace.Battle.Env
             return returnList;
         }
 
-        public List<Tile> GetAllTilesDiag(Position position, int range = 1, bool ignoreWalls = false, bool sortByDistance = false)
+        public List<Tile> GetTilesDiag(Position position, int range = 1, bool ignoreWalls = false, bool sortByDistance = false)
         {
-            return GetAllTilesDiag(position, new Position(range, range), ignoreWalls, sortByDistance);
+            return GetTilesDiag(position, new Position(range, range), ignoreWalls, sortByDistance);
         }
 
-        public List<BoardEntity> GetAllBoardEntityDiag(Position position, Position Range, bool ignoreWalls = false, bool sortByDistance = false)
+        public List<BoardEntity> GetBoardEntityDiag(Position position, Position Range, bool ignoreWalls = false, bool sortByDistance = false)
         {
-            List<Tile> tiles = GetAllTilesDiag(position, Range, ignoreWalls, sortByDistance);
+            List<Tile> tiles = GetTilesDiag(position, Range, ignoreWalls, sortByDistance);
             return tilesToBoardEntities(tiles);
         }
 
-        public List<BoardEntity> GetAllBoardEntityDiag(Position position, int range = 1, bool ignoreWalls = false, bool sortByDistance = false)
+        public List<BoardEntity> GetBoardEntityDiag(Position position, int range = 1, bool ignoreWalls = false, bool sortByDistance = false)
         {
-            return GetAllBoardEntityDiag(position, new Position(range, range), ignoreWalls, sortByDistance);
+            return GetBoardEntityDiag(position, new Position(range, range), ignoreWalls, sortByDistance);
         }
 
         private List<BoardEntity> tilesToBoardEntities(List<Tile> tiles)
@@ -254,6 +263,8 @@ namespace Placeholdernamespace.Battle.Env
             this.tupleToWall = response.tuppleToWall;
 
         }
+
+        //public List<Tile> GetTilesDiagLineOfSight()
 
         public bool CheckIfBlocked(Position start, Position end)
         {

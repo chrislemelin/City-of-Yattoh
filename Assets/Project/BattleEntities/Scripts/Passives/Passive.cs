@@ -9,7 +9,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
     public abstract class Passive
     {
         protected BattleCalculator battleCalculator;
-        protected BoardEntity boardEntity;
+        protected CharacterBoardEntity boardEntity;
         protected TileManager tileManager;
 
         protected string title;
@@ -24,7 +24,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         // if passive should cause the turn to be skipped
         protected bool skip = false;
 
-        public enum PassiveType { None, Buff, Debuff}
+        public enum PassiveType { None, Buff, Debuff, TalentTrigger, Talent}
 
         protected PassiveType type;
         public PassiveType Type
@@ -36,7 +36,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         {
         }
 
-        public Passive(BattleCalculator battleCalculator, BoardEntity boardEntity, TileManager tileManager)
+        public Passive(BattleCalculator battleCalculator, CharacterBoardEntity boardEntity, TileManager tileManager)
         {
             this.battleCalculator = battleCalculator;
             this.boardEntity = boardEntity;

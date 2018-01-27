@@ -13,19 +13,16 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         private Skill influenceSkill;
         private List<Tile> influenceTiles = new List<Tile>();
 
-        public PassiveAreaOfInfluenceSkill(BattleCalculator battleCalculator, BoardEntity boardEntity, TileManager tileManager): 
+        public PassiveAreaOfInfluenceSkill(BattleCalculator battleCalculator, CharacterBoardEntity boardEntity, TileManager tileManager): 
             base(battleCalculator, boardEntity, tileManager)
-        {
-            if(boardEntity is CharacterBoardEntity)
-            {
-                influenceSkill = ((CharacterBoardEntity)boardEntity).BasicAttack;
-            }
+        { 
+            influenceSkill = boardEntity.BasicAttack;            
             EnterTile(boardEntity.GetTile());
         }
 
         public override void EnterTile(Tile tile)
         {
-            foreach(Tile t in influenceSkill.TileSetPossible(tile.Position))
+            foreach(Tile t in influenceSkill.TileSetHelper(tile.Position))
             {
                 influenceTiles.Add(t);
                 t.AddEnterActions(EnterAction);

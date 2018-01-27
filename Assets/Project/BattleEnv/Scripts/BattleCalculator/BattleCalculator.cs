@@ -54,8 +54,6 @@ namespace Placeholdernamespace.Battle.Calculator
             
         }
 
-
-
         public SkillReport ExecuteSkillHelper(CharacterBoardEntity source, Skill skill, CharacterBoardEntity target, DamagePackage damage)
         {
             Stats sourceBefore = source.Stats.GetCopy();
@@ -76,10 +74,10 @@ namespace Placeholdernamespace.Battle.Calculator
             switch(usingTakeDamageReturn)
             {
                 case TakeDamageReturn.Normal:
-                    Tuple<int,int> newTargetHealthDamage = HealthAfterDamage(source, target, damage);
+                    Tuple<int,DamageDisplay> newTargetHealthDamage = HealthAfterDamage(source, target, damage);
                     targetAfter.SetMutableStat(StatType.Health, newTargetHealthDamage.first);
 
-                    displayDamages.Add(new DamageDisplay() { value = newTargetHealthDamage.second, character = target });
+                    displayDamages.Add(newTargetHealthDamage.second);
                     
                     return new SkillReport(sourceBefore, sourceAfter, targetBefore, targetAfter);
 
@@ -94,22 +92,36 @@ namespace Placeholdernamespace.Battle.Calculator
 
         }
 
-        private Tuple<int, int> HealthAfterDamage(CharacterBoardEntity source, CharacterBoardEntity target, DamagePackage damage)
+        private Tuple<int, DamageDisplay> HealthAfterDamage(CharacterBoardEntity source, CharacterBoardEntity target, DamagePackage damage)
         {
+            int tempArmour = target.Stats.GetNonMuttableStat(StatType.Armour).Value;
+            tempArmour -= damage.Piercing;
+            if(tempArmour < 0)
+            {
+                tempArmour = 0;
+            }
+
             int tempDamage = damage.Damage;
             if(damage.Type == DamageType.physical)
             {
-                tempDamage -= target.Stats.GetNonMuttableStat(StatType.Armour).Value;
+                tempDamage -= tempArmour;
                 if (tempDamage < 0)
                     tempDamage = 0;
             }
-            int newHealth = target.Stats.GetMutableStat(StatType.Health).Value - tempDamage;
+            int oldHealth = target.Stats.GetMutableStat(StatType.Health).Value;
+
+            int newHealth = oldHealth - tempDamage;
             if (newHealth < 0)
             {
                 // dat bibba dead
                 newHealth = 0;
             }
-            return new Tuple<int, int> (newHealth, tempDamage);
+
+            DamageDisplay damageDisplay = new DamageDisplay();
+            damageDisplay.value = tempDamage;
+            damageDisplay.character = target;
+
+            return new Tuple<int, DamageDisplay> (newHealth, damageDisplay);
         }
 
     }

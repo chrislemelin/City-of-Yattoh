@@ -54,7 +54,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
     }
     public enum SkillModifierType
     {
-        Power, Range, CoolDown, APCost, Duration
+        Power, Range, CoolDown, APCost, Duration, Piercing
     }
 
     public enum SkillModifierApplication

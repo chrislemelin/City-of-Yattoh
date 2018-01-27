@@ -104,9 +104,16 @@ namespace Placeholdernamespace.Battle.UI
                 passiveObject.GetComponent<TooltipSpawner>().Init(passive.GetTitle, passive.GetDescription, ()=> { return null; });
                 passiveObject.transform.SetParent(passivePanel.transform);
                 this.passives.Add(passiveObject);
-
             }
-            
+            if(passives.Count == 0)
+            {
+                passivePanel.gameObject.SetActive(false);
+            }
+            else
+            {
+                passivePanel.gameObject.SetActive(true);
+            }
+
         }
 
         private void EvaluateStats(BoardEntity boardEntity, Stats previewStats = null)

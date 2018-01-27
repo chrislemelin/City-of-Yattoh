@@ -17,6 +17,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             title = "Basic Attack";
             description = "Deal STRENGTH damage to one enemy";
             apCost = 1;
+            range = 5;
             coolDown = 1;
             flavorText = "this is the basic attack";
         }
@@ -31,12 +32,17 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             return boardEntity.Stats.GetNonMuttableStat(AttributeStats.StatType.Strength).Value;
         }
 
-        protected override void ActionHelper(Tile t)
+        protected override void ActionHelper(List<Tile> tiles)
         {
-            DamagePackageInternal damagePackage = GenerateDamagePackage();
-            DamagePackage package = new DamagePackage(damagePackage);
+            DamagePackage package = GenerateDamagePackage();
+            List<BoardEntity> entities =  TeamTiles(tiles, OtherTeam());
+             
+            foreach(BoardEntity entity in entities)
+            {
+                if(entity.Team != boardEntity.Team)
+                    battleCalculator.ExecuteSkillDamage(boardEntity, this, (CharacterBoardEntity)entity, package);
 
-            battleCalculator.ExecuteSkillDamage(boardEntity, this, (CharacterBoardEntity)t.BoardEntity, package);
+            }
         }
     }
 }
