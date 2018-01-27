@@ -13,8 +13,28 @@ namespace Placeholdernamespace.Battle.Entities.AI
     public class EnemyAIBasic : EnemyAi
     {
         private Action callBack;
+        private CharacterBoardEntity character;
+        private BoardEntity ragedBy;
 
-        public void ExecuteTurn(Action callBack, BoardEntity ragedBy = null)
+        public void ExecuteTurn(CharacterBoardEntity character, Action callBack, BoardEntity ragedBy = null)
+        {
+            this.callBack = callBack;
+            this.character = character;
+            this.ragedBy = ragedBy;
+
+            if (character.Stats.GetMutableStat(AttributeStats.StatType.AP).Value > 0)
+            {
+                ExecuteTurnHelper(callBack, ragedBy);
+            }
+            else
+            {
+                callBack();
+            }
+
+            
+        }
+
+        public void ExecuteTurnHelper(Action callBack, BoardEntity ragedBy = null)
         {
             this.callBack = callBack;
             List<Move> moves = characterBoardEntity.MoveSet();
@@ -25,7 +45,7 @@ namespace Placeholdernamespace.Battle.Entities.AI
 
             foreach(Move m in moves)
             {
-                List<Tile> tiles = skill.TheoreticalTileSet(m.destination.Position);
+                List<Tile> tiles = skill.TileSetClickable(m.destination.Position);
 
                 List<BoardEntity> entities = new List<BoardEntity>();
 
@@ -74,15 +94,15 @@ namespace Placeholdernamespace.Battle.Entities.AI
             aiMoves.Sort();
 
             actionQueue = aiMoves[0].Actions;
-            DoNextAction();
+            DoNextAction(false);
 
         }
 
     
 
-        private void DoNextAction()
+        private void DoNextAction(bool interupted)
         {
-            if(actionQueue.Count > 0)
+            if(actionQueue.Count > 0 && !interupted)
             {
                 Action a = actionQueue[0];
                 actionQueue.RemoveAt(0);
@@ -90,8 +110,9 @@ namespace Placeholdernamespace.Battle.Entities.AI
             }
             else
             {
-                if (callBack != null)
-                    callBack();
+                ExecuteTurn(character, callBack, ragedBy);
+                //if (callBack != null)
+                //   callBack();
             }
         }
 

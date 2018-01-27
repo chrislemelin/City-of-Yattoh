@@ -46,9 +46,10 @@ namespace Placeholdernamespace.Battle.Env
 
             if (entity is CharacterBoardEntity)
             {
-                foreach (Passive passive in ((CharacterBoardEntity)entity).Passives)
+                List<Passive> passivesTemp = ((CharacterBoardEntity)entity).Passives;
+                foreach (Passive passive in passivesTemp)
                 {
-                    passive.LeaveTile(tile);
+                    passive.LeaveTile(oldTile);
                     passive.EnterTile(tile);
                 }
             }
@@ -364,43 +365,13 @@ namespace Placeholdernamespace.Battle.Env
         /// <param name="range"></param>
         /// <returns></returns>
         public List<Move> DFSMoves(Position start, CharacterBoardEntity character, int apLimit = 2, Team? team = null,
-            bool ignoreTaunt = false)
+            HashSet<Tile> tauntTiles = null)
         {
-            HashSet<Tile> availibleTiles = new HashSet<Tile>();
-            if (!ignoreTaunt)
-            {
-                foreach(CharacterBoardEntity characterBoardEntity in CharacterBoardEntity.AllCharacterBoardEntities)
-                { 
-                    if(characterBoardEntity == character || characterBoardEntity.Team == character.Team)
-                    {
-                        continue;
-                    }
-                    bool add = false;
-                    HashSet<Tile> tauntTiles = characterBoardEntity.GetTauntTiles();
-                    Tile currentCharacterTile = character.GetTile();
-
-                    foreach (Tile t in tauntTiles )
-                    {
-                        if(currentCharacterTile == t)
-                        {
-                            add = true;
-                        }
-                    }
-                    if(add)
-                    {
-                        foreach (Tile t in tauntTiles)
-                        {
-                            availibleTiles.Add(t);
-                        }
-                    }
-
-                }
-            }                  
-
-            if (availibleTiles.Count > 0)
+              
+            if (tauntTiles != null && tauntTiles.Count != 0)
             {
                 tempCoordinateToTile = new Dictionary<Position, Tile>();
-                foreach (Tile t in availibleTiles)
+                foreach (Tile t in tauntTiles)
                 {
                     tempCoordinateToTile.Add(t.Position, t);
                 }

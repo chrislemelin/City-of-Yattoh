@@ -93,6 +93,8 @@ namespace Placeholdernamespace.Battle.Entities
             get { return name; }
         }
 
+        protected BattleCalculator battleCalculator;
+
         public virtual void Init(Position startingPosition, TurnManager turnManager, TileManager tileManager, BoardEntitySelector boardEntitySelector, BattleCalculator battleCalculator)
         {
             healthBar = Instantiate(healthBar);
@@ -105,6 +107,7 @@ namespace Placeholdernamespace.Battle.Entities
             this.turnManager = turnManager;
             this.tileManager = tileManager;
             this.boardEntitySelector = boardEntitySelector;
+            this.battleCalculator = battleCalculator;
 
             tileManager.AddBoardEntity(startingPosition, gameObject);
 

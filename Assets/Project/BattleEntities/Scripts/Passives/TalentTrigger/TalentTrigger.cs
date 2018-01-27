@@ -9,8 +9,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 {
     public abstract class TalentTrigger : Passive
     {
-        public TalentTrigger(BattleCalculator battleCalculator, CharacterBoardEntity boardEntity, TileManager tileManager) :
-            base(battleCalculator, boardEntity, tileManager)
+        public TalentTrigger() :base()
         {
             type = PassiveType.TalentTrigger;
         }

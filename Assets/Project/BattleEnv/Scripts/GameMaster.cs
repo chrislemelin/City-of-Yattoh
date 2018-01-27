@@ -39,15 +39,15 @@ namespace Placeholdernamespace.Battle
             tileManager.Init(turnManager, profile);
 
             GameObject BE = Instantiate(Player1);
-            BE.GetComponent<CharacterBoardEntity>().Init(new Position(0, 0), turnManager, tileManager, boardEntitySelector, battleCalulator);
+            BE.GetComponent<CharacterBoardEntity>().Init(new Position(0, 2), turnManager, tileManager, boardEntitySelector, battleCalulator);
 
             
             BE = Instantiate(Player2);
-            BE.GetComponent<CharacterBoardEntity>().Init(new Position(0, 3), turnManager, tileManager, boardEntitySelector, battleCalulator);
+            BE.GetComponent<CharacterBoardEntity>().Init(new Position(1, 5), turnManager, tileManager, boardEntitySelector, battleCalulator);
             
 
             BE = Instantiate(Enemy1);
-            BE.GetComponent<CharacterBoardEntity>().Init(new Position(5, 1), turnManager, tileManager, boardEntitySelector, battleCalulator);
+            BE.GetComponent<CharacterBoardEntity>().Init(new Position(1, 0), turnManager, tileManager, boardEntitySelector, battleCalulator);
             
             turnManager.init(boardEntitySelector, tileSelectionManager);
             turnManager.ReCalcQueue();

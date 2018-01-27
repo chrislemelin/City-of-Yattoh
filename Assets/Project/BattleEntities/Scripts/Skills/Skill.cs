@@ -201,13 +201,13 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
         public virtual bool TileOptionClickable(Tile t )
         {
-            if(t == tileManager.GetTile(boardEntity.Position))
+            if(t == tileManager.GetTile(boardEntity.Position) && range == RANGE_SELF)
             {
                 return true;
             }
             else
             {
-                return t.BoardEntity != null;
+                return t.BoardEntity != null && t.BoardEntity.Team != boardEntity.Team;
             }
         }
 
@@ -243,12 +243,12 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
         }
 
-        public void Action(Tile t, Action callback = null)
+        public void Action(Tile t, Action<bool> callback = null)
         {
             Action(new List<Tile>() { t }, callback);
         }
 
-        public void Action(List<Tile> tiles, Action callback = null)
+        public void Action(List<Tile> tiles, Action<bool> callback = null)
         {
             if (tiles.Count > 0)
             {
@@ -260,7 +260,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             }
             if (callback != null)
             {
-                Core.CallbackDelay(.8f, callback);                
+                Core.CallbackDelay(.8f, () => callback(false));                
             }
         }
 
@@ -286,7 +286,6 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         {
             float? value = baseValue;
             List<SkillModifier> modifiers = boardEntity.GetSkillModifier(this);
-
 
             foreach (SkillModifier mod in modifiers)
             {

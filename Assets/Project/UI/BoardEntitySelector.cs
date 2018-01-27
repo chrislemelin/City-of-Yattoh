@@ -182,7 +182,7 @@ namespace Placeholdernamespace.Battle.Interaction
                 if(tileOption != null)
                 {
                     setHoverEntity(null);
-                    ((CharacterBoardEntity)selectedBoardEntity).ExecuteMove( (Move)tileOption.ReturnObject, buildMoveOptions);
+                    ((CharacterBoardEntity)selectedBoardEntity).ExecuteMove( (Move)tileOption.ReturnObject, (bool ok) => buildMoveOptions());
                 }
                 else
                 {

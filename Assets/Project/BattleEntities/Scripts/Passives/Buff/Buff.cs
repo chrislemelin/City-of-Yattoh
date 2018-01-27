@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Placeholdernamespace.Battle.Calculator;
+using Placeholdernamespace.Battle.Env;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,42 +9,49 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 {
     public abstract class Buff : Passive
     {
+        protected const int STACKS_HIDDEN = int.MaxValue;
+        protected int stacks = STACKS_HIDDEN;
         private Func<Passive, bool> remove;
-        protected int stacks;
 
-        public Buff (int stacks = 1) : base()
+        public Buff(int stacks = STACKS_HIDDEN) : base()
         {
             this.stacks = stacks;
         }
 
         public override void StartTurn()
         {
-            PopStack(1);
+            if(stacks != STACKS_HIDDEN)
+            {
+                PopStack(1);
+            }
         }
 
-        public void addRemoveAction(Func<Passive, bool> remove)
+        public void Init(Func<Passive, bool> remove)
         {
             this.remove = remove;
         }
 
-        protected void PopStack(int value = 1)
+        protected void Remove()
         {
-            stacks = stacks - value;
-            if (stacks <= 0)
+            if(remove != null)
             {
-                if(remove != null)
-                {
-                    remove(this);
-                }
+                remove(this);
             }
         }
 
-        protected void AddStack(int value  = 1)
+        public void PopStack(int value = 1)
         {
-            stacks = stacks + value;
+            Remove();
+            
         }
 
-        protected void PopAll()
+        public void AddStack(int value  = 1)
+        {
+            if(stacks != STACKS_HIDDEN)
+                stacks = stacks + value;
+        }
+
+        public void PopAll()
         {
             PopStack(stacks);
         }

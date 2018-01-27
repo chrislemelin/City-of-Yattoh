@@ -54,7 +54,7 @@ namespace Placeholdernamespace.Battle.Entities.AI
             this.movementScore = movementScore;
         }
 
-        public void AddAttackAction(Skill skill, Tile t, Action callBack)
+        public void AddAttackAction(Skill skill, Tile t, Action<bool> callBack)
         {
             SkillReport report = skill.TheoreticalAction(t);
             if(report.TargetAfter.MutableStats[AttributeStats.StatType.Health].Value == 0 )
@@ -65,7 +65,7 @@ namespace Placeholdernamespace.Battle.Entities.AI
             actions.Add(() => skill.Action(t, callBack));
         }
 
-        public void AddMoveAction(CharacterBoardEntity boardEntity, Move move, Action callBack)
+        public void AddMoveAction(CharacterBoardEntity boardEntity, Move move, Action<bool> callBack)
         {
             movementCost += move.movementCost;
             apCost += move.apCost;

@@ -1,16 +1,37 @@
-﻿using System.Collections;
+﻿using Placeholdernamespace.Battle.Calculator;
+using Placeholdernamespace.Battle.Env;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BuffTaunt : MonoBehaviour {
+namespace Placeholdernamespace.Battle.Entities.Passives
+{
+    public class BuffTaunt : Buff
+    {
+        private HashSet<Tile> tauntTiles = new HashSet<Tile>();
+        private CharacterBoardEntity tauntedBy;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+        public BuffTaunt(HashSet<Tile> tauntTiles, CharacterBoardEntity tauntedBy ):base()
+        {
+            this.tauntTiles = tauntTiles;
+            this.tauntedBy = tauntedBy;
+            description = "can only move adjacent to " + tauntedBy.Name;
+        }
+
+        public override HashSet<Tile> GetTauntTiles()
+        {
+            return tauntTiles;
+        }
+
+        public override void LeaveTile(Tile t)
+        {
+            if(!tauntTiles.Contains(t))
+            {
+                Remove();
+            }
+            base.LeaveTile(t);
+        }
+
+
+    }
 }

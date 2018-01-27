@@ -12,10 +12,13 @@ namespace Placeholdernamespace.Battle.Entities.Instances
     public class CharacterBoardEntityJaz : CharacterBoardEntity
     {
 
-        public override void Init(Position startingPosition, TurnManager turnManager, TileManager tileManager, BoardEntitySelector boardEntitySelector, BattleCalculator battleCalculator)
+        public override void Init(Position startingPosition, TurnManager turnManager, TileManager tileManager, 
+            BoardEntitySelector boardEntitySelector, BattleCalculator battleCalculator)
         {
             base.Init(startingPosition, turnManager, tileManager, boardEntitySelector, battleCalculator);
             range = 4;
+
+            //AddPassive(new PassiveAreaOfInfluenceTaunt());
         }
 
     }

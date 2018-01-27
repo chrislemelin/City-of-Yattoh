@@ -390,7 +390,7 @@ MonoBehaviour:
         value: 10
         display: 0
       movement:
-        value: 3
+        value: 6
         display: 0
       speed:
         value: 3

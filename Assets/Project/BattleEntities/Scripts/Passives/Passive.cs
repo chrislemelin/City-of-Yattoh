@@ -36,7 +36,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         {
         }
 
-        public Passive(BattleCalculator battleCalculator, CharacterBoardEntity boardEntity, TileManager tileManager)
+        public virtual void Init(BattleCalculator battleCalculator, CharacterBoardEntity boardEntity, TileManager tileManager)
         {
             this.battleCalculator = battleCalculator;
             this.boardEntity = boardEntity;

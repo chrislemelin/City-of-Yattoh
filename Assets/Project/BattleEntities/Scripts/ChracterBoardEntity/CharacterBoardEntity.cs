@@ -70,7 +70,8 @@ namespace Placeholdernamespace.Battle.Entities
         private Tile target = null;
         
         private Dictionary<Tile, Move> cachedMoves = new Dictionary<Tile, Move>();
-        private Action moveDoneCallback;
+        private Action<bool> moveDoneCallback;
+
 
         public override void Init(Position startingPosition, TurnManager turnManager, TileManager tileManager, BoardEntitySelector boardEntitySelector, BattleCalculator battleCalculator)
         {
@@ -103,7 +104,7 @@ namespace Placeholdernamespace.Battle.Entities
 
         public override List<Move> MoveSet()
         {
-            return tileManager.DFSMoves(GetTile().Position, this, team: team);
+            return tileManager.DFSMoves(GetTile().Position, this, team: team, tauntTiles:GetTauntTiles());
         }
         
         public List<SkillModifier> GetSkillModifier(Skill skill)
@@ -117,6 +118,8 @@ namespace Placeholdernamespace.Battle.Entities
         }
 
         private List<Tile> path = new List<Tile>();
+        private int pathCounter = 0;
+        private bool interupted = false;
 
         private void checkAtTarget()
         {
@@ -136,8 +139,10 @@ namespace Placeholdernamespace.Battle.Entities
             transform.position = Vector3.MoveTowards(transform.position, target.transform.position, step);
         }
 
-        public void ExecuteMove(Move move, Action action = null)
+        public void ExecuteMove(Move move, Action<bool> action = null)
         {
+            interupted = false;
+            pathCounter = 0;
             if(characterAnimation != null)
             {
                 characterAnimation.OnButtonClick(1);
@@ -152,18 +157,32 @@ namespace Placeholdernamespace.Battle.Entities
                 stats.SubtractAPPoints(move.apCost);
                 path = move.path;
             }
-
             ChangeTarget();
         }
 
         private void ChangeTarget()
         {
+            // we gotta check to see if we just walked into a taunt, we will have to do this for taunt as well
+            if(GetTauntTiles().Count != 0)
+            {
+                HashSet<Tile> tauntTiles = GetTauntTiles();
+                for(int a = 0; a < path.Count; a++)
+                {
+                    if (tauntTiles.Contains(path[a]))
+                    {
+                        path.RemoveRange(a, path.Count - a);
+                        interupted = true;
+                    }
+                }
+            }
+
             if(path.Count > 0)
             {
                 AnimatorUtils.animationDirection dir = AnimatorUtils.GetAttackDirectionCode(GetTile().Position, path[0].Position);
                 SetAnimationDirection(dir);
                 target = path[0];
                 path.RemoveAt(0);
+                pathCounter++;
             }
             else
             {
@@ -178,7 +197,7 @@ namespace Placeholdernamespace.Battle.Entities
                     {
                         characterAnimation.OnButtonClick(0);
                     }
-                    moveDoneCallback();
+                    moveDoneCallback(interupted);
                 }
             }
         }
@@ -200,7 +219,8 @@ namespace Placeholdernamespace.Battle.Entities
             {
                 skill.StartTurn();
             }
-            foreach(Passive passive in passives)
+            List<Passive> tempPassives = new List<Passive>(passives);
+            foreach(Passive passive in tempPassives)
             {
                 passive.StartTurn();
                 skipTurn = passive.SkipTurn(skipTurn);
@@ -214,7 +234,7 @@ namespace Placeholdernamespace.Battle.Entities
                 if (team == Team.Enemy)
                 {
                     BoardEntity boardEntity = GetRagedBy();
-                    enemyAIBasic1.ExecuteTurn(turnManager.NextTurn, ragedBy:boardEntity);
+                    enemyAIBasic1.ExecuteTurn(this, turnManager.NextTurn, ragedBy:boardEntity);
                     //turnManager.NextTurn();
                 }
             }           
@@ -232,17 +252,41 @@ namespace Placeholdernamespace.Battle.Entities
                 {
                     target = path[0];
                     path.Remove(target);
+                    pathCounter++;
                 }
             }
             else
             {
                 if(moveDoneCallback != null)
-                    moveDoneCallback();
+                    moveDoneCallback(interupted);
             }
         }
 
+        public void RemoveBuff<buffClass>()
+        {
+            foreach(Passive p in passives)
+            {
+                if(p is Buff)
+                {
+                    if(p is buffClass)
+                    {
+                        ((Buff)p).PopAll();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// please use this when adding any type of passive
+        /// </summary>
+        /// <param name="passive"></param>
         public void AddPassive(Passive passive)
         {
+            passive.Init(battleCalculator, this, tileManager);
+            if(passive is Buff)
+            {
+                AddBuff((Buff)passive);
+            }
             if(passive is TalentTrigger)
             {
                 TalentTriggers.Add((TalentTrigger)passive);
@@ -253,7 +297,6 @@ namespace Placeholdernamespace.Battle.Entities
             }
             passives.Add(passive);
         }
-
         public void TriggerTalents()
         {
             foreach(Talent talent in talents)
@@ -267,9 +310,9 @@ namespace Placeholdernamespace.Battle.Entities
             skills.Add(skill);
         }
 
-        public void AddBuff(Buff buff)
+        protected void AddBuff(Buff buff)
         {
-            buff.addRemoveAction(passives.Remove);          
+            buff.Init(passives.Remove);          
         }
 
 

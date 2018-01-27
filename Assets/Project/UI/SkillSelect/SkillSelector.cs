@@ -132,7 +132,7 @@ namespace Placeholdernamespace.Battle.Interaction
             {
                 if (cancelButton != null)
                     cancelButton.GetComponent<Button>().interactable = false;
-                selectedSkill.Action((List<Tile>)tile.ReturnObject, ExecuteSkillCallback);
+                selectedSkill.Action((List<Tile>)tile.ReturnObject, (bool ok) => ExecuteSkillCallback());
             }
             else
             {
