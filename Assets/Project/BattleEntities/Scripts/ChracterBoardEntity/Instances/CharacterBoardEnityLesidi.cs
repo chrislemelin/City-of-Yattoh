@@ -5,6 +5,7 @@ using Placeholdernamespace.Battle.Env;
 using Placeholdernamespace.Battle.Interaction;
 using Placeholdernamespace.Battle.Managers;
 using UnityEngine;
+using Placeholdernamespace.Battle.Entities.Passives;
 
 namespace Placeholdernamespace.Battle.Entities.Instances
 {
@@ -15,6 +16,8 @@ namespace Placeholdernamespace.Battle.Entities.Instances
         {
             base.Init(startingPosition, turnManager, tileManager, boardEntitySelector, battleCalculator);
             range = 4;
+
+            AddPassive(new PassiveLesidi());
         }     
 
 

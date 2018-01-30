@@ -12,17 +12,25 @@ namespace Placeholdernamespace.Battle.Entities.AI
 {
     public class EnemyAIBasic : EnemyAi
     {
+        private int counter = 0;
         private Action callBack;
         private CharacterBoardEntity character;
         private BoardEntity ragedBy;
+
+
 
         public void ExecuteTurn(CharacterBoardEntity character, Action callBack, BoardEntity ragedBy = null)
         {
             this.callBack = callBack;
             this.character = character;
             this.ragedBy = ragedBy;
+            counter = 0;
+            CheckIfDone();
+        }
 
-            if (character.Stats.GetMutableStat(AttributeStats.StatType.AP).Value > 0)
+        public void CheckIfDone()
+        {
+            if (character.Stats.GetMutableStat(AttributeStats.StatType.AP).Value > 0 && counter++ < 5)
             {
                 ExecuteTurnHelper(callBack, ragedBy);
             }
@@ -30,8 +38,6 @@ namespace Placeholdernamespace.Battle.Entities.AI
             {
                 callBack();
             }
-
-            
         }
 
         public void ExecuteTurnHelper(Action callBack, BoardEntity ragedBy = null)
@@ -45,7 +51,11 @@ namespace Placeholdernamespace.Battle.Entities.AI
 
             foreach(Move m in moves)
             {
-                List<Tile> tiles = skill.TileSetClickable(m.destination.Position);
+                List<Tile> tiles = new List<Tile>();
+                if (skill.IsActive())
+                {
+                    tiles = skill.TileSetClickable(m.destination.Position);
+                }
 
                 List<BoardEntity> entities = new List<BoardEntity>();
 
@@ -96,9 +106,7 @@ namespace Placeholdernamespace.Battle.Entities.AI
             actionQueue = aiMoves[0].Actions;
             DoNextAction(false);
 
-        }
-
-    
+        } 
 
         private void DoNextAction(bool interupted)
         {
@@ -110,7 +118,7 @@ namespace Placeholdernamespace.Battle.Entities.AI
             }
             else
             {
-                ExecuteTurn(character, callBack, ragedBy);
+                CheckIfDone();
                 //if (callBack != null)
                 //   callBack();
             }

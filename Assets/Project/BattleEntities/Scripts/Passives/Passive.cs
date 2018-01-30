@@ -3,6 +3,7 @@ using Placeholdernamespace.Battle.Calculator;
 using Placeholdernamespace.Battle.Entities.Skills;
 using System.Collections.Generic;
 using Placeholdernamespace.Battle.Env;
+using Placeholdernamespace.Battle.Entities.AttributeStats;
 
 namespace Placeholdernamespace.Battle.Entities.Passives
 {
@@ -20,6 +21,8 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         // default skillModifiers for ALL skills
         protected List<SkillModifier> skillModifiers = new List<SkillModifier>();
+
+        protected List<StatModifier> statModifiers = new List<StatModifier>();
 
         // if passive should cause the turn to be skipped
         protected bool skip = false;
@@ -108,12 +111,31 @@ namespace Placeholdernamespace.Battle.Entities.Passives
             return new List<SkillModifier>();
         }
 
-        protected virtual List<SkillModifier> GetSkillHelperModifiers()
+        protected List<SkillModifier> GetSkillHelperModifiers()
         {
-            return skillModifiers;
-        }       
+            return new List<SkillModifier>(skillModifiers); ;
+        }
+
+        public List<StatModifier> GetStatModifiers()
+        {
+            List<StatModifier> modifiers = GetStatHelperModifiersDefault();
+            modifiers.AddRange(GetStatHelperModifiers());
+            return modifiers;
+        }
+
+        protected virtual List<StatModifier> GetStatHelperModifiers()
+        {
+            return new List<StatModifier>();
+        }
+
+        protected List<StatModifier> GetStatHelperModifiersDefault()
+        {
+            return new List<StatModifier>(statModifiers);
+        }
 
         public virtual void StartTurn(){}
+
+        public virtual void EndTurn(){ }
 
         public virtual void LeaveTile(Tile t){}
 
@@ -124,6 +146,16 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         public virtual bool IsStealthed(bool stealthed)
         {
             return stealthed;
+        }
+
+        public virtual List<DamagePackage> GetDamagePackage(Skill skill)
+        {
+            return new List<DamagePackage>();
+        }
+
+        public virtual void ExecutedMove(Move move)
+        {
+
         }
 
         public virtual CharacterBoardEntity GetRagedBy(CharacterBoardEntity characterBoardEntity)

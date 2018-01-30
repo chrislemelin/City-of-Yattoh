@@ -9,8 +9,18 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 {
     public abstract class Buff : Passive
     {
-        protected const int STACKS_HIDDEN = int.MaxValue;
+        
+        public const int STACKS_HIDDEN = int.MaxValue;
         protected int stacks = STACKS_HIDDEN;
+
+        protected enum addBuff {add, refresh};
+        protected addBuff addBuffHandle;
+
+
+        public int Stacks
+        {
+            get { return stacks; }
+        }
         private Func<Passive, bool> remove;
 
         public Buff(int stacks = STACKS_HIDDEN) : base()
@@ -20,10 +30,6 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         public override void StartTurn()
         {
-            if(stacks != STACKS_HIDDEN)
-            {
-                PopStack(1);
-            }
         }
 
         public void Init(Func<Passive, bool> remove)
@@ -41,14 +47,35 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         public void PopStack(int value = 1)
         {
-            Remove();
-            
+            if (stacks != STACKS_HIDDEN)
+            {
+                stacks -= value;
+                if (stacks <= 0)
+                    Remove();
+            }
+        }
+
+        public virtual void AddSameBuff(Buff b)
+        {
+            if(GetType() == b.GetType())
+            {
+                if (addBuffHandle == addBuff.add)
+                    AddStack(b.stacks);
+                else
+                    SetStacks(b.stacks);
+            }
         }
 
         public void AddStack(int value  = 1)
         {
             if(stacks != STACKS_HIDDEN)
                 stacks = stacks + value;
+        }
+
+        private void SetStacks(int value)
+        {
+            if (stacks != STACKS_HIDDEN)
+                stacks = value;
         }
 
         public void PopAll()
@@ -78,7 +105,11 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         private string GetDescriptionExtra()
         {
-            string returnString = "STACKS: "+stacks;
+            string returnString = "";
+            if(stacks != STACKS_HIDDEN)
+            {
+                returnString += "STACKS: " + stacks;
+            }
             return returnString;
         }
 

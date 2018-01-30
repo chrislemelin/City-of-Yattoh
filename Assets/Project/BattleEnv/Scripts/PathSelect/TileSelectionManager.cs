@@ -1,5 +1,6 @@
 ﻿using Placeholdernamespace.Battle.Entities;
 using Placeholdernamespace.Battle.Entities.AttributeStats;
+using Placeholdernamespace.Battle.Entities.Skills;
 using Placeholdernamespace.Battle.Env;
 using Placeholdernamespace.Battle.Managers;
 using Placeholdernamespace.Battle.UI;
@@ -315,6 +316,7 @@ namespace Placeholdernamespace.Battle.Interaction
         public object ReturnObject;
         public Action OnHoverAction;
         public Stats DisplayStats;
+        public SkillReport skillReport;
         public bool Clickable = true;
 
     }

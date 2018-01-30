@@ -56,7 +56,7 @@ namespace Placeholdernamespace.Battle.Entities
             return tileManager.GetTile(Position);
         }
 
-        protected Position position = new Position(1, 1);
+        protected Position position = new Position(0, 0);
         public Position Position
         {
             get { return position; }
@@ -84,6 +84,7 @@ namespace Placeholdernamespace.Battle.Entities
         public Stats Stats
         {
             get { return stats; }
+            set { stats = value; }
         }
 
         [SerializeField]
@@ -93,7 +94,7 @@ namespace Placeholdernamespace.Battle.Entities
             get { return name; }
         }
 
-        protected BattleCalculator battleCalculator;
+        protected BattleCalculator  battleCalculator;
 
         public virtual void Init(Position startingPosition, TurnManager turnManager, TileManager tileManager, BoardEntitySelector boardEntitySelector, BattleCalculator battleCalculator)
         {
@@ -127,13 +128,9 @@ namespace Placeholdernamespace.Battle.Entities
 
         public void UpdateUi()
         {
-            if (updateStatHandler != null)
-            {
-                updateStatHandler(this);
-            }
             if (healthBar != null)
             {
-                float newHealth = (float)stats.GetMutableStat(StatType.Health).Value / (float)stats.GetStatInstance().getValue(StatType.Health);
+                float newHealth = (float)Stats.GetMutableStat(StatType.Health).Value / (float)Stats.GetStatInstance().getValue(StatType.Health);
                 healthBar.GetComponent<UIBar>().SetValue(newHealth);
             }
         }

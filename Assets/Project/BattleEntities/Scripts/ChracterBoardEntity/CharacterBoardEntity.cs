@@ -42,7 +42,7 @@ namespace Placeholdernamespace.Battle.Entities
         protected List<Passive> passives = new List<Passive>();
         public List<Passive> Passives
         {
-            get { return passives; }
+            get { return new List<Passive>(passives); }
         }
 
         protected List<Talent> talents = new List<Talent>();
@@ -87,8 +87,9 @@ namespace Placeholdernamespace.Battle.Entities
             {
                 enemyAIBasic1.Init(tileManager, this);
             }
-            basicAttack = new BasicAttack(tileManager, this, battleCalculator);
-            skills.Add(basicAttack);
+
+            basicAttack = new BasicAttack();
+            AddSkill(basicAttack);
             /*
             basicAttack = new BasicAttack(tileManager, this, battleCalculator);
             skills.Add(basicAttack);
@@ -110,11 +111,21 @@ namespace Placeholdernamespace.Battle.Entities
         public List<SkillModifier> GetSkillModifier(Skill skill)
         {
             List<SkillModifier> skillModifiers = new List<SkillModifier>();
-            foreach(Passive passive in passives)
+            foreach(Passive passive in Passives)
             {
                 skillModifiers.AddRange(passive.GetSkillModifiers(skill));
             }
             return skillModifiers;
+        }
+
+        public List<StatModifier> GetStatModifiers()
+        {
+            List<StatModifier> statModifiers = new List<StatModifier>();
+            foreach(Passive passive in Passives)
+            {
+                statModifiers.AddRange(passive.GetStatModifiers());
+            }
+            return statModifiers;
         }
 
         private List<Tile> path = new List<Tile>();
@@ -153,8 +164,13 @@ namespace Placeholdernamespace.Battle.Entities
                 OutlineOnHover.disabled = true;
                 PathOnClick.pause = true;
 
-                stats.SetMutableStat(StatType.Movement, move.movementPointsAfterMove);
-                stats.SubtractAPPoints(move.apCost);
+                foreach(Passive p in Passives)
+                {
+                    p.ExecutedMove(move);
+                }
+
+                //stats.SetMutableStat(StatType.Movement, move.movementPointsAfterMove);
+                //stats.SubtractAPPoints(move.apCost);
                 path = move.path;
             }
             ChangeTarget();
@@ -162,8 +178,9 @@ namespace Placeholdernamespace.Battle.Entities
 
         private void ChangeTarget()
         {
+
             // we gotta check to see if we just walked into a taunt, we will have to do this for taunt as well
-            if(GetTauntTiles().Count != 0)
+            if (GetTauntTiles().Count != 0)
             {
                 HashSet<Tile> tauntTiles = GetTauntTiles();
                 for(int a = 0; a < path.Count; a++)
@@ -183,10 +200,12 @@ namespace Placeholdernamespace.Battle.Entities
                 target = path[0];
                 path.RemoveAt(0);
                 pathCounter++;
+
             }
             else
             {
-                
+                stats.SubtractMovementPoints(pathCounter);
+
                 // all done moving
                 target = null;
                 PathOnClick.pause = false;
@@ -219,8 +238,7 @@ namespace Placeholdernamespace.Battle.Entities
             {
                 skill.StartTurn();
             }
-            List<Passive> tempPassives = new List<Passive>(passives);
-            foreach(Passive passive in tempPassives)
+            foreach(Passive passive in Passives)
             {
                 passive.StartTurn();
                 skipTurn = passive.SkipTurn(skipTurn);
@@ -231,6 +249,7 @@ namespace Placeholdernamespace.Battle.Entities
             }
             else
             {               
+
                 if (team == Team.Enemy)
                 {
                     BoardEntity boardEntity = GetRagedBy();
@@ -238,33 +257,48 @@ namespace Placeholdernamespace.Battle.Entities
                     //turnManager.NextTurn();
                 }
             }           
+        } 
+        
+        public void EndMyTurn()
+        {
+            foreach(Passive p in Passives)
+            {
+                p.EndTurn();
+            }
+            turnManager.NextTurn();
         }
 
-        private void ExecuteMoveHelper(Move move)
+        // Passives
+
+        /// <summary>
+        /// please use this when adding any type of passive
+        /// </summary>
+        /// <param name="passive"></param>
+        public void AddPassive(Passive passive)
         {
-            if (move != null)
+            passive.Init(battleCalculator, this, tileManager);
+            bool add = true;
+            if (passive is Buff)
             {
-                //stats.SubtractMovementPoints(move.movementCost);
-                stats.SetMutableStat(StatType.Movement, move.movementPointsAfterMove);
-                stats.SubtractAPPoints(move.apCost);
-                path = move.path;
-                if (path.Count > 0)
-                {
-                    target = path[0];
-                    path.Remove(target);
-                    pathCounter++;
-                }
+                add = AddBuff((Buff)passive);
             }
-            else
+            if (passive is TalentTrigger)
             {
-                if(moveDoneCallback != null)
-                    moveDoneCallback(interupted);
+                TalentTriggers.Add((TalentTrigger)passive);
             }
+            if (passive is Talent)
+            {
+                Talents.Add((Talent)passive);
+            }
+            if(add)
+                passives.Add(passive);
+
+            
         }
 
         public void RemoveBuff<buffClass>()
         {
-            foreach(Passive p in passives)
+            foreach(Passive p in Passives)
             {
                 if(p is Buff)
                 {
@@ -276,27 +310,6 @@ namespace Placeholdernamespace.Battle.Entities
             }
         }
 
-        /// <summary>
-        /// please use this when adding any type of passive
-        /// </summary>
-        /// <param name="passive"></param>
-        public void AddPassive(Passive passive)
-        {
-            passive.Init(battleCalculator, this, tileManager);
-            if(passive is Buff)
-            {
-                AddBuff((Buff)passive);
-            }
-            if(passive is TalentTrigger)
-            {
-                TalentTriggers.Add((TalentTrigger)passive);
-            }
-            if(passive is Talent)
-            {
-                Talents.Add((Talent)passive);
-            }
-            passives.Add(passive);
-        }
         public void TriggerTalents()
         {
             foreach(Talent talent in talents)
@@ -307,19 +320,28 @@ namespace Placeholdernamespace.Battle.Entities
 
         public void AddSkill(Skill skill)
         {
+            skill.Init(tileManager, this, battleCalculator);
             skills.Add(skill);
         }
 
-        protected void AddBuff(Buff buff)
+        protected bool AddBuff(Buff buff)
         {
-            buff.Init(passives.Remove);          
+            buff.Init(passives.Remove);
+            foreach(Passive p in passives)
+            {
+                if(buff.GetType() == p.GetType())
+                {
+                    ((Buff)p).AddSameBuff(buff);
+                    return false;
+                }
+            }
+            return true;
         }
-
 
         public CharacterBoardEntity GetRagedBy()
         {
             CharacterBoardEntity returnEntity = null;
-            foreach(Passive passive in passives)
+            foreach(Passive passive in Passives)
             {
                 returnEntity = passive.GetRagedBy(returnEntity);
             }
@@ -329,7 +351,7 @@ namespace Placeholdernamespace.Battle.Entities
         public HashSet<Tile> GetTauntTiles()
         {
             HashSet<Tile> returnTauntTiles = new HashSet<Tile>();
-            foreach (Passive passive in passives)
+            foreach (Passive passive in Passives)
             {
                 foreach(Tile tile in passive.GetTauntTiles())
                 {
@@ -342,12 +364,14 @@ namespace Placeholdernamespace.Battle.Entities
         public bool IsStealthed()
         {
             bool stealthed = false;
-            foreach(Passive p in passives)
+            foreach(Passive p in Passives)
             {
                 stealthed = p.IsStealthed(stealthed);
             }
             return stealthed;
         }
+
+        // ANIMATIONS
 
         public void SetAnimation(AnimatorUtils.animationType type)
         {

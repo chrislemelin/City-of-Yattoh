@@ -79,21 +79,32 @@ namespace Placeholdernamespace.Battle.Interaction
         {
             selectedSkill = skill;           
             tileSelectionManager.CancelSelection();
-            ClearButtonList();
-            buildCancelSkillButton();
-            List<TileSelectOption> tileSelectOptions = skill.TileOptionSet();
-            foreach(TileSelectOption option in tileSelectOptions)
+
+            if (skill.SelfCasting())
             {
-                if (option.DisplayStats != null)
+                selectedSkill.Action(new List<Tile>(), (bool ok) => ExecuteSkillCallback());
+            }
+            else
+            {
+                ClearButtonList();
+                buildCancelSkillButton();
+                List<TileSelectOption> tileSelectOptions = skill.TileOptionSet();
+                foreach (TileSelectOption option in tileSelectOptions)
                 {
-                    option.OnHoverAction = () => {if (getHoverEntity() == null)
-                        { profile.UpdateProfile(option.DisplayStats.BoardEntity, option.DisplayStats); } };
+                    if (option.DisplayStats != null)
+                    {
+                        option.OnHoverAction = () =>
+                        {
+                            if (getHoverEntity() == null)
+                            { profile.UpdateProfile(option.DisplayStats.BoardEntity, skillReport: option.skillReport); }
+                        };
+                    }
                 }
+                tileSelectionManager.SelectTile(boardEntity, tileSelectOptions, ExecuteSkill);
+
             }
 
 
-            tileSelectionManager.SelectTile(boardEntity, tileSelectOptions, ExecuteSkill);
-            
             //tileSelectionManager.SelectTile(boardEntity, skill.TileSet(), ExecuteSkill, Color.blue, Color.cyan);
         }
 

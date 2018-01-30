@@ -58,6 +58,14 @@ namespace Placeholdernamespace.Battle.Managers
             ReCalcQueue();
         }
 
+        public void NextTurnHelper()
+        {
+            if(currentBoardEntity != null)
+            {
+                ((CharacterBoardEntity)currentBoardEntity).EndMyTurn();
+            }
+        }
+
         public void NextTurn()
         {
             PathOnClick.pause = true;

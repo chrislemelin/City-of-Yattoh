@@ -43,7 +43,12 @@ namespace Placeholdernamespace.Common.UI
 
         void Update()
         {
-            if(spawnedTooltip == null && hover && (Time.time - enterTime) > waitTime && (getDescription() != null || getTitle() != null))
+            if(spawnedTooltip == null
+                && hover 
+                && (Time.time - enterTime)
+                > waitTime 
+                && (getDescription() != null 
+                || getTitle() != null))
             {
                 spawnedTooltip = Instantiate(tooltip);
                 spawnedTooltip.GetComponent<Tooltip>().setDescription(getDescription());

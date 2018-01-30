@@ -14,7 +14,8 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
     {
         public delegate void UpdateState();
         public event UpdateState updateStatHandler;
-        private List<StatModifier> modifiers = new List<StatModifier>();
+        public List<StatModifier> modifiers = new List<StatModifier>();
+        
         private BoardEntity boardEntity;
         public BoardEntity BoardEntity
         {
@@ -38,6 +39,22 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
                 return mutableStats.ToDictionary(entry => entry.Key, entry =>  new Stat (entry.Value));
             }
         }
+
+        public List<StatModifier> GetModifiers()
+        {
+            List<StatModifier> mods = new List<StatModifier>(modifiers);
+            if(boardEntity is CharacterBoardEntity)
+            {
+                mods.AddRange(((CharacterBoardEntity)boardEntity).GetStatModifiers());
+            }
+            return mods;
+        }
+
+        public void AddModifier(StatModifier modifier)
+        {
+            modifiers.Add(modifier);
+        }
+            
 
 
         [SerializeField]
@@ -65,7 +82,7 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
         {
             baseStats.UseDefaults();
             StatInstance returnStats = new StatInstance(baseStats);
-            foreach (StatModifier modifier in modifiers)
+            foreach (StatModifier modifier in GetModifiers())
             {
                 returnStats.ApplyMod(modifier);
             }
@@ -78,6 +95,7 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
             // a clone for the different previews,
             Stats stats = new Stats();
             stats.modifiers = new List<StatModifier>();
+            stats.updateStatHandler += updateStatHandler;
             foreach(StatModifier mod in modifiers)
             {
                 stats.modifiers.Add(mod);
@@ -116,6 +134,8 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
             }
         }
 
+        
+
         public Stat GetNonMuttableStat(StatType type)
         {
             return GetStatInstance().GetStat(type);
@@ -125,13 +145,26 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
         /// get mutable stat if it is mutable, else gets the non mutable stat
         /// </summary>
         /// <returns></returns>
-        public Stat GetDefaultStat(StatType type)
+        public Stat GetDefaultStat(StatType type, List<StatModifier> modifiers = null)
         {
-            if(mutableStats.ContainsKey(type))
+            if(modifiers != null)
             {
-                return GetMutableStat(type);
+                this.modifiers = modifiers;
             }
-            return GetNonMuttableStat(type);
+            Stat returnStats;
+            if (mutableStats.ContainsKey(type))
+            {
+                returnStats =  GetMutableStat(type);
+            }
+            else
+            {
+                returnStats = GetNonMuttableStat(type);
+            }
+            if (modifiers != null)
+            {
+                this.modifiers = new List<StatModifier>();
+            }
+            return returnStats;
         }
 
         public void SetMutableStat(StatType type, int value)
@@ -155,6 +188,14 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
     
         }
 
+        public void UpdateStatHandler()
+        {
+            if (updateStatHandler != null)
+            {
+                updateStatHandler();
+            }
+        }
+
         public void AddActionPoints(int value)
         {
             // if its less than zero something should probably happen here
@@ -162,11 +203,25 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
             SetMutableStat(StatType.AP, newValue);
         }
 
-        public void SubtractMovementPoints(int value)
+        public bool SubtractMovementPoints(int value)
         {
             // if its less than zero something should probably happen here
             int newValue = GetMutableStat(StatType.Movement).Value - value;
+            while(newValue < 0)
+            {
+                newValue += GetNonMuttableStat(StatType.Movement).Value;
+                if(GetMutableStat(StatType.AP).Value == 0)
+                {
+                    return false;
+                }
+                else
+                {
+                    SubtractAPPoints(1);
+                }
+            }
             SetMutableStat(StatType.Movement, newValue);
+            return true;
+
         }
 
         public void SubtractAPPoints(int value)

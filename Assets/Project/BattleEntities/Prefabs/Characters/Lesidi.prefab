@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 4914905680874010}
   - component: {fileID: 114631525846542012}
   - component: {fileID: 114828439413869006}
-  - component: {fileID: 114023767886800988}
+  - component: {fileID: 114029403163052804}
   m_Layer: 0
   m_Name: Lesidi
   m_TagString: Untagged
@@ -231,7 +231,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114023767886800988
+--- !u!114 &114029403163052804
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -239,9 +239,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1542313980632146}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c67de6ac62216c4b9357b98fd0c8d34, type: 3}
+  m_Script: {fileID: 11500000, guid: ed8b6996ef53ad04fa5f0de7c3d5f0ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  textDisplayObject: {fileID: 1666611324461376, guid: deefc0ebd4e5a9a4f97ae552b8a2dc61,
+    type: 2}
 --- !u!114 &114074054411203152
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -435,7 +437,7 @@ MonoBehaviour:
         value: 2
         display: 0
       strength:
-        value: 0
+        value: 4
         display: 0
       ap:
         value: 8

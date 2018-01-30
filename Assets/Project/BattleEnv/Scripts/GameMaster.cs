@@ -39,7 +39,7 @@ namespace Placeholdernamespace.Battle
             tileManager.Init(turnManager, profile);
 
             GameObject BE = Instantiate(Player1);
-            BE.GetComponent<CharacterBoardEntity>().Init(new Position(0, 2), turnManager, tileManager, boardEntitySelector, battleCalulator);
+            BE.GetComponent<CharacterBoardEntity>().Init(new Position(1, 2), turnManager, tileManager, boardEntitySelector, battleCalulator);
 
             
             BE = Instantiate(Player2);

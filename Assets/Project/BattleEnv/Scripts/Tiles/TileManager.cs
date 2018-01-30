@@ -452,6 +452,40 @@ namespace Placeholdernamespace.Battle.Env
             return tiles;
         }
 
+        public List<Tile> GetTilesInDirection(Position start, Position direction, int distance, bool stopAtObstacle = true)
+        {
+            List<Tile> returnTiles = new List<Tile>();
+            Position currentPosition = new Position(start);
+            for(int a = 0; a < distance; a++)
+            {
+                currentPosition = currentPosition + direction;
+                if(GetTile(currentPosition) != null)
+                {
+                    returnTiles.Add(GetTile(currentPosition));
+                }
+                else
+                {
+                    if(stopAtObstacle)
+                    {
+                        break;
+                    }
+                }
+            }
+            return returnTiles;
+        }
+
+        public List<Tile> GetTilesInAllDirections(Position start, List<Position> directions, int distance, bool stopAtObstacle = true)
+        {
+            List<Tile> returnTiles = new List<Tile>();
+            foreach(Position p in directions)
+            {
+                List<Tile> currentReturnTiles = GetTilesInDirection(start, p, distance, stopAtObstacle);
+                returnTiles.AddRange(currentReturnTiles);
+            }
+            return returnTiles;
+
+        }
+
         public bool AddBoardEntity(Position position, GameObject boardEntity)
         {
             Tile tile = GetTile(position);
@@ -469,5 +503,48 @@ namespace Placeholdernamespace.Battle.Env
                 return false;
             }
         }
+
+        public bool RemoveTile(Position p)
+        {
+            Tile t = GetTile(p);
+            if (t != null && CanRemoveTile(t))
+            {
+                t.gameObject.SetActive(false);
+                coordinateToTile.Remove(p);
+                return true;
+            }
+            return false;
+        }
+
+        private bool CanRemoveTile(Tile t)
+        {
+            int beforeCount = ReachableTiles(t, new HashSet<Tile>()).Count;
+            int afterCount = ReachableTiles(t, new HashSet<Tile>() {t}).Count;
+            return (beforeCount - 1 == afterCount);
+        }
+
+        private HashSet<Tile> ReachableTiles(Tile start, HashSet<Tile> exclude)
+        {
+            HashSet<Tile> reachableTiles = new HashSet<Tile>() { start };
+            List<Tile> visitingTiles = new List<Tile>() { start };
+            while(visitingTiles.Count != 0)
+            {
+                Tile t = visitingTiles[0];
+                visitingTiles.RemoveAt(0);
+                List<Tile> tiles = GetTilesNoDiag(t.Position);
+                foreach(Tile tile in tiles)
+                {
+                    if(!reachableTiles.Contains(tile) && !exclude.Contains(tile))
+                    {
+                        reachableTiles.Add(tile);
+                        visitingTiles.Add(tile);
+                    }
+                }
+
+            }
+            return reachableTiles;
+
+        }
+
     }
 }

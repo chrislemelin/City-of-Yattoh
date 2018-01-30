@@ -6,6 +6,7 @@ using Placeholdernamespace.Battle.Interaction;
 using Placeholdernamespace.Battle.Managers;
 using UnityEngine;
 using Placeholdernamespace.Battle.Entities.Passives;
+using Placeholdernamespace.Battle.Entities.Skills;
 
 namespace Placeholdernamespace.Battle.Entities.Instances
 {
@@ -18,6 +19,13 @@ namespace Placeholdernamespace.Battle.Entities.Instances
             base.Init(startingPosition, turnManager, tileManager, boardEntitySelector, battleCalculator);
             range = 4;
 
+            AddPassive(new PassivePiercingJaz());
+            AddPassive(new TalentJaz());
+            AddPassive(new TalentTriggerJaz());
+
+            AddSkill(new SkillJaz1());
+            AddSkill(new SkillJaz2());
+            //AddPassive(new )
             //AddPassive(new PassiveAreaOfInfluenceTaunt());
         }
 

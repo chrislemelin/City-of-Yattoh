@@ -1,6 +1,7 @@
 ﻿using Placeholdernamespace.Battle.Entities;
 using Placeholdernamespace.Battle.Entities.AttributeStats;
 using Placeholdernamespace.Battle.Entities.Passives;
+using Placeholdernamespace.Battle.Entities.Skills;
 using Placeholdernamespace.Common.UI;
 using System.Collections;
 using System.Collections.Generic;
@@ -44,7 +45,7 @@ namespace Placeholdernamespace.Battle.UI
         }
 
 
-        public void UpdateProfile(BoardEntity boardEntity, Stats previewStats = null)
+        public void UpdateProfile(BoardEntity boardEntity, Stats previewStats = null, SkillReport skillReport = null)
         {
             if (currentBoardEntity != null)
             {
@@ -59,7 +60,7 @@ namespace Placeholdernamespace.Battle.UI
             {
                 currentBoardEntity.updateStatHandler += RefreshProfile;
                 gameObject.SetActive(true);
-                processBoardEntity(boardEntity, previewStats);
+                processBoardEntity(boardEntity, previewStats, skillReport);
             }
 
         }
@@ -72,7 +73,7 @@ namespace Placeholdernamespace.Battle.UI
             processBoardEntity(boardEntity, stats);
         }
 
-        private void processBoardEntity(BoardEntity boardEntity, Stats previewStats = null)
+        private void processBoardEntity(BoardEntity boardEntity, Stats previewStats = null, SkillReport skillreport = null)
         {
             UpdateProfilePic(boardEntity.ProfileImage);
             foreach (GameObject g in texts)
@@ -84,7 +85,7 @@ namespace Placeholdernamespace.Battle.UI
                 Destroy(g);
             }
             AddTitle(boardEntity.Name);
-            EvaluateStats(boardEntity, previewStats);
+            EvaluateStats(boardEntity, previewStats, skillreport);
             if (boardEntity is CharacterBoardEntity)
             {
                 AddPassives(((CharacterBoardEntity)boardEntity).Passives);
@@ -116,7 +117,7 @@ namespace Placeholdernamespace.Battle.UI
 
         }
 
-        private void EvaluateStats(BoardEntity boardEntity, Stats previewStats = null)
+        private void EvaluateStats(BoardEntity boardEntity, Stats previewStats = null, SkillReport skillReport = null)
         {
             foreach(StatType type in displayOrder)
             {
@@ -129,6 +130,23 @@ namespace Placeholdernamespace.Battle.UI
                     {
                         text += ColorText((Color)col, " -> " + previewStats.StatValueString(type));
                     }
+                }
+                if(skillReport != null)
+                {
+                    List<StatModifier> mods = new List<StatModifier>();
+                    foreach(Buff buff in skillReport.Buffs)
+                    {
+                        mods.AddRange(buff.GetStatModifiers());
+                    }
+                    int value =  skillReport.targetAfter.GetDefaultStat(type, mods).Value;
+                    skillReport.targetAfter.modifiers = mods;
+
+                    Color? col = GetStatChangeColor(boardEntity, skillReport.targetAfter, type);
+                    if (col != null)
+                    {
+                        text += ColorText((Color)col, " -> " + skillReport.targetAfter.StatValueString(type));
+                    }
+                    skillReport.targetAfter.modifiers = new List<StatModifier>();
                 }
                 AddText(text, Stats.StatTypeToTooltip(type));
             }
@@ -149,6 +167,24 @@ namespace Placeholdernamespace.Battle.UI
             return null;      
 
         }
+
+
+        private Color? GetStatChangeColor(BoardEntity boardEntity, int perviewValue, StatType type)
+        {
+            int before = boardEntity.Stats.GetDefaultStat(type).Value;
+            int after = perviewValue;
+            if (before > after)
+            {
+                return negColor;
+            }
+            if (after > before)
+            {
+                return posColor;
+            }
+            return null;
+
+        }
+
 
         private void AddTitle(string text)
         {

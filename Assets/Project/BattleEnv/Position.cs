@@ -15,6 +15,12 @@ namespace Placeholdernamespace.Battle.Env
             this.y = y;
         }
 
+        public Position(Position position)
+        {
+            x = position.x;
+            y = position.y;
+        }
+
         public Position(int length)
         {
             this.x = length;

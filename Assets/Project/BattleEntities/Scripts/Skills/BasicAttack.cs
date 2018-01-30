@@ -6,19 +6,20 @@ using UnityEngine;
 using Placeholdernamespace.Battle.Calculator;
 using System;
 using Placeholdernamespace.Battle.Interaction;
+using Placeholdernamespace.Battle.Entities.Passives;
 
 namespace Placeholdernamespace.Battle.Entities.Skills
 {
     public class BasicAttack : Skill
     {
 
-        public BasicAttack(TileManager tileManager, CharacterBoardEntity boardEntity, BattleCalculator battleCalculator):base(tileManager,boardEntity,battleCalculator)
+        public BasicAttack():base()
         {
             title = "Basic Attack";
             description = "Deal STRENGTH damage to one enemy";
             apCost = 1;
-            range = 5;
             coolDown = 1;
+            piercing = 0;
             flavorText = "this is the basic attack";
         }
 
@@ -32,17 +33,22 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             return boardEntity.Stats.GetNonMuttableStat(AttributeStats.StatType.Strength).Value;
         }
 
-        protected override void ActionHelper(List<Tile> tiles)
+        protected override SkillReport ActionHelper(List<Tile> tiles)
         {
-            DamagePackage package = GenerateDamagePackage();
+            List<DamagePackage> packages = GenerateDamagePackages();
             List<BoardEntity> entities =  TeamTiles(tiles, OtherTeam());
-             
+
+            SkillReport report = null;
+
+
             foreach(BoardEntity entity in entities)
             {
                 if(entity.Team != boardEntity.Team)
-                    battleCalculator.ExecuteSkillDamage(boardEntity, this, (CharacterBoardEntity)entity, package);
+                    report = battleCalculator.ExecuteSkillDamage(boardEntity, this, (CharacterBoardEntity)entity,
+                        packages);
 
             }
+            return report;
         }
     }
 }

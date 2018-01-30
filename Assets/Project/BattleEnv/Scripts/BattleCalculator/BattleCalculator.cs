@@ -2,6 +2,7 @@
 using Placeholdernamespace.Battle.Entities.AttributeStats;
 using Placeholdernamespace.Battle.Entities.Passives;
 using Placeholdernamespace.Battle.Entities.Skills;
+using Placeholdernamespace.Common.UI;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -17,113 +18,186 @@ namespace Placeholdernamespace.Battle.Calculator
 
         private List<DamageDisplay> displayDamages = new List<DamageDisplay>();
 
-        public void ExecuteSkillDamage(CharacterBoardEntity source, Skill skill, CharacterBoardEntity target, DamagePackage damage)
+        public SkillReport ExecuteSkillDamage(CharacterBoardEntity source, Skill skill, CharacterBoardEntity target, List<DamagePackage> damage)
         {
-            SkillReport skillReport = ExecuteSkillHelper(source, skill, target, damage);            
+            Stats sourceStats = source.Stats.GetCopy();
+            Stats targetStats = target.Stats.GetCopy();
+
+            SkillReport skillReport = ExecuteSkillHelper(source, skill, target, damage);
+            //ExecuteSkillReport(skillReport);
+
+
+            return skillReport;
+        }
+
+        public SkillReport ExecuteSkillHealing(Skill skill, CharacterBoardEntity source, CharacterBoardEntity target, int value)
+        {
+            SkillReport report = new SkillReport();
+            report.targetBefore = source.Stats.GetCopy();
+            report.targetAfter = source.Stats.GetCopy();
+
+            report.targetAfter.SetMutableStat(StatType.Health, report.targetAfter.GetMutableStat(StatType.Health).Value + value);
+            report.TextDisplays.Add(new TextDisplay() {
+                text = "+ " + value,
+                textColor = Color.green,
+                callback = (() =>  target.SetAnimation(Common.Animator.AnimatorUtils.animationType.win)),
+                target = target
+            });
+
+            return report;
+        }
+
+        public void ExecuteSkillReport(SkillReport skillReport )
+        {
 
             if (skillReport != null)
             {
-                foreach (StatType type in skillReport.SourceAfter.MutableStats.Keys)
+
+                foreach(Tuple<Stats,Stats> stats in skillReport.targets)
                 {
-                    source.Stats.SetMutableStat(type, skillReport.SourceAfter.MutableStats[type].Value);
+                    stats.second.BoardEntity.Stats = stats.second;
+                    stats.second.UpdateStatHandler();
                 }
-                foreach (StatType type in skillReport.TargetAfter.MutableStats.Keys)
+              
+                // should put this in an couroutine for later and make more better
+                foreach (DamageDisplay displayDamage in skillReport.DamageDisplays)
                 {
-                    target.Stats.SetMutableStat(type, skillReport.TargetAfter.MutableStats[type].Value);
+                    displayDamage.character.GetComponent<FloatingTextGenerator>().AddTextDisplay(displayDamage.GetFloatingText());
+                }
+                foreach (TextDisplay textDisplay in skillReport.TextDisplays)
+                {
+                    textDisplay.target.GetComponent<FloatingTextGenerator>().AddTextDisplay(textDisplay);
                 }
             }
-
-
-            // tell the passives what just happened
-            foreach(Passive passive in source.Passives)
-            {
-                passive.ExecutedSkill(skillReport);
-            }
-
-            // should put this in an couroutine for later and make more better
-            foreach(DamageDisplay displayDamage in displayDamages)
-            {
-                GameObject displayDamageObj = Instantiate(displayDamageObject);
-                GameObject displayDamageObjFollow = displayDamageObj.GetComponent<FloatingText>().textMeshProUGUI.gameObject;
-
-                displayDamageObjFollow.transform.SetParent(FindObjectOfType<Canvas>().gameObject.transform);
-                displayDamageObj.transform.position = target.transform.position;
-                displayDamageObjFollow.GetComponent<TextMeshProUGUI>().text = "-" + displayDamage.value;
-                displayDamage.character.SetAnimation(Common.Animator.AnimatorUtils.animationType.damage);
-            }
-            
         }
 
-        public SkillReport ExecuteSkillHelper(CharacterBoardEntity source, Skill skill, CharacterBoardEntity target, DamagePackage damage)
+        public SkillReport ExecuteSkillHelper(CharacterBoardEntity source, Skill skill, CharacterBoardEntity target, List<DamagePackage> damages)
         {
+            SkillReport report = new SkillReport();
+
+            report.Buffs = skill.GetBuffs();
+
             Stats sourceBefore = source.Stats.GetCopy();
             Stats sourceAfter = source.Stats.GetCopy();
-
             Stats targetBefore = target.Stats.GetCopy();
             Stats targetAfter = target.Stats.GetCopy();
 
-            TakeDamageReturn usingTakeDamageReturn = TakeDamageReturn.Normal;
-            List<Passive> passives = target.Passives;
-            foreach(Passive passive in passives)
+            report.sourceBefore = sourceBefore;
+            report.targetBefore = targetBefore;
+
+            foreach (DamagePackage package in damages)
             {
-                usingTakeDamageReturn = passive.TakeDamage(skill, damage, usingTakeDamageReturn);
+                List<Passive> passives = target.Passives;
+                TakeDamageReturn usingTakeDamageReturn = TakeDamageReturn.Normal;
+                foreach (Passive passive in passives)
+                {
+                    usingTakeDamageReturn = passive.TakeDamage(skill, package, usingTakeDamageReturn);
+                }
+
+
+                switch (usingTakeDamageReturn)
+                {
+                    case TakeDamageReturn.Normal:
+
+                        sourceAfter = sourceBefore.GetCopy();
+                        targetAfter = targetBefore.GetCopy();
+
+                        int newTargetHealthDamage = HealthAfterDamage(report, target, sourceAfter, targetAfter, package);
+                        targetAfter.SetMutableStat(StatType.Health, newTargetHealthDamage);
+
+                        int newTargetHealthHeal = HealthAfterDamage(report, target, sourceAfter, targetAfter, package);
+                        //ArmourDamage(report, targetAfter, damage);
+                        break;
+
+
+                    case TakeDamageReturn.NoDamage:
+                        break;
+
+                    case TakeDamageReturn.Reflect:
+                        break;
+                        
+                }
+
+                sourceBefore = sourceAfter;
+                targetBefore = targetAfter;
+
             }
+            report.targets.Add(new Tuple<Stats, Stats>(targetBefore, targetAfter));
+            report.targetAfter = targetAfter;
+            report.sourceAfter = sourceAfter;
+            return report;
 
-            displayDamages.Clear();
 
-            switch(usingTakeDamageReturn)
-            {
-                case TakeDamageReturn.Normal:
-                    Tuple<int,DamageDisplay> newTargetHealthDamage = HealthAfterDamage(source, target, damage);
-                    targetAfter.SetMutableStat(StatType.Health, newTargetHealthDamage.first);
-
-                    displayDamages.Add(newTargetHealthDamage.second);
-                    
-                    return new SkillReport(sourceBefore, sourceAfter, targetBefore, targetAfter);
-
-                case TakeDamageReturn.NoDamage:
-                    return null;                    
-
-                case TakeDamageReturn.Reflect:
-                    return null;
-            }
-
-            return null;
 
         }
 
-        private Tuple<int, DamageDisplay> HealthAfterDamage(CharacterBoardEntity source, CharacterBoardEntity target, DamagePackage damage)
+        private int HealthAfterDamage(SkillReport report,CharacterBoardEntity target, Stats source, Stats targetStats, DamagePackage damage)
         {
-            int tempArmour = target.Stats.GetNonMuttableStat(StatType.Armour).Value;
-            tempArmour -= damage.Piercing;
-            if(tempArmour < 0)
+
+            int tempArmour = 0;
+            if (damage.Type == DamageType.physical)
             {
-                tempArmour = 0;
+                tempArmour = targetStats.GetNonMuttableStat(StatType.Armour).Value;
+                tempArmour -= damage.Piercing;
+                if (tempArmour < 0)
+                {
+                    tempArmour = 0;
+                }
             }
+            if(damage.Type == DamageType.physical || damage.Type == DamageType.pure)
+            { 
+                int tempDamage = damage.Damage;
+                if (damage.Type == DamageType.physical)
+                {
+                    tempDamage -= tempArmour;
+                    if (tempDamage < 0)
+                        tempDamage = 0;
+                }
+                int oldHealth = targetStats.GetMutableStat(StatType.Health).Value;
 
-            int tempDamage = damage.Damage;
-            if(damage.Type == DamageType.physical)
-            {
-                tempDamage -= tempArmour;
-                if (tempDamage < 0)
-                    tempDamage = 0;
+                int newHealth = oldHealth - tempDamage;
+                if (newHealth < 0)
+                {
+                    // dat bibba dead
+                    newHealth = 0;
+                }
+
+                DamageDisplay damageDisplay = new DamageDisplay();
+                damageDisplay.value = tempDamage;
+                damageDisplay.character = target;
+                if(damage.Type == DamageType.physical)
+                {
+                    damageDisplay.color = Color.red;
+                }
+                else
+                {
+                    damageDisplay.color = Color.magenta;
+                }
+                //damageDisplay.color = 
+                report.DamageDisplays.Add(damageDisplay);
+
+                return newHealth;
             }
-            int oldHealth = target.Stats.GetMutableStat(StatType.Health).Value;
-
-            int newHealth = oldHealth - tempDamage;
-            if (newHealth < 0)
-            {
-                // dat bibba dead
-                newHealth = 0;
-            }
-
-            DamageDisplay damageDisplay = new DamageDisplay();
-            damageDisplay.value = tempDamage;
-            damageDisplay.character = target;
-
-            return new Tuple<int, DamageDisplay> (newHealth, damageDisplay);
+            else
+                return target.Stats.GetMutableStat(StatType.Health).Value;
         }
 
+  
+        /*
+        private void ArmourDamage (SkillReport report, Stats targetStats, DamagePackage damage)
+        {
+            if (damage.Type == DamageType.armour)
+            {
+                int tempDamage = Mathf.Min(targetStats.GetDefaultStat(StatType.Armour).Value, damage.Damage);
+                if(tempDamage > 0)
+                {
+                    targetStats.AddModifier(new StatModifier(StatType.Armour, StatModifierType.Add, -tempDamage));
+                }
+                report.DamageDisplays.Add(new DamageDisplay() { character = (CharacterBoardEntity)targetStats.BoardEntity, color = Color.blue, value = tempDamage });
+            }
+
+        }
+        */
     }
 
     public enum TakeDamageReturn
@@ -131,10 +205,24 @@ namespace Placeholdernamespace.Battle.Calculator
         Normal, NoDamage, Reflect
     }
 
+    
+
     public class DamageDisplay
     {
+       //private static Dictionary<DamageType, Color>() = new Dictionary<DamageType,Color>();
+
         public Color color = Color.red;
         public int value;
         public CharacterBoardEntity character;
+
+        public TextDisplay GetFloatingText()
+        {
+            return new TextDisplay()
+            {
+                textColor = color,
+                text = "- " + value,
+                callback = () => character.SetAnimation(Common.Animator.AnimatorUtils.animationType.damage)
+            };
+        }
     }
 }

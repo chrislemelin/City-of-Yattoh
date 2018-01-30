@@ -78,6 +78,10 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
             if (stats.ContainsKey(mod.StatType))
             {
                 StatInternal newStat = new StatInternal(stats[mod.StatType].Type, mod.Apply(stats[mod.StatType].Value, mod.StatType));
+                if(newStat.Value < 0)
+                {
+                    newStat = new StatInternal(mod.StatType, 0f);
+                }
                 stats.Remove(mod.StatType);
                 stats.Add(mod.StatType, newStat);
             }

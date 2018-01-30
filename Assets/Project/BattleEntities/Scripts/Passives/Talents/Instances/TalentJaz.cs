@@ -11,12 +11,14 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         public TalentJaz() :base()
         {
             type = PassiveType.Talent;
+            description = "TALENT: Next attack will have double range";
+
         }
 
         public override void Activate()
         {
             //Passive
-            //boardEntity.AddPassive();
+            boardEntity.AddPassive(new BuffTalentJaz());
         }
 
     }

@@ -83,7 +83,6 @@ namespace Placeholdernamespace.Battle.Interaction
 
         private void setHoverEntity(BoardEntity boardEntity)
         {
-            profile.UpdateProfile(boardEntity);
             if (hoverBoardEntity != null)
             {
                 hoverBoardEntity.GetTile().PathOnClick.ColorEffectManager.TurnOff(this);
@@ -91,6 +90,7 @@ namespace Placeholdernamespace.Battle.Interaction
             hoverBoardEntity = boardEntity;
             if (hoverBoardEntity != null)
             {
+                profile.UpdateProfile(boardEntity);
                 hoverBoardEntity.GetTile().PathOnClick.ColorEffectManager.TurnOn(this, Color.blue);
             }
 
@@ -144,7 +144,8 @@ namespace Placeholdernamespace.Battle.Interaction
                             () => {
                                 if (getHoverEntity() == null)
                                 {
-                                    profile.UpdateProfile(selectedBoardEntity, displaystats);
+                                    profile.PreviewMove(selectedBoardEntity, m);
+                                    //profile.UpdateProfile(selectedBoardEntity, displaystats);
                                 } }
                             )
                         });
