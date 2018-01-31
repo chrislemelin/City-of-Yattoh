@@ -104,13 +104,14 @@ namespace Placeholdernamespace.Battle.Entities
             healthBar.transform.SetAsFirstSibling();
             healthBar.transform.position = new Vector3(100000, 100000);
 
-            isInit = true;
             this.turnManager = turnManager;
             this.tileManager = tileManager;
             this.boardEntitySelector = boardEntitySelector;
             this.battleCalculator = battleCalculator;
 
+            isInit = true;
             tileManager.AddBoardEntity(startingPosition, gameObject);
+            position = startingPosition;
 
             stats.updateStatHandler += UpdateUi;
             stats.Start(this);

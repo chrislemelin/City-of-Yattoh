@@ -33,12 +33,16 @@ namespace Placeholdernamespace.Battle.Calculator
         public SkillReport ExecuteSkillHealing(Skill skill, CharacterBoardEntity source, CharacterBoardEntity target, int value)
         {
             SkillReport report = new SkillReport();
-            report.targetBefore = source.Stats.GetCopy();
-            report.targetAfter = source.Stats.GetCopy();
+            report.targetBefore = target.Stats.GetCopy();
+            report.targetAfter = target.Stats.GetCopy();
 
             report.targetAfter.SetMutableStat(StatType.Health, report.targetAfter.GetMutableStat(StatType.Health).Value + value);
+            report.targets.Add(new Tuple<Stats, Stats>(report.targetBefore, report.targetAfter));
+
+            int healValue = report.targetAfter.GetMutableStat(StatType.Health).Value - report.targetBefore.GetMutableStat(StatType.Health).Value;
+
             report.TextDisplays.Add(new TextDisplay() {
-                text = "+ " + value,
+                text = "+ " + healValue,
                 textColor = Color.green,
                 callback = (() =>  target.SetAnimation(Common.Animator.AnimatorUtils.animationType.win)),
                 target = target
@@ -104,9 +108,6 @@ namespace Placeholdernamespace.Battle.Calculator
 
                         int newTargetHealthDamage = HealthAfterDamage(report, target, sourceAfter, targetAfter, package);
                         targetAfter.SetMutableStat(StatType.Health, newTargetHealthDamage);
-
-                        int newTargetHealthHeal = HealthAfterDamage(report, target, sourceAfter, targetAfter, package);
-                        //ArmourDamage(report, targetAfter, damage);
                         break;
 
 

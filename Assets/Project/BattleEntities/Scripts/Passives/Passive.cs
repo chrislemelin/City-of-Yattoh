@@ -27,7 +27,6 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         // if passive should cause the turn to be skipped
         protected bool skip = false;
 
-        public enum PassiveType { None, Buff, Debuff, TalentTrigger, Talent}
 
         protected PassiveType type;
         public PassiveType Type
@@ -37,6 +36,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         public Passive()
         {
+            type = PassiveType.Passive;
         }
 
         public virtual void Init(BattleCalculator battleCalculator, CharacterBoardEntity boardEntity, TileManager tileManager)
@@ -153,17 +153,19 @@ namespace Placeholdernamespace.Battle.Entities.Passives
             return new List<DamagePackage>();
         }
 
-        public virtual void ExecutedMove(Move move)
-        {
+        public virtual void AboutToExecuteAction(Skill skill, List<Tile> tile){}
 
-        }
+        public virtual void ExecutedMove(Move move){}
 
         public virtual CharacterBoardEntity GetRagedBy(CharacterBoardEntity characterBoardEntity)
         {
             return characterBoardEntity;
         }
 
+        
+
     }
 
-   
+    public enum PassiveType { Passive, Buff, Debuff, TalentTrigger, Talent }
+
 }

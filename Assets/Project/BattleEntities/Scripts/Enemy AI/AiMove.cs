@@ -61,6 +61,7 @@ namespace Placeholdernamespace.Battle.Entities.AI
             {
                 scoredKill = true;
             }
+            targetScore = report.targetAfter.GetMutableStat(AttributeStats.StatType.Health).Value;
             apCost += skill.GetAPCost();
             actions.Add(() => skill.Action(t, callBack));
         }

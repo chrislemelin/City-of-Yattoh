@@ -235,7 +235,7 @@ namespace Placeholdernamespace.Battle.Env
         public List<BoardEntity> GetBoardEntityDiag(Position position, Position Range, bool ignoreWalls = false, bool sortByDistance = false)
         {
             List<Tile> tiles = GetTilesDiag(position, Range, ignoreWalls, sortByDistance);
-            return tilesToBoardEntities(tiles);
+            return TilesToBoardEntities(tiles);
         }
 
         public List<BoardEntity> GetBoardEntityDiag(Position position, int range = 1, bool ignoreWalls = false, bool sortByDistance = false)
@@ -243,7 +243,7 @@ namespace Placeholdernamespace.Battle.Env
             return GetBoardEntityDiag(position, new Position(range, range), ignoreWalls, sortByDistance);
         }
 
-        private List<BoardEntity> tilesToBoardEntities(List<Tile> tiles)
+        public List<BoardEntity> TilesToBoardEntities(List<Tile> tiles)
         {
             List<BoardEntity> boardEntities = new List<BoardEntity>();
             foreach (Tile tile in tiles)
@@ -254,6 +254,18 @@ namespace Placeholdernamespace.Battle.Env
                 }
             }
             return boardEntities;
+        }
+
+        public CharacterBoardEntity GetFirstCharacter(List<Tile> tiles)
+        {
+            foreach(Tile tile in tiles)
+            {
+                if(tile.BoardEntity != null && tile.BoardEntity is CharacterBoardEntity)
+                {
+                    return ((CharacterBoardEntity)tile.BoardEntity);
+                }
+            }
+            return null;
         }
 
         private void generateBoard()

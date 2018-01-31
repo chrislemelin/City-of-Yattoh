@@ -75,11 +75,10 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4914905680874010}
-  - component: {fileID: 114631525846542012}
-  - component: {fileID: 114213890369153560}
   - component: {fileID: 114186605721220920}
+  - component: {fileID: 114104125669623174}
   m_Layer: 0
-  m_Name: Jaz
+  m_Name: Bongani
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -206,7 +205,7 @@ Animator:
   m_GameObject: {fileID: 1422958045928576}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: a9460aaa7fc8556479fc5de7a6332496, type: 2}
+  m_Controller: {fileID: 9100000, guid: 031699c2f7512364796d4feafd059afb, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -231,6 +230,51 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114104125669623174
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1542313980632146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5dcad92dcb7557d40b690846da784e11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  profileImage: {fileID: 21300000, guid: 2b24949b79a9fa441a8c7c70f792fd86, type: 3}
+  healthBar: {fileID: 1075659018159238, guid: a0ae54a5f3f969d418b6a279f613a09d, type: 2}
+  team: 0
+  stats:
+    baseStats:
+      armour:
+        value: 1
+        display: 0
+      inteligence:
+        value: 0
+        display: 0
+      maxHealth:
+        value: 15
+        display: 0
+      movement:
+        value: 3
+        display: 0
+      speed:
+        value: 6
+        display: 0
+      strength:
+        value: 6
+        display: 0
+      ap:
+        value: 8
+        display: 0
+      apGain:
+        value: 2
+        display: 0
+  name: Bongani
+  characterAnimation: {fileID: 114815535030796286}
+  charactersprite: {fileID: 1422958045928576}
+  speed: 1
+  enemyAIBasic1: {fileID: 0}
 --- !u!114 &114186605721220920
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -255,52 +299,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ffb99f67b59661428a4cf4257aeb964, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterBoardEntity: {fileID: 114213890369153560}
---- !u!114 &114213890369153560
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1542313980632146}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88aea5c45b8f8e544b362632151e5195, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  profileImage: {fileID: 21300000, guid: 971758a4610b6af43be49e6486d8d669, type: 3}
-  healthBar: {fileID: 1075659018159238, guid: a0ae54a5f3f969d418b6a279f613a09d, type: 2}
-  team: 0
-  stats:
-    baseStats:
-      armour:
-        value: 1
-        display: 0
-      inteligence:
-        value: 3
-        display: 0
-      maxHealth:
-        value: 8
-        display: 0
-      movement:
-        value: 4
-        display: 0
-      speed:
-        value: 8
-        display: 0
-      strength:
-        value: 2
-        display: 0
-      ap:
-        value: 8
-        display: 0
-      apGain:
-        value: 2
-        display: 0
-  name: Jaz
-  characterAnimation: {fileID: 114815535030796286}
-  charactersprite: {fileID: 1422958045928576}
-  speed: 1
-  enemyAIBasic1: {fileID: 0}
+  characterBoardEntity: {fileID: 114104125669623174}
 --- !u!114 &114245910978165384
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -312,7 +311,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ffb99f67b59661428a4cf4257aeb964, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterBoardEntity: {fileID: 114213890369153560}
+  characterBoardEntity: {fileID: 0}
 --- !u!114 &114386631933246298
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -340,18 +339,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114631525846542012
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1542313980632146}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ffb99f67b59661428a4cf4257aeb964, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  characterBoardEntity: {fileID: 0}
 --- !u!114 &114653560778829354
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -474,7 +461,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ffb99f67b59661428a4cf4257aeb964, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterBoardEntity: {fileID: 114213890369153560}
+  characterBoardEntity: {fileID: 0}
 --- !u!114 &114910173449349550
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -492,7 +479,7 @@ SpriteRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1844718460837428}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1

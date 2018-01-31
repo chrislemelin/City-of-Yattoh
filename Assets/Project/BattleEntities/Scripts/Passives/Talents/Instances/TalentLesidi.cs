@@ -1,16 +1,24 @@
-﻿using System.Collections;
+﻿using Placeholdernamespace.Battle.Entities.Passives;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TalentLesidi : MonoBehaviour {
+namespace Placeholdernamespace.Battle.Entities.Passives
+{
+    public class TalentLesidi : Talent
+    {
+        public override void Activate()
+        {
+            List<BoardEntity> enitites = tileManager.GetBoardEntityDiag(boardEntity.GetTile().Position, 1);
+            List<CharacterBoardEntity> chars =  Core.convert(enitites);
+            foreach(CharacterBoardEntity character in enitites)
+            {
+                character.ReduceCooldowns();
+            }
+            boardEntity.ReduceCooldowns();
+           
+        }
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+      
+    }
 }

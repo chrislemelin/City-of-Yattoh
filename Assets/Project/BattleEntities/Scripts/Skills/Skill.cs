@@ -27,6 +27,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         protected BattleCalculator battleCalculator;
         protected AnimatorUtils.animationType animationType = AnimatorUtils.animationType.attack;
         protected string flavorText;
+        protected bool targetSelfTeam = false;
         protected DamageType damageType = DamageType.physical;
 
         [SerializeField]
@@ -148,6 +149,11 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
         public void StartTurn()
         {
+            //ReduceCooldowns();
+        }
+
+        public void EndTurn()
+        {
             ReduceCooldowns();
         }
 
@@ -171,7 +177,11 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             {
                 usedTiles.Add(t);
                 bool clickable = TileOptionClickable(t);
-                SkillReport skillReport = TheoreticalAction(t);
+                SkillReport skillReport = null;
+                if(clickable)
+                {
+                    skillReport = TheoreticalAction(t);
+                }
                 Stats targetAfter = null;
                 if (clickable && skillReport != null)
                     targetAfter = skillReport.TargetAfter;
@@ -231,13 +241,16 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             }
             else
             {
-                return t.BoardEntity != null && t.BoardEntity.Team != boardEntity.Team;
+                return TileHasTarget(t);
             }
         }
 
         protected virtual bool TileHasTarget(Tile t)
         {
-            return t.BoardEntity != null && t.BoardEntity.Team != boardEntity.Team;
+            if(!targetSelfTeam)
+                return t.BoardEntity != null && t.BoardEntity.Team != boardEntity.Team;
+            else
+                return t.BoardEntity != null && t.BoardEntity.Team == boardEntity.Team;
         }
 
         public virtual List<Tile> TileReturnHelper(Tile t)
@@ -272,17 +285,17 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
         }
 
-        public void Action(Tile t, Action<bool> callback = null)
+        public void Action(Tile t, Action<bool> callback = null, bool free = false)
         {
             Action(new List<Tile>() { t }, callback);
         }
 
-        public void Action(List<Tile> tiles, Action<bool> callback = null)
+        public void Action(List<Tile> tiles, Action<bool> callback = null, bool free = false)
         {
             if (tiles.Count > 0)
             {
                 boardEntity.SetAnimationDirection(AnimatorUtils.GetAttackDirectionCode(boardEntity.GetTile().Position, tiles[0].Position));
-                boardEntity.SetAnimation(AnimatorUtils.animationType.attack);
+                boardEntity.SetAnimation(animationType);
             }
 
             SkillReport report = ActionHelper(tiles);
@@ -298,8 +311,11 @@ namespace Placeholdernamespace.Battle.Entities.Skills
                 }
             }
 
-            currentCoolDown = GetCoolDown();
-            boardEntity.Stats.SubtractAPPoints(GetAPCost());
+            if(!free)
+            {
+                currentCoolDown = GetCoolDown();
+                boardEntity.Stats.SubtractAPPoints(GetAPCost());
+            }
 
             // tell the passives what just happened
             foreach (Passive passive in boardEntity.Passives)

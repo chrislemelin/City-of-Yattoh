@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using System.Threading;
 using Placeholdernamespace.Common.UI;
+using Placeholdernamespace.Battle.Entities;
 
 namespace Placeholdernamespace
 {
@@ -26,6 +27,20 @@ namespace Placeholdernamespace
         static public void CallbackDelay(float seconds, Action callback)
         {
             instance.StartCoroutine(CallbackDelayHelper(seconds,callback)); //this will launch the coroutine on our instance
+        }
+
+        public static List<CharacterBoardEntity> convert(List<BoardEntity> things)
+        {
+            List<CharacterBoardEntity> returnList = new List<CharacterBoardEntity>();
+            foreach(BoardEntity b in things)
+            {
+                if(b is CharacterBoardEntity)
+                {
+                    returnList.Add((CharacterBoardEntity)b);
+                }
+            }
+            return returnList;
+
         }
 
     }

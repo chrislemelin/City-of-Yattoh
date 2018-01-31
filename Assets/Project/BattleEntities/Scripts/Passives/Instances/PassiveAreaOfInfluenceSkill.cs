@@ -15,8 +15,14 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         public PassiveAreaOfInfluenceSkill(): base()
         { 
-            influenceSkill = boardEntity.BasicAttack;            
             EnterTile(boardEntity.GetTile());
+        }
+
+        public override void Init(BattleCalculator battleCalculator, CharacterBoardEntity boardEntity, TileManager tileManager)
+        {
+            base.Init(battleCalculator, boardEntity, tileManager);
+            influenceSkill = boardEntity.BasicAttack;
+
         }
 
         public override void EnterTile(Tile tile)
@@ -40,7 +46,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         private void EnterAction (BoardEntity boardEntity, Tile leavingTile, Action callback)
         {
             if (this.boardEntity.Team != boardEntity.Team && !influenceTiles.Contains(leavingTile))
-                influenceSkill.Action(boardEntity.GetTile(), (bool ok) => callback());
+                influenceSkill.Action(boardEntity.GetTile(), (bool ok) => callback(), true);
             else
                 callback();
         }

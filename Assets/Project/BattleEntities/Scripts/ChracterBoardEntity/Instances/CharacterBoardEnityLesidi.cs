@@ -6,6 +6,7 @@ using Placeholdernamespace.Battle.Interaction;
 using Placeholdernamespace.Battle.Managers;
 using UnityEngine;
 using Placeholdernamespace.Battle.Entities.Passives;
+using Placeholdernamespace.Battle.Entities.Skills;
 
 namespace Placeholdernamespace.Battle.Entities.Instances
 {
@@ -18,6 +19,10 @@ namespace Placeholdernamespace.Battle.Entities.Instances
             range = 4;
 
             AddPassive(new PassiveLesidi());
+            AddPassive(new TalentTriggerLesidi());
+            AddPassive(new TalentLesidi());
+            AddSkill(new SkillLesidi1());
+            AddSkill(new SkillLesidi2());
         }     
 
 

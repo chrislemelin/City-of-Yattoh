@@ -242,10 +242,11 @@ namespace Placeholdernamespace.Battle.Entities
             {
                 passive.StartTurn();
                 skipTurn = passive.SkipTurn(skipTurn);
+
             }
-            if(skipTurn)
+            if (skipTurn)
             {
-                turnManager.NextTurn();
+                EndMyTurn();
             }
             else
             {               
@@ -253,8 +254,7 @@ namespace Placeholdernamespace.Battle.Entities
                 if (team == Team.Enemy)
                 {
                     BoardEntity boardEntity = GetRagedBy();
-                    enemyAIBasic1.ExecuteTurn(this, turnManager.NextTurn, ragedBy:boardEntity);
-                    //turnManager.NextTurn();
+                    enemyAIBasic1.ExecuteTurn(this, EndMyTurn, ragedBy:boardEntity);
                 }
             }           
         } 
@@ -265,7 +265,19 @@ namespace Placeholdernamespace.Battle.Entities
             {
                 p.EndTurn();
             }
+            foreach (Skill skill in Skills)
+            {
+                skill.EndTurn();
+            }
             turnManager.NextTurn();
+        }
+
+        public void ReduceCooldowns()
+        {
+            foreach(Skill skill in skills)
+            {
+                skill.ReduceCooldowns();
+            }
         }
 
         // Passives
@@ -316,6 +328,18 @@ namespace Placeholdernamespace.Battle.Entities
             {
                 talent.Activate();
             }
+        }
+
+        public bool HasPassiveType(PassiveType type)
+        {
+            foreach (Passive p in passives)
+            {
+                if(p.Type == type)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public void AddSkill(Skill skill)

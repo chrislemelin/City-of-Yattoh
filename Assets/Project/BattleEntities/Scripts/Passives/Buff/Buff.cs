@@ -13,8 +13,9 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         public const int STACKS_HIDDEN = int.MaxValue;
         protected int stacks = STACKS_HIDDEN;
 
-        protected enum addBuff {add, refresh};
-        protected addBuff addBuffHandle;
+        protected enum AddBuff {add, refresh};
+        protected AddBuff addBuffHandle;
+        protected bool popOneAtTurnEnd = true;
 
 
         public int Stacks
@@ -26,10 +27,16 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         public Buff(int stacks = STACKS_HIDDEN) : base()
         {
             this.stacks = stacks;
+            type = PassiveType.Buff;
         }
 
         public override void StartTurn()
         {
+        }
+        public override void EndTurn()
+        {
+            if (popOneAtTurnEnd)
+                PopStack();
         }
 
         public void Init(Func<Passive, bool> remove)
@@ -59,7 +66,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         {
             if(GetType() == b.GetType())
             {
-                if (addBuffHandle == addBuff.add)
+                if (addBuffHandle == AddBuff.add)
                     AddStack(b.stacks);
                 else
                     SetStacks(b.stacks);

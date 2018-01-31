@@ -288,7 +288,7 @@ MonoBehaviour:
         value: 8
         display: 0
       strength:
-        value: 2
+        value: 8
         display: 0
       ap:
         value: 8

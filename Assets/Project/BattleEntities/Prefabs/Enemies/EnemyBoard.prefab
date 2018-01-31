@@ -410,7 +410,7 @@ MonoBehaviour:
         value: 3
         display: 0
       strength:
-        value: 1
+        value: 6
         display: 0
       ap:
         value: 2

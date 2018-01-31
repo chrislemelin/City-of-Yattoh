@@ -13,6 +13,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         public BuffTaunt(HashSet<Tile> tauntTiles, CharacterBoardEntity tauntedBy ):base()
         {
+            type = PassiveType.Debuff;
             this.tauntTiles = tauntTiles;
             this.tauntedBy = tauntedBy;
             description = "can only move adjacent to " + tauntedBy.Name;

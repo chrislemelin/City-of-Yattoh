@@ -11,6 +11,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         public BuffRaged(CharacterBoardEntity ragedBy, int stacks = 1): base(stacks)
         {
+            type = PassiveType.Debuff;
             this.ragedBy = ragedBy;
             description = "Raged by " + ragedBy.Name;
         }

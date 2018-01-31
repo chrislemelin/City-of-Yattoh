@@ -10,9 +10,9 @@ namespace Placeholdernamespace.Battle.Entities.Passives
     {
         int value;
 
-        public BuffMinusArmour(int stacks, int value): base()
+        public BuffMinusArmour(int stacks, int value): base(stacks)
         {
-            this.stacks = stacks;
+            type = PassiveType.Debuff;
             this.value = value;
             description = "decreases armour by " + value + " for " + stacks + " turns";
         }

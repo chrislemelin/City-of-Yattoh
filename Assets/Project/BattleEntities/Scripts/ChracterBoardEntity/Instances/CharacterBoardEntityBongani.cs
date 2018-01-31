@@ -1,16 +1,20 @@
-﻿using System.Collections;
+﻿using Placeholdernamespace.Battle.Entities.Passives;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterBoardEntityBongani : MonoBehaviour {
+namespace Placeholdernamespace.Battle.Entities
+{
+    public class CharacterBoardEntityBongani : CharacterBoardEntity
+    {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+        public CharacterBoardEntityBongani():base()
+        {
+            AddPassive(new PassiveAreaOfInfluenceSkill());
+            AddPassive(new TalentBongani());
+            AddPassive(new TalentTriggerBongani());
+            //AddPassive()
+        }
+        
+    }
 }
