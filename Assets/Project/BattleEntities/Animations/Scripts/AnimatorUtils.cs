@@ -17,7 +17,7 @@ namespace Placeholdernamespace.Common.Animator
         };
 
         public enum animationDirection { left, right, up, down }
-        public enum animationType { idle = 0, walking = 1, attack = 2, jump = 3, damage = 4, win = 5, death = 6, skill = 7 };
+        public enum animationType { idle = 0, walking = 1, attack = 2, jump = 3, damage = 4, win = 5, death = 6, skill = 7, none = 8};
 
         public static animationDirection GetAttackDirectionCode(Position pos, Position target)
         {

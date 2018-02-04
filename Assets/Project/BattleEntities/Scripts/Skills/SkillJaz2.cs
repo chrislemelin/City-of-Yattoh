@@ -90,14 +90,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
                     if (t.BoardEntity != null && TileHasTarget(t))
                     {
                         skillReport = battleCalculator.ExecuteSkillDamage(boardEntity, this, (CharacterBoardEntity)t.BoardEntity, 
-                            GenerateDamagePackages() );
-                        /*
-                        DamagePackage armourPackage = new DamagePackage(
-                            boardEntity.Stats.GetNonMuttableStat(AttributeStats.StatType.Strength).Value / 2,
-                            DamageType.armour
-                            );
-                        battleCalculator.ExecuteSkillDamage(boardEntity, this, (CharacterBoardEntity)t.BoardEntity, armourPackage);
-                        */
+                            GenerateDamagePackages());
                     }
                 }
             }

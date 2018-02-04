@@ -29,7 +29,7 @@ public class FloatingText : MonoBehaviour {
         if (fade > 0)
         {
             float newAlpha = ((1.0f-fade) * 255);
-            textMeshProUGUI.color = new Color32(oldColor.r, oldColor.b, oldColor.g, (byte)newAlpha);
+            textMeshProUGUI.color = new Color32(oldColor.r, oldColor.g, oldColor.b, (byte)newAlpha);
         }
         transform.position += new Vector3(0, speed * Time.deltaTime, 0);
     }

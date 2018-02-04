@@ -40,7 +40,6 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
             SkillReport report = null;
 
-
             foreach(BoardEntity entity in entities)
             {
                 if(entity.Team != boardEntity.Team)

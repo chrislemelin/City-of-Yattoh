@@ -15,7 +15,7 @@ namespace Placeholdernamespace.Common.UI
 
         private List<TextDisplay> textDisplays = new List<TextDisplay>();
         private float lastDisplay;
-        private float waitTime = 1;
+        private float waitTime = 2;
 
         // Use this for initialization
         void Start()
@@ -63,7 +63,7 @@ namespace Placeholdernamespace.Common.UI
     public class TextDisplay
     {
         public string text;
-        public Color textColor;
+        public Color textColor = Color.blue;
         public Action callback;
         public CharacterBoardEntity target;
     }

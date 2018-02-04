@@ -10,8 +10,17 @@ namespace Placeholdernamespace.Battle.Env
     public class Tile : MonoBehaviour
     {
         public LayerMask myLayerMask;
+        public GameObject trap;
+        private GameObject currentTrap;
+
+        private List<TileListener> tileListeners = new List<TileListener>();
+        public  List<TileListener> TileListeners
+        {
+            get { return new List<TileListener>(tileListeners); }
+        }
 
         private TileManager tileManager = null;
+        public bool canRemove = false;
 
         private Position position;
         public Position Position
@@ -29,7 +38,11 @@ namespace Placeholdernamespace.Battle.Env
         public BoardEntity BoardEntity
         {
             get { return boardEntity; }
-            set { boardEntity = value; }
+        }
+
+        public void SetBoardEntity(BoardEntity value)
+        {
+            boardEntity = value;
         }
 
         public delegate void TileEnterAction(BoardEntity boardEntity, Tile tile, Action callback);
@@ -38,11 +51,6 @@ namespace Placeholdernamespace.Battle.Env
         {
             this.position = position;
             this.tileManager = tileManager;
-        }
-
-        public void SetBoardEntity(BoardEntity boardEntity)
-        {
-            this.boardEntity = boardEntity;
         }
 
         public bool CheckIfBlocked(Tile tile)
@@ -70,9 +78,7 @@ namespace Placeholdernamespace.Battle.Env
 
         public BoardEntity GetInReferencTo(Position offset)
         {
-
             return tileManager.GetTile(Position + offset).GetComponent<Tile>().boardEntity;
-
         }
 
         public Tile GetLeftNeighborTile()
@@ -143,6 +149,11 @@ namespace Placeholdernamespace.Battle.Env
             leavingTile = t;
             ExecuteEnterActionsHelper();
                       
+        }
+
+        public void AddTileListener(TileListener tileListener)
+        {
+            tileListeners.Add(tileListener);
         }
 
         private List<TileEnterAction> enterActions = new List<TileEnterAction>();

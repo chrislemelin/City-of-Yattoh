@@ -13,7 +13,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
             displayColor = Color.green;
         }
 
-        public override void ExecutedSkill(SkillReport skillreport)
+        public override void ExecutedSkill(Skill skill, SkillReport skillreport)
         {
             if (skillreport.TargetAfter.MutableStats[AttributeStats.StatType.Health].Value == 0)
             {

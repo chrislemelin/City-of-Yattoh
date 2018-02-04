@@ -16,9 +16,9 @@ namespace Placeholdernamespace.Battle.Entities.Passives
             description = "Next attack has double range";
         }
 
-        public override void ExecutedSkill(SkillReport skillreport)
+        public override void ExecutedSkill(Skill skill, SkillReport skillreport)
         {
-            base.ExecutedSkill(skillreport);
+            base.ExecutedSkill(skill, skillreport);
             Remove();
 
         }

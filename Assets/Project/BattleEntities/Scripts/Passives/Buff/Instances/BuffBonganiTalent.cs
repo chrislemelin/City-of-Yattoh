@@ -1,16 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Placeholdernamespace.Battle.Entities.Skills;
 using UnityEngine;
 
-public class BuffBonganiTalent : MonoBehaviour {
+namespace Placeholdernamespace.Battle.Entities.Passives
+{
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public class BuffBonganiTalent : Buff
+    {
+
+        public BuffBonganiTalent():base()
+        {
+            description = "Next basic attack will stun";
+        }
+
+        public override void ExecutedSkill(Skill skill, SkillReport skillreport)
+        {
+            if(skill is BasicAttack)
+            {
+                skillreport.targetAfter.BoardEntity.AddPassive(new BuffStun());
+                Remove();
+            }
+        }
+    }
 }

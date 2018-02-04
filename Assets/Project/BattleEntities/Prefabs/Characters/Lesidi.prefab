@@ -59,7 +59,6 @@ GameObject:
   - component: {fileID: 224789889056408392}
   - component: {fileID: 222389683563740480}
   - component: {fileID: 114288182645113140}
-  - component: {fileID: 114847573284039022}
   m_Layer: 5
   m_Name: Character
   m_TagString: Untagged
@@ -92,9 +91,9 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4914905680874010}
-  - component: {fileID: 114631525846542012}
-  - component: {fileID: 114828439413869006}
   - component: {fileID: 114029403163052804}
+  - component: {fileID: 114638276081218238}
+  - component: {fileID: 114246899739308330}
   m_Layer: 0
   m_Name: Lesidi
   m_TagString: Untagged
@@ -299,7 +298,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ffb99f67b59661428a4cf4257aeb964, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterBoardEntity: {fileID: 114828439413869006}
+  characterBoardEntity: {fileID: 0}
+--- !u!114 &114246899739308330
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1542313980632146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c54760148f95e9842ad13e5b983101be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114288182645113140
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -338,7 +348,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ffb99f67b59661428a4cf4257aeb964, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterBoardEntity: {fileID: 114828439413869006}
+  characterBoardEntity: {fileID: 114638276081218238}
 --- !u!114 &114560428717004758
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -350,7 +360,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c67de6ac62216c4b9357b98fd0c8d34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114631525846542012
+--- !u!114 &114638276081218238
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -358,10 +368,44 @@ MonoBehaviour:
   m_GameObject: {fileID: 1542313980632146}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ffb99f67b59661428a4cf4257aeb964, type: 3}
+  m_Script: {fileID: 11500000, guid: 562850e52a28c1f4f95fafc53f2f9637, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterBoardEntity: {fileID: 0}
+  profileImage: {fileID: 21300000, guid: d425ca8cbeb23fd4881bea5444243761, type: 3}
+  healthBar: {fileID: 1075659018159238, guid: a0ae54a5f3f969d418b6a279f613a09d, type: 2}
+  team: 0
+  stats:
+    baseStats:
+      armour:
+        value: 0
+        display: 0
+      inteligence:
+        value: 0
+        display: 0
+      maxHealth:
+        value: 1
+        display: 0
+      movement:
+        value: 4
+        display: 0
+      speed:
+        value: 9
+        display: 0
+      strength:
+        value: 5
+        display: 0
+      ap:
+        value: 8
+        display: 0
+      apGain:
+        value: 2
+        display: 0
+  name: Lesidi
+  characterAnimation: {fileID: 114139175213496152}
+  charactersprite: {fileID: 1083589137289046}
+  charContainer: {fileID: 114246899739308330}
+  speed: 1
+  enemyAIBasic1: {fileID: 0}
 --- !u!114 &114653560778829354
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -405,63 +449,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114828439413869006
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1542313980632146}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a1eec064c309334583a4fac11496071, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  profileImage: {fileID: 21300000, guid: d425ca8cbeb23fd4881bea5444243761, type: 3}
-  healthBar: {fileID: 1075659018159238, guid: a0ae54a5f3f969d418b6a279f613a09d, type: 2}
-  team: 0
-  stats:
-    baseStats:
-      armour:
-        value: 0
-        display: 0
-      inteligence:
-        value: 0
-        display: 0
-      maxHealth:
-        value: 10
-        display: 0
-      movement:
-        value: 4
-        display: 0
-      speed:
-        value: 10
-        display: 0
-      strength:
-        value: 4
-        display: 0
-      ap:
-        value: 8
-        display: 0
-      apGain:
-        value: 2
-        display: 0
-  name: Lesidi
-  characterAnimation: {fileID: 114139175213496152}
-  charactersprite: {fileID: 1083589137289046}
-  speed: 1
-  enemyAIBasic1: {fileID: 0}
---- !u!114 &114847573284039022
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1199455800038826}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ffb99f67b59661428a4cf4257aeb964, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  characterBoardEntity: {fileID: 114828439413869006}
 --- !u!114 &114876492714574670
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -16,10 +16,6 @@ namespace Placeholdernamespace.Battle.Entities.Instances
         public override void Init(Position startingPosition, TurnManager turnManager, TileManager tileManager, BoardEntitySelector boardEntitySelector, BattleCalculator battleCalculator)
         {
             base.Init(startingPosition, turnManager, tileManager, boardEntitySelector, battleCalculator);
-
-            //CharacterBoardEntityJaz doYouLikeJaz = FindObjectOfType<CharacterBoardEntityJaz>();
-            //Passive passive = new BuffRaged(doYouLikeJaz, 4);
-            //AddPassive(passive);
            
         }
 

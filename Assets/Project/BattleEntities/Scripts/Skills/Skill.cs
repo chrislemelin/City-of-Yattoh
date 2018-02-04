@@ -30,6 +30,8 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         protected bool targetSelfTeam = false;
         protected DamageType damageType = DamageType.physical;
 
+        private List<SkillModifier> skillModifiers = new List<SkillModifier>();
+
         [SerializeField]
         protected string description = "CHANGE THE SKILL DESCRIPTION PLS";
 
@@ -290,15 +292,23 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             Action(new List<Tile>() { t }, callback);
         }
 
-        public void Action(List<Tile> tiles, Action<bool> callback = null, bool free = false)
+        public void Action(List<Tile> tiles, Action<bool> callback = null, bool free = false, List<SkillModifier> mods = null)
         {
+            if( mods != null )
+            {
+                skillModifiers = mods;
+            }
             if (tiles.Count > 0)
             {
                 boardEntity.SetAnimationDirection(AnimatorUtils.GetAttackDirectionCode(boardEntity.GetTile().Position, tiles[0].Position));
-                boardEntity.SetAnimation(animationType);
+                if(animationType != AnimatorUtils.animationType.none)
+                {
+                    boardEntity.SetAnimation(animationType);
+                }
             }
 
             SkillReport report = ActionHelper(tiles);
+            ActionHelperNoPreview(tiles, callback);
             battleCalculator.ExecuteSkillReport(report);
             foreach(Tile t in tiles)
             {
@@ -320,12 +330,18 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             // tell the passives what just happened
             foreach (Passive passive in boardEntity.Passives)
             {
-                passive.ExecutedSkill(report);
+                passive.ExecutedSkill(this, report);
             }
-            
+            skillModifiers = new List<SkillModifier>();
+
+            DoCallback(callback);
+        }
+
+        protected virtual void DoCallback(Action<bool> callback = null)
+        {
             if (callback != null)
             {
-                Core.CallbackDelay(.8f, () => callback(false));                
+                Core.CallbackDelay(.8f, () => callback(false));
             }
         }
 
@@ -334,6 +350,8 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         /// </summary>
         /// <param name="t"></param>
         protected abstract SkillReport ActionHelper(List<Tile> t);
+
+        protected virtual void ActionHelperNoPreview(List<Tile> tiles, Action<bool> calback = null){ }
 
         public virtual bool IsActive()
         {
@@ -356,6 +374,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         {
             List<SkillModifier> returnModifiers = new List<SkillModifier>();
             List<SkillModifier> modifiers = boardEntity.GetSkillModifier(this);
+            modifiers.AddRange(skillModifiers);
             foreach(SkillModifier mod in modifiers)
             {
                 if(mod.Type == type)
@@ -364,7 +383,6 @@ namespace Placeholdernamespace.Battle.Entities.Skills
                 }
             }
             return returnModifiers;
-
         }
 
         protected int? GetStatAfterSkillModifiers(SkillModifierType type, int? baseValue)
@@ -379,6 +397,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
                     value = mod.Apply(value, type);
                 }
             }
+
             foreach (SkillModifier mod in modifiers)
             {
                 if (mod.Application == SkillModifierApplication.Mult)

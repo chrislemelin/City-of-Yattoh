@@ -8,12 +8,12 @@ namespace Placeholdernamespace.Battle.Entities.Passives
     {
         public TalentBongani():base()
         {
-            skip = true;
+            description = "applies a buff that will make the next basic attack apply a stun";
         }
 
         public override void Activate()
         {
-            //boardEntity.AddPassive()
+            boardEntity.AddPassive(new BuffBonganiTalent());
         }
 
     }

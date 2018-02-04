@@ -11,6 +11,7 @@ using Placeholdernamespace.Battle.UI;
 using Placeholdernamespace.Battle.Entities.Skills;
 using Placeholdernamespace.Battle.Calculator;
 using UnityEngine.UI;
+using Placeholdernamespace.Battle.Entities.Passives;
 
 namespace Placeholdernamespace.Battle.Entities
 {
@@ -147,8 +148,10 @@ namespace Placeholdernamespace.Battle.Entities
             boardEntitySelector.ExitHover();
         }
 
+        public abstract void AddPassive(Passive passive);
+        public abstract void AddSkill(Skill skill); 
 
     }
 
-    public enum Team { Player, Enemy, Neutral, Environment }
+    public enum Team { Player, Enemy, Neutral, Environment, Null }
 }

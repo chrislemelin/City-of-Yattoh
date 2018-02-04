@@ -21,7 +21,6 @@ GameObject:
   - component: {fileID: 224398820877675338}
   - component: {fileID: 222451084091980630}
   - component: {fileID: 114386631933246298}
-  - component: {fileID: 114880462792590618}
   m_Layer: 5
   m_Name: Character
   m_TagString: Untagged
@@ -76,7 +75,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4914905680874010}
   - component: {fileID: 114186605721220920}
-  - component: {fileID: 114104125669623174}
+  - component: {fileID: 114206434361373798}
+  - component: {fileID: 114244507700181018}
   m_Layer: 0
   m_Name: Bongani
   m_TagString: Untagged
@@ -230,7 +230,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114104125669623174
+--- !u!114 &114186605721220920
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -238,7 +238,32 @@ MonoBehaviour:
   m_GameObject: {fileID: 1542313980632146}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5dcad92dcb7557d40b690846da784e11, type: 3}
+  m_Script: {fileID: 11500000, guid: ed8b6996ef53ad04fa5f0de7c3d5f0ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textDisplayObject: {fileID: 1666611324461376, guid: deefc0ebd4e5a9a4f97ae552b8a2dc61,
+    type: 2}
+--- !u!114 &114203607857292902
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1422958045928576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ffb99f67b59661428a4cf4257aeb964, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterBoardEntity: {fileID: 114206434361373798}
+--- !u!114 &114206434361373798
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1542313980632146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 562850e52a28c1f4f95fafc53f2f9637, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   profileImage: {fileID: 21300000, guid: 2b24949b79a9fa441a8c7c70f792fd86, type: 3}
@@ -273,9 +298,10 @@ MonoBehaviour:
   name: Bongani
   characterAnimation: {fileID: 114815535030796286}
   charactersprite: {fileID: 1422958045928576}
+  charContainer: {fileID: 114244507700181018}
   speed: 1
   enemyAIBasic1: {fileID: 0}
---- !u!114 &114186605721220920
+--- !u!114 &114244507700181018
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -283,23 +309,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1542313980632146}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed8b6996ef53ad04fa5f0de7c3d5f0ae, type: 3}
+  m_Script: {fileID: 11500000, guid: 47908d1a1955f4f4b90881c11ebb9bcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textDisplayObject: {fileID: 1666611324461376, guid: deefc0ebd4e5a9a4f97ae552b8a2dc61,
-    type: 2}
---- !u!114 &114203607857292902
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1422958045928576}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ffb99f67b59661428a4cf4257aeb964, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  characterBoardEntity: {fileID: 114104125669623174}
 --- !u!114 &114245910978165384
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -450,18 +462,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c67de6ac62216c4b9357b98fd0c8d34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114880462792590618
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1231510183718768}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ffb99f67b59661428a4cf4257aeb964, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  characterBoardEntity: {fileID: 0}
 --- !u!114 &114910173449349550
 MonoBehaviour:
   m_ObjectHideFlags: 1

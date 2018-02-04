@@ -8,6 +8,7 @@ using Placeholdernamespace.Battle.Entities.AttributeStats;
 using Placeholdernamespace.Battle.UI;
 using Placeholdernamespace.Battle.Interaction;
 using TMPro;
+using Placeholdernamespace.Battle.Entities.Passives;
 
 namespace Placeholdernamespace.Battle.Managers
 {
@@ -28,6 +29,7 @@ namespace Placeholdernamespace.Battle.Managers
 
         private List<BoardEntity> enities = new List<BoardEntity>();
         private List<BoardEntity> turnQueue = new List<BoardEntity>();
+        private HashSet<BoardEntity> alreadyTakenTurn = new HashSet<BoardEntity>();
         private int queueLength = 5;
         private Profile profile;
         private BoardEntitySelector boardEntitySelector;
@@ -68,27 +70,27 @@ namespace Placeholdernamespace.Battle.Managers
 
         public void NextTurn()
         {
+            ReCalcQueue();
             PathOnClick.pause = true;
             tileSelectionManager.CancelSelection();
-            if (turnQueue.Count == 0)
-            {
-                ReCalcQueue();
-            }
             currentBoardEntity = null;
             boardEntitySelector.setSelectedBoardEntity(null);
             
-            BoardEntity tempcurrentBoardEntity = turnQueue[0];          
+            BoardEntity tempcurrentBoardEntity = turnQueue[0];
+            alreadyTakenTurn.Add(tempcurrentBoardEntity);
             turnQueue.RemoveAt(0);
             
             CenterText.Instance.DisplayMessage(tempcurrentBoardEntity.Name + "'s Turn", () => {
-                PathOnClick.pause = false;
-                tempcurrentBoardEntity.StartMyTurn();
                 currentBoardEntity = tempcurrentBoardEntity;
+                PathOnClick.pause = false;
                 UpdateGui();
-                if(currentBoardEntity.Team == Team.Player)
+                ((CharacterBoardEntity)tempcurrentBoardEntity).SetUpMyTurn();
+                if (currentBoardEntity.Team == Team.Player)
                 {
                     boardEntitySelector.setSelectedBoardEntity(currentBoardEntity);
                 }
+                tempcurrentBoardEntity.StartMyTurn();
+
             });
            
         }
@@ -104,7 +106,7 @@ namespace Placeholdernamespace.Battle.Managers
             string newText = "";
             newText += currentBoardEntity.Name;
 
-            List<BoardEntity> displayList = QueueDisplayHelper();
+            List<BoardEntity> displayList = turnQueue;
             foreach (BoardEntity entity in displayList)
             {
                 newText += " -> " + entity.Name;
@@ -117,7 +119,43 @@ namespace Placeholdernamespace.Battle.Managers
 
         public void ReCalcQueue()
         {
-            turnQueue = ReCalcQueueHelper();
+            List<BoardEntity> firstListentities = ReCalcQueueHelper();
+            firstListentities.RemoveAll((a) => alreadyTakenTurn.Contains(a));
+            SetFirst(firstListentities);
+            
+            if(firstListentities.Count == 0)
+            {
+                alreadyTakenTurn.Clear();
+                firstListentities = ReCalcQueueHelper();
+            }
+
+            List<BoardEntity> secondListentities = ReCalcQueueHelper();
+            secondListentities.RemoveAll((a) => !alreadyTakenTurn.Contains(a));
+            SetFirst(secondListentities);
+
+            firstListentities.AddRange(secondListentities);
+            turnQueue = firstListentities;
+        }
+
+        public void SetFirst(List<BoardEntity> list)
+        {
+            for(int a = 0; a < list.Count; a++)
+            {
+                BoardEntity b = list[a];
+                if(b is CharacterBoardEntity)
+                {
+                    bool first = false;
+                    foreach(Passive p in ((CharacterBoardEntity)b).Passives)
+                    {
+                        first = p.TurnOrderFirst(first);
+                    }
+                    if(first)
+                    {
+                        list.Remove(b);
+                        list.Insert(0, b);
+                    }
+                }
+            }
         }
 
         private List<BoardEntity> ReCalcQueueHelper()

@@ -14,14 +14,14 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         private List<Tile> influenceTiles = new List<Tile>();
 
         public PassiveAreaOfInfluenceSkill(): base()
-        { 
-            EnterTile(boardEntity.GetTile());
+        {            
         }
 
         public override void Init(BattleCalculator battleCalculator, CharacterBoardEntity boardEntity, TileManager tileManager)
         {
             base.Init(battleCalculator, boardEntity, tileManager);
             influenceSkill = boardEntity.BasicAttack;
+            EnterTile(boardEntity.GetTile());
 
         }
 

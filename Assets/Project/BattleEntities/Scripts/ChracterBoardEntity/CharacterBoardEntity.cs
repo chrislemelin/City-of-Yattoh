@@ -14,6 +14,8 @@ using Placeholdernamespace.Battle.Entities.Skills;
 using Placeholdernamespace.Battle.Entities.Passives;
 using Placeholdernamespace.Battle.Entities.AI;
 using Placeholdernamespace.Common.Animator;
+using Placeholdernamespace.Battle.Entities.Instances;
+using Placeholdernamespace.Common.UI;
 
 namespace Placeholdernamespace.Battle.Entities
 {
@@ -23,6 +25,8 @@ namespace Placeholdernamespace.Battle.Entities
         protected CharacterAnimation characterAnimation;
         [SerializeField]
         protected GameObject charactersprite;
+        [SerializeField]
+        protected CharContainer charContainer;
 
         private static List<CharacterBoardEntity> allCharacterBoardEntities = new List<CharacterBoardEntity>();
         public static List<CharacterBoardEntity> AllCharacterBoardEntities
@@ -33,7 +37,17 @@ namespace Placeholdernamespace.Battle.Entities
         [SerializeField]
         private float speed = 5;
 
+        private FloatingTextGenerator floatingTextGenerator;
+        public FloatingTextGenerator FloatingTextGenerator
+        {
+            get { return floatingTextGenerator; }
+        }
+
         protected int? range = Skill.RANGE_ADJACENT;
+        public void setRange(int? range)
+        {
+            this.range = range;
+        }
         public int? Range
         {
             get { return range; }
@@ -90,6 +104,11 @@ namespace Placeholdernamespace.Battle.Entities
 
             basicAttack = new BasicAttack();
             AddSkill(basicAttack);
+            if(charContainer != null)
+            {
+                charContainer.Init(this);
+            }
+            floatingTextGenerator = GetComponent<FloatingTextGenerator>();
             /*
             basicAttack = new BasicAttack(tileManager, this, battleCalculator);
             skills.Add(basicAttack);
@@ -131,6 +150,86 @@ namespace Placeholdernamespace.Battle.Entities
         private List<Tile> path = new List<Tile>();
         private int pathCounter = 0;
         private bool interupted = false;
+        private bool interuptClearMovement = false;
+        private bool charging = false;
+        private bool pushing = false;
+        private Position direction = null;
+
+        private void OnMouseEnter()
+        {
+            
+        }
+
+        public void ExecutePush(Tile tile, AnimatorUtils.animationDirection direction)
+        {
+            interupted = false;
+            pushing = true;
+            pathCounter = 0;
+
+            SetAnimationDirection(direction);
+            SetAnimation(AnimatorUtils.animationType.damage);
+            
+            path.Add(tile);            
+            ChangeTarget();
+        }
+
+        public void ExecuteCharge(Move move, Position direction, Action<bool> action = null)
+        {
+            interupted = false;
+            charging = true;
+            this.direction = direction;
+            pathCounter = 0;
+            if (characterAnimation != null)
+            {
+                SetAnimation(AnimatorUtils.animationType.walking);
+            }
+            moveDoneCallback = action;
+            if (move != null)
+            {
+                OutlineOnHover.disabled = true;
+                PathOnClick.pause = true;
+
+                foreach (Passive p in Passives)
+                {
+                    p.ExecutedMove(move);
+                }
+                path = move.path;
+            }
+            ChangeTarget();
+        }
+
+        public void ExecuteMove(Move move, Action<bool> action = null)
+        {
+            pushing = false;
+            charging = false;
+            interupted = false;
+            pathCounter = 0;
+            if (characterAnimation != null)
+            {
+                characterAnimation.OnButtonClick(1);
+            }
+            moveDoneCallback = action;
+            if (move != null)
+            {
+                OutlineOnHover.disabled = true;
+                PathOnClick.pause = true;
+
+                foreach (Passive p in Passives)
+                {
+                    p.ExecutedMove(move);
+                }
+                path = move.path;
+            }
+            ChangeTarget();
+        }
+
+        public void InteruptMovment()
+        {
+            //pathCounter += path.Count;
+            path.Clear();
+            interupted = true;
+            interuptClearMovement = true;
+        }
 
         private void checkAtTarget()
         {
@@ -148,38 +247,12 @@ namespace Placeholdernamespace.Battle.Entities
         {
             float step = speed * Time.deltaTime;
             transform.position = Vector3.MoveTowards(transform.position, target.transform.position, step);
-        }
-
-        public void ExecuteMove(Move move, Action<bool> action = null)
-        {
-            interupted = false;
-            pathCounter = 0;
-            if(characterAnimation != null)
-            {
-                characterAnimation.OnButtonClick(1);
-            }
-            moveDoneCallback = action;
-            if(move != null)
-            {
-                OutlineOnHover.disabled = true;
-                PathOnClick.pause = true;
-
-                foreach(Passive p in Passives)
-                {
-                    p.ExecutedMove(move);
-                }
-
-                //stats.SetMutableStat(StatType.Movement, move.movementPointsAfterMove);
-                //stats.SubtractAPPoints(move.apCost);
-                path = move.path;
-            }
-            ChangeTarget();
-        }
+        }  
 
         private void ChangeTarget()
         {
 
-            // we gotta check to see if we just walked into a taunt, we will have to do this for taunt as well
+            // we gotta check to see if we just walked into a taunt, we will have to do this for stun as well
             if (GetTauntTiles().Count != 0)
             {
                 HashSet<Tile> tauntTiles = GetTauntTiles();
@@ -196,16 +269,38 @@ namespace Placeholdernamespace.Battle.Entities
             if(path.Count > 0)
             {
                 AnimatorUtils.animationDirection dir = AnimatorUtils.GetAttackDirectionCode(GetTile().Position, path[0].Position);
-                SetAnimationDirection(dir);
+                if(!pushing)
+                {
+                    SetAnimationDirection(dir);
+                }
                 target = path[0];
                 path.RemoveAt(0);
                 pathCounter++;
+                if(charging)
+                {
+                    Position targetTile = position + direction;
+                    Tile t = tileManager.GetTile(targetTile);
+                    if(t != null && t.BoardEntity != null && t.BoardEntity.Team != Team)
+                    {
+                        basicAttack.Action(new List<Tile>() { t }, null, true,
+                            new List<SkillModifier>() { new SkillModifier(SkillModifierType.Power, SkillModifierApplication.Mult, .5f) });
+                        Tile newTile = tileManager.GetTile(targetTile + direction);
+                    
+                        AnimatorUtils.animationDirection pushDir = AnimatorUtils.GetAttackDirectionCode(newTile.Position, position);
 
+                        ((CharacterBoardEntity)t.BoardEntity).ExecutePush(newTile, pushDir);
+
+                    }
+                }
             }
             else
             {
                 stats.SubtractMovementPoints(pathCounter);
-
+                if(interuptClearMovement)
+                {
+                    stats.SetMutableStat(AttributeStats.StatType.Movement, 0);
+                    interuptClearMovement = false;
+                }
                 // all done moving
                 target = null;
                 PathOnClick.pause = false;
@@ -217,6 +312,16 @@ namespace Placeholdernamespace.Battle.Entities
                         characterAnimation.OnButtonClick(0);
                     }
                     moveDoneCallback(interupted);
+                }
+                if (charging)
+                {
+                    Position targetTile = position + direction;
+                    Tile t = tileManager.GetTile(targetTile);
+                    if (t != null && t.BoardEntity != null && t.BoardEntity.Team != Team)
+                    {
+                        basicAttack.Action(new List<Tile>() { t }, null, true);
+                    }
+                    charging = false;
                 }
             }
         }
@@ -230,17 +335,25 @@ namespace Placeholdernamespace.Battle.Entities
             }
         }
 
-        public override void StartMyTurn()
+        public void SetUpMyTurn()
         {
             stats.NewTurn();
-            bool skipTurn = false;
-            foreach(Skill skill in skills)
+            foreach (Skill skill in skills)
             {
                 skill.StartTurn();
             }
-            foreach(Passive passive in Passives)
+            foreach (Passive passive in Passives)
             {
                 passive.StartTurn();
+
+            }
+        }
+
+        public override void StartMyTurn()
+        {
+            bool skipTurn = false;
+            foreach(Passive passive in Passives)
+            {
                 skipTurn = passive.SkipTurn(skipTurn);
 
             }
@@ -250,7 +363,6 @@ namespace Placeholdernamespace.Battle.Entities
             }
             else
             {               
-
                 if (team == Team.Enemy)
                 {
                     BoardEntity boardEntity = GetRagedBy();
@@ -286,7 +398,7 @@ namespace Placeholdernamespace.Battle.Entities
         /// please use this when adding any type of passive
         /// </summary>
         /// <param name="passive"></param>
-        public void AddPassive(Passive passive)
+        public override void AddPassive(Passive passive)
         {
             passive.Init(battleCalculator, this, tileManager);
             bool add = true;
@@ -342,7 +454,7 @@ namespace Placeholdernamespace.Battle.Entities
             return false;
         }
 
-        public void AddSkill(Skill skill)
+        public override void AddSkill(Skill skill)
         {
             skill.Init(tileManager, this, battleCalculator);
             skills.Add(skill);

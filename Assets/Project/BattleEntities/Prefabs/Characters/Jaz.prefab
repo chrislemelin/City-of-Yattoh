@@ -21,7 +21,6 @@ GameObject:
   - component: {fileID: 224398820877675338}
   - component: {fileID: 222451084091980630}
   - component: {fileID: 114386631933246298}
-  - component: {fileID: 114880462792590618}
   m_Layer: 5
   m_Name: Character
   m_TagString: Untagged
@@ -75,9 +74,9 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4914905680874010}
-  - component: {fileID: 114631525846542012}
-  - component: {fileID: 114213890369153560}
   - component: {fileID: 114186605721220920}
+  - component: {fileID: 114853893240388222}
+  - component: {fileID: 114057334828296064}
   m_Layer: 0
   m_Name: Jaz
   m_TagString: Untagged
@@ -231,6 +230,17 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114057334828296064
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1542313980632146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7232e0096c6bdaa479f46beee86b3fbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114186605721220920
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -255,52 +265,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ffb99f67b59661428a4cf4257aeb964, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterBoardEntity: {fileID: 114213890369153560}
---- !u!114 &114213890369153560
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1542313980632146}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88aea5c45b8f8e544b362632151e5195, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  profileImage: {fileID: 21300000, guid: 971758a4610b6af43be49e6486d8d669, type: 3}
-  healthBar: {fileID: 1075659018159238, guid: a0ae54a5f3f969d418b6a279f613a09d, type: 2}
-  team: 0
-  stats:
-    baseStats:
-      armour:
-        value: 1
-        display: 0
-      inteligence:
-        value: 3
-        display: 0
-      maxHealth:
-        value: 8
-        display: 0
-      movement:
-        value: 4
-        display: 0
-      speed:
-        value: 8
-        display: 0
-      strength:
-        value: 8
-        display: 0
-      ap:
-        value: 8
-        display: 0
-      apGain:
-        value: 2
-        display: 0
-  name: Jaz
-  characterAnimation: {fileID: 114815535030796286}
-  charactersprite: {fileID: 1422958045928576}
-  speed: 1
-  enemyAIBasic1: {fileID: 0}
+  characterBoardEntity: {fileID: 114853893240388222}
 --- !u!114 &114245910978165384
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -312,7 +277,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ffb99f67b59661428a4cf4257aeb964, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterBoardEntity: {fileID: 114213890369153560}
+  characterBoardEntity: {fileID: 0}
 --- !u!114 &114386631933246298
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -340,18 +305,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114631525846542012
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1542313980632146}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ffb99f67b59661428a4cf4257aeb964, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  characterBoardEntity: {fileID: 0}
 --- !u!114 &114653560778829354
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -463,18 +416,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c67de6ac62216c4b9357b98fd0c8d34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114880462792590618
+--- !u!114 &114853893240388222
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1231510183718768}
+  m_GameObject: {fileID: 1542313980632146}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ffb99f67b59661428a4cf4257aeb964, type: 3}
+  m_Script: {fileID: 11500000, guid: 562850e52a28c1f4f95fafc53f2f9637, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterBoardEntity: {fileID: 114213890369153560}
+  profileImage: {fileID: 21300000, guid: 971758a4610b6af43be49e6486d8d669, type: 3}
+  healthBar: {fileID: 1075659018159238, guid: a0ae54a5f3f969d418b6a279f613a09d, type: 2}
+  team: 0
+  stats:
+    baseStats:
+      armour:
+        value: 0
+        display: 0
+      inteligence:
+        value: 0
+        display: 0
+      maxHealth:
+        value: 14
+        display: 0
+      movement:
+        value: 4
+        display: 0
+      speed:
+        value: 9
+        display: 0
+      strength:
+        value: 9
+        display: 0
+      ap:
+        value: 2
+        display: 0
+      apGain:
+        value: 8
+        display: 0
+  name: Jaz
+  characterAnimation: {fileID: 114815535030796286}
+  charactersprite: {fileID: 1422958045928576}
+  charContainer: {fileID: 114057334828296064}
+  speed: 1
+  enemyAIBasic1: {fileID: 0}
 --- !u!114 &114910173449349550
 MonoBehaviour:
   m_ObjectHideFlags: 1

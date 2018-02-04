@@ -14,7 +14,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         protected int stacks = STACKS_HIDDEN;
 
         protected enum AddBuff {add, refresh};
-        protected AddBuff addBuffHandle;
+        protected AddBuff addBuffHandle = AddBuff.add;
         protected bool popOneAtTurnEnd = true;
 
 
@@ -48,9 +48,12 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         {
             if(remove != null)
             {
+                RemoveHelper();
                 remove(this);
             }
         }
+
+        protected virtual void RemoveHelper(){}
 
         public void PopStack(int value = 1)
         {

@@ -29,6 +29,7 @@ namespace Placeholdernamespace.Common.Utils
             //CharacterBoardEntity c = GetComponentInParent<CharacterBoardEntity>();
             characterBoardEntity.GetTile().GetComponentInChildren<OutlineOnHover>().OnMouseEnter();
             characterBoardEntity.GetTile().GetComponentInChildren<PathOnClick>().OnMouseEnterHelper();
+            
         }
 
         public void OnMouseOver()

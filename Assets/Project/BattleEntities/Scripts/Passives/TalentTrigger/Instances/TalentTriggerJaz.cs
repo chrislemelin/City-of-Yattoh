@@ -19,7 +19,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
 
 
-        public override void ExecutedSkill(SkillReport skillReport)
+        public override void ExecutedSkill(Skill skill, SkillReport skillReport)
         {
             if (skillReport != null)
             {

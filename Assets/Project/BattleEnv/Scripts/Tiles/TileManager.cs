@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Placeholdernamespace.Battle.Env;
 
 namespace Placeholdernamespace.Battle.Env
 {
@@ -16,6 +17,8 @@ namespace Placeholdernamespace.Battle.Env
 
         public BoardEntitySelector boardEntitySelector;
         public TileGenerator generator;
+        [SerializeField]
+        public GameObject trap;
 
         private TurnManager turnManager;
         private Profile profile;
@@ -39,9 +42,16 @@ namespace Placeholdernamespace.Battle.Env
             Tile oldTile = entity.GetTile();
             Tile tile = GetTile(p);      
 
-            entity.GetTile().BoardEntity = null;
+            if(entity.GetTile().BoardEntity == entity)
+            {
+                entity.GetTile().SetBoardEntity(null);
+            }
             entity.Position = p;
-            entity.GetTile().BoardEntity = entity;
+            if(entity.GetTile().BoardEntity == null)
+            {
+                entity.GetTile().SetBoardEntity(entity);
+            }
+
             entity.transform.position = entity.GetTile().transform.position;
 
             if (entity is CharacterBoardEntity)
@@ -51,6 +61,10 @@ namespace Placeholdernamespace.Battle.Env
                 {
                     passive.LeaveTile(oldTile);
                     passive.EnterTile(tile);
+                }
+                foreach(TileListener listner in tile.TileListeners)
+                {
+                    listner.TileEnter((CharacterBoardEntity)entity, tile);
                 }
             }
             if (UpdatedBoardEntityPosition != null)
@@ -248,9 +262,25 @@ namespace Placeholdernamespace.Battle.Env
             List<BoardEntity> boardEntities = new List<BoardEntity>();
             foreach (Tile tile in tiles)
             {
-                if (tile.GetComponent<Tile>().BoardEntity != null)
+                if (tile.BoardEntity != null)
                 {
                     boardEntities.Add(tile.BoardEntity);
+                }
+            }
+            return boardEntities;
+        }
+
+        public List<CharacterBoardEntity> TilesToCharacterBoardEntities(List<Tile> tiles, Team team = Team.Null)
+        {
+            List<CharacterBoardEntity> boardEntities = new List<CharacterBoardEntity>();
+            foreach (Tile tile in tiles)
+            {
+                if (tile.BoardEntity != null && tile.BoardEntity is CharacterBoardEntity)
+                {
+                    if(team == Team.Null || tile.BoardEntity.Team != team)
+                    {
+                        boardEntities.Add((CharacterBoardEntity)tile.BoardEntity);
+                    }
                 }
             }
             return boardEntities;
@@ -274,6 +304,7 @@ namespace Placeholdernamespace.Battle.Env
             GenerateBoardResponse response = generator.generateTiles(this, boardEntitySelector.TileSelectionManager);
             this.coordinateToTile = response.coordinateToTile;
             this.tupleToWall = response.tuppleToWall;
+            RecalculateRemoveableTiles();
 
         }
 
@@ -282,6 +313,24 @@ namespace Placeholdernamespace.Battle.Env
         public bool CheckIfBlocked(Position start, Position end)
         {
             return GetTile(start).CheckIfBlocked(GetTile(end));
+        }
+
+        public void AddTrap(Tile tile, EnterTileAction trapAction)
+        {
+            GameObject currentTrap = Instantiate(trap);
+            TileListener listener = currentTrap.GetComponent<TileListener>();
+            listener.SetEnterAction(trapAction);
+            if(listener != null)
+            {
+                tile.AddTileListener(listener);
+                currentTrap.gameObject.transform.SetParent(tile.gameObject.transform);
+                currentTrap.transform.localPosition = new Vector3(0, 0, 0);
+            }
+            else
+            {
+                Destroy(currentTrap);
+            }
+
         }
 
         public List<Tile> DFS(Position start, Position end, Team? team = null)
@@ -523,6 +572,7 @@ namespace Placeholdernamespace.Battle.Env
             {
                 t.gameObject.SetActive(false);
                 coordinateToTile.Remove(p);
+                RecalculateRemoveableTiles();
                 return true;
             }
             return false;
@@ -530,13 +580,25 @@ namespace Placeholdernamespace.Battle.Env
 
         private bool CanRemoveTile(Tile t)
         {
-            int beforeCount = ReachableTiles(t, new HashSet<Tile>()).Count;
-            int afterCount = ReachableTiles(t, new HashSet<Tile>() {t}).Count;
-            return (beforeCount - 1 == afterCount);
+            return t.canRemove;
         }
 
-        private HashSet<Tile> ReachableTiles(Tile start, HashSet<Tile> exclude)
+        private HashSet<Tile> ReachableTiles(HashSet<Tile> exclude)
         {
+            Tile start = null;
+            foreach(Tile t in coordinateToTile.Values)
+            {
+                if(!exclude.Contains(t))
+                {
+                    start = t;
+                    break;
+                }
+            }
+            if(start == null)
+            {
+                return null;
+            }
+
             HashSet<Tile> reachableTiles = new HashSet<Tile>() { start };
             List<Tile> visitingTiles = new List<Tile>() { start };
             while(visitingTiles.Count != 0)
@@ -558,5 +620,22 @@ namespace Placeholdernamespace.Battle.Env
 
         }
 
+        private void RecalculateRemoveableTiles()
+        {
+            foreach(Tile t in coordinateToTile.Values)
+            {
+                int start = coordinateToTile.Count;
+                int end = ReachableTiles(new HashSet<Tile>(){ t }).Count;
+                if(start == (end+1))
+                {
+                    t.canRemove = true;
+                }
+                else
+                {
+                    t.canRemove = false;
+                }
+            }
+
+        }
     }
 }

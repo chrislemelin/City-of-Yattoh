@@ -27,6 +27,8 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         // if passive should cause the turn to be skipped
         protected bool skip = false;
 
+        // if this character should go first in the order queue
+        protected bool turnOrderFirst = false;
 
         protected PassiveType type;
         public PassiveType Type
@@ -61,6 +63,11 @@ namespace Placeholdernamespace.Battle.Entities.Passives
             return this.skip || skip;
         }
 
+        public bool TurnOrderFirst(bool turnOrderFirst)
+        {
+            return this.turnOrderFirst || turnOrderFirst;
+        }
+
         public bool IsType(bool isType, PassiveType type)
         {
             if(this.type == type)
@@ -84,7 +91,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         /// when a skill is executed
         /// </summary>
         /// <param name="skillreport"></param>
-        public virtual void ExecutedSkill(SkillReport skillreport)
+        public virtual void ExecutedSkill(Skill skill, SkillReport skillreport)
         {
 
         }
