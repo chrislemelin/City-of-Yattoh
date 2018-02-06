@@ -266,7 +266,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 562850e52a28c1f4f95fafc53f2f9637, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  profileImage: {fileID: 21300000, guid: 2b24949b79a9fa441a8c7c70f792fd86, type: 3}
+  profileImage: {fileID: 21300000, guid: 22228d1e9d4530a4da2a33e701427a27, type: 3}
   healthBar: {fileID: 1075659018159238, guid: a0ae54a5f3f969d418b6a279f613a09d, type: 2}
   team: 0
   stats:

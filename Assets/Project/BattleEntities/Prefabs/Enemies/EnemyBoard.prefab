@@ -389,7 +389,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9275d3059f60e114b8e6048874f25b46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  profileImage: {fileID: 0}
+  profileImage: {fileID: 21300000, guid: 9dd65b2a7099b464ba0c17ad5ab99114, type: 3}
   healthBar: {fileID: 1075659018159238, guid: a0ae54a5f3f969d418b6a279f613a09d, type: 2}
   team: 1
   stats:
@@ -421,6 +421,7 @@ MonoBehaviour:
   name: Enemy 1
   characterAnimation: {fileID: 114151050746152352}
   charactersprite: {fileID: 1624195209641910}
+  charContainer: {fileID: 0}
   speed: 1
   enemyAIBasic1: {fileID: 114249362209101460}
 --- !u!114 &114910173449349550

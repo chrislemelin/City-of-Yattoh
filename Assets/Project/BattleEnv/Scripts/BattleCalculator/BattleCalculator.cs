@@ -20,13 +20,7 @@ namespace Placeholdernamespace.Battle.Calculator
 
         public SkillReport ExecuteSkillDamage(CharacterBoardEntity source, Skill skill, CharacterBoardEntity target, List<DamagePackage> damage)
         {
-            Stats sourceStats = source.Stats.GetCopy();
-            Stats targetStats = target.Stats.GetCopy();
-
             SkillReport skillReport = ExecuteSkillHelper(source, skill, target, damage);
-            //ExecuteSkillReport(skillReport);
-
-
             return skillReport;
         }
 
@@ -92,38 +86,59 @@ namespace Placeholdernamespace.Battle.Calculator
             foreach (DamagePackage package in damages)
             {
                 List<Passive> passives = target.Passives;
-                TakeDamageReturn usingTakeDamageReturn = TakeDamageReturn.Normal;
+                TakeDamageReturn usingTakeDamageReturn = new TakeDamageReturn() { type = TakeDamageReturnType.Normal };
                 foreach (Passive passive in passives)
                 {
                     usingTakeDamageReturn = passive.TakeDamage(skill, package, usingTakeDamageReturn);
                 }
 
 
-                switch (usingTakeDamageReturn)
+                if (usingTakeDamageReturn.type == TakeDamageReturnType.Normal)
                 {
-                    case TakeDamageReturn.Normal:
+                    targetAfter = targetBefore.GetCopy();
 
-                        sourceAfter = sourceBefore.GetCopy();
-                        targetAfter = targetBefore.GetCopy();
-
-                        int newTargetHealthDamage = HealthAfterDamage(report, target, sourceAfter, targetAfter, package);
-                        targetAfter.SetMutableStat(StatType.Health, newTargetHealthDamage);
-                        break;
-
-
-                    case TakeDamageReturn.NoDamage:
-                        break;
-
-                    case TakeDamageReturn.Reflect:
-                        break;
-                        
+                    int newTargetHealthDamage = HealthAfterDamage(report, targetAfter, source, package);
+                    targetAfter.SetMutableStat(StatType.Health, newTargetHealthDamage);
                 }
+                else if (usingTakeDamageReturn.type == TakeDamageReturnType.NoDamage)
+                {
+                    report.TextDisplays.Add(new TextDisplay() { target = target, text = "MISS" });
+                }
+                else if (usingTakeDamageReturn.type == TakeDamageReturnType.Mitigate)
+                { 
+                    targetAfter = targetBefore.GetCopy();
 
+                    int newDamage = (int)(package.Damage * (1 - usingTakeDamageReturn.value));
+                    DamagePackage newDamagePackage = new DamagePackage(newDamage, package.Type, package.Piercing);
+                    int newReflectTargetHealthDamage = HealthAfterDamage(report, targetAfter, source, newDamagePackage);
+                    targetAfter.SetMutableStat(StatType.Health, newReflectTargetHealthDamage);
+                }
+                else if(usingTakeDamageReturn.type == TakeDamageReturnType.Reflect)
+                {
+                    sourceAfter = sourceBefore.GetCopy();
+                    targetAfter = targetBefore.GetCopy();
+
+                    int newDamage = (int)(package.Damage * (1 - usingTakeDamageReturn.value));
+                    int reflectDamage = (int)(package.Damage * (usingTakeDamageReturn.value));
+
+                    DamagePackage newDamagePackage = new DamagePackage(newDamage, package.Type, package.Piercing);
+                    DamagePackage reflectDamagePackage = new DamagePackage(reflectDamage, DamageType.physical);
+
+                    int newReflectTargetHealthDamage = HealthAfterDamage(report, targetAfter, source, newDamagePackage);
+                    int newReflectSourceHealthDamage = HealthAfterDamage(report, sourceAfter, target, reflectDamagePackage);
+
+                    targetAfter.SetMutableStat(StatType.Health, newReflectTargetHealthDamage);
+                    sourceAfter.SetMutableStat(StatType.Health, newReflectSourceHealthDamage);
+
+                }              
+                                      
                 sourceBefore = sourceAfter;
                 targetBefore = targetAfter;
 
             }
             report.targets.Add(new Tuple<Stats, Stats>(targetBefore, targetAfter));
+            report.targets.Add(new Tuple<Stats, Stats>(source.Stats, sourceAfter));
+
             report.targetAfter = targetAfter;
             report.sourceAfter = sourceAfter;
             return report;
@@ -132,7 +147,7 @@ namespace Placeholdernamespace.Battle.Calculator
 
         }
 
-        private int HealthAfterDamage(SkillReport report,CharacterBoardEntity target, Stats source, Stats targetStats, DamagePackage damage)
+        private int HealthAfterDamage(SkillReport report,Stats targetStats, CharacterBoardEntity source, DamagePackage damage)
         {
 
             int tempArmour = 0;
@@ -157,7 +172,7 @@ namespace Placeholdernamespace.Battle.Calculator
                 int oldHealth = targetStats.GetMutableStat(StatType.Health).Value;
 
                 int newHealth = oldHealth - tempDamage;
-                if (newHealth < 0)
+                if (newHealth <= 0)
                 {
                     // dat bibba dead
                     newHealth = 0;
@@ -165,7 +180,7 @@ namespace Placeholdernamespace.Battle.Calculator
 
                 DamageDisplay damageDisplay = new DamageDisplay();
                 damageDisplay.value = tempDamage;
-                damageDisplay.character = target;
+                damageDisplay.character = (CharacterBoardEntity)targetStats.BoardEntity;
                 if(damage.Type == DamageType.physical)
                 {
                     damageDisplay.color = Color.red;
@@ -174,13 +189,12 @@ namespace Placeholdernamespace.Battle.Calculator
                 {
                     damageDisplay.color = Color.magenta;
                 }
-                //damageDisplay.color = 
                 report.DamageDisplays.Add(damageDisplay);
 
                 return newHealth;
             }
             else
-                return target.Stats.GetMutableStat(StatType.Health).Value;
+                return targetStats.GetMutableStat(StatType.Health).Value;
         }
 
   
@@ -201,11 +215,16 @@ namespace Placeholdernamespace.Battle.Calculator
         */
     }
 
-    public enum TakeDamageReturn
+    public enum TakeDamageReturnType
     {
-        Normal, NoDamage, Reflect
+        Normal, Mitigate, Reflect, NoDamage
     }
 
+    public class TakeDamageReturn
+    {
+        public TakeDamageReturnType type;
+        public float value;
+    }
     
 
     public class DamageDisplay

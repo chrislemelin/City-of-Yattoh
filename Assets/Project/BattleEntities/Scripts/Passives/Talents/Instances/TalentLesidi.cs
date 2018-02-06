@@ -11,7 +11,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         {
             List<BoardEntity> enitites = tileManager.GetBoardEntityDiag(boardEntity.GetTile().Position, 1);
             List<CharacterBoardEntity> chars =  Core.convert(enitites);
-            foreach(CharacterBoardEntity character in enitites)
+            foreach(CharacterBoardEntity character in chars)
             {
                 character.ReduceCooldowns();
             }

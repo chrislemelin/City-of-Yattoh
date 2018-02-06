@@ -160,6 +160,15 @@ namespace Placeholdernamespace.Battle.Entities
             
         }
 
+        public void Die()
+        {
+            foreach(Passive p in Passives)
+            {
+                
+            }
+
+        }
+
         public void ExecutePush(Tile tile, AnimatorUtils.animationDirection direction)
         {
             interupted = false;
@@ -430,6 +439,17 @@ namespace Placeholdernamespace.Battle.Entities
                     {
                         ((Buff)p).PopAll();
                     }
+                }
+            }
+        }
+        
+        public void RemovePassive(Passive passive)
+        {
+            foreach(Passive p in Passives)
+            {
+                if(p == passive)
+                {
+                    passives.Remove(passive);
                 }
             }
         }

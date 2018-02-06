@@ -61,14 +61,20 @@ namespace Placeholdernamespace.Battle.Entities.AI
 
                 // raged target must be the 'nearest' boardentity
                 Position targetPosition;
-                if(ragedBy != null)
+                if (ragedBy != null)
                 {
                     targetPosition = ragedBy.GetTile().Position;
                 }
                 else
                 {
                     BoardEntity nearest = tileManager.NearestBoardEntity(m.destination.Position, Team.Player);
+                    if (nearest == null)
+                    {
+                        callBack();
+                        return;
+                    }
                     targetPosition = nearest.GetTile().Position;
+
                 }
 
                 int movementScore = tileManager.DFS(m.destination.Position, targetPosition, characterBoardEntity.Team).Count;

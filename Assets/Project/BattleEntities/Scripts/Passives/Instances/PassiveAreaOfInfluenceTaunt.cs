@@ -27,7 +27,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         {
             if (this.boardEntity.Team != boardEntity.Team && !influenceTiles.Contains(leavingTile))
             { 
-                BuffTaunt buff = new BuffTaunt(influenceTiles, (CharacterBoardEntity)boardEntity);
+                BuffTaunt buff = new BuffTaunt((CharacterBoardEntity)boardEntity);
                 taunts.Add(buff);
                 ((CharacterBoardEntity)boardEntity).AddPassive(buff);      
             }

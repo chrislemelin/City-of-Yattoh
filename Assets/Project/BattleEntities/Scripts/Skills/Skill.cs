@@ -292,7 +292,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             Action(new List<Tile>() { t }, callback);
         }
 
-        public void Action(List<Tile> tiles, Action<bool> callback = null, bool free = false, List<SkillModifier> mods = null)
+        public void Action(List<Tile> tiles, Action<bool> callback = null, bool free = false, List<SkillModifier> mods = null, bool animation = true)
         {
             if( mods != null )
             {
@@ -301,13 +301,25 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             if (tiles.Count > 0)
             {
                 boardEntity.SetAnimationDirection(AnimatorUtils.GetAttackDirectionCode(boardEntity.GetTile().Position, tiles[0].Position));
-                if(animationType != AnimatorUtils.animationType.none)
+                if(animationType != AnimatorUtils.animationType.none && animation) 
                 {
                     boardEntity.SetAnimation(animationType);
                 }
             }
 
             SkillReport report = ActionHelper(tiles);
+            if(report != null)
+            {
+                foreach (Tuple<Stats, Stats> stat in report.targets)
+                {
+                    foreach (Passive p in ((CharacterBoardEntity)stat.first.BoardEntity).Passives)
+                    {
+                        p.AttackedBy(boardEntity);
+                    }
+                }
+            }
+      
+
             ActionHelperNoPreview(tiles, callback);
             battleCalculator.ExecuteSkillReport(report);
             foreach(Tile t in tiles)
@@ -333,6 +345,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
                 passive.ExecutedSkill(this, report);
             }
             skillModifiers = new List<SkillModifier>();
+            
 
             DoCallback(callback);
         }

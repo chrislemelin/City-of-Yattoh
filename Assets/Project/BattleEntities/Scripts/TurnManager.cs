@@ -27,7 +27,13 @@ namespace Placeholdernamespace.Battle.Managers
             get { return currentBoardEntity; }
         }
 
-        private List<BoardEntity> enities = new List<BoardEntity>();
+        private static List<BoardEntity> enities = new List<BoardEntity>();
+        public static List<BoardEntity> Entities
+        {
+            get { return new List<BoardEntity>(enities); }
+        }
+
+        //private List<BoardEntity> enities = new List<BoardEntity>();
         private List<BoardEntity> turnQueue = new List<BoardEntity>();
         private HashSet<BoardEntity> alreadyTakenTurn = new HashSet<BoardEntity>();
         private int queueLength = 5;
@@ -157,6 +163,7 @@ namespace Placeholdernamespace.Battle.Managers
                 }
             }
         }
+
 
         private List<BoardEntity> ReCalcQueueHelper()
         {

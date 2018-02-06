@@ -17,8 +17,6 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         protected string description = "CHANGE THE PASSIVE DESCRIPTION PLS";
         protected Color displayColor;
 
-        protected TakeDamageReturn takeDamageReturn = TakeDamageReturn.Normal;
-
         // default skillModifiers for ALL skills
         protected List<SkillModifier> skillModifiers = new List<SkillModifier>();
 
@@ -26,6 +24,8 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         // if passive should cause the turn to be skipped
         protected bool skip = false;
+
+        protected bool stealthed = false;
 
         // if this character should go first in the order queue
         protected bool turnOrderFirst = false;
@@ -55,7 +55,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         /// <returns></returns>
         public virtual TakeDamageReturn TakeDamage(Skill skill, DamagePackage package, TakeDamageReturn lastReturn)
         {
-            return (TakeDamageReturn)Mathf.Max((int)takeDamageReturn, (int)lastReturn);
+            return lastReturn;
         }
 
         public bool SkipTurn(bool skip)
@@ -106,6 +106,10 @@ namespace Placeholdernamespace.Battle.Entities.Passives
             return description;
         }
 
+        public virtual void StartBattle() { }
+
+        public virtual void AttackedBy(CharacterBoardEntity character) { }
+
         public List<SkillModifier> GetSkillModifiers(Skill skill)
         {
             List<SkillModifier> modifiers = GetSkillHelperModifiers();
@@ -140,9 +144,11 @@ namespace Placeholdernamespace.Battle.Entities.Passives
             return new List<StatModifier>(statModifiers);
         }
 
+        public virtual void Die(){}
+
         public virtual void StartTurn(){}
 
-        public virtual void EndTurn(){ }
+        public virtual void EndTurn(){}
 
         public virtual void LeaveTile(Tile t){}
 
@@ -152,7 +158,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         public virtual bool IsStealthed(bool stealthed)
         {
-            return stealthed;
+            return this.stealthed || stealthed;
         }
 
         public virtual List<DamagePackage> GetDamagePackage(Skill skill)

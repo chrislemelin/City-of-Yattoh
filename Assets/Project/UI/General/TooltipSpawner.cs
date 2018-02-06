@@ -55,7 +55,7 @@ namespace Placeholdernamespace.Common.UI
                 spawnedTooltip.GetComponent<Tooltip>().setTitle(getTitle());
                 spawnedTooltip.GetComponent<Tooltip>().setFlavorText(getFlavorText());
                 spawnedTooltip.GetComponent<Tooltip>().setDescriptionFontSize(fontSize);
-                spawnedTooltip.transform.SetParent(FindObjectOfType<Canvas>().transform);
+                spawnedTooltip.transform.SetParent(FindObjectOfType<Canvas>().transform,false);
                 spawnedTooltip.transform.SetAsLastSibling();
                 spawnedTooltipRect = spawnedTooltip.GetComponent<RectTransform>();
                 spawnedTooltip.transform.position = new Vector3(10000, 10000);
@@ -65,20 +65,22 @@ namespace Placeholdernamespace.Common.UI
             {
                 Vector3 mousePos = Input.mousePosition;
                 float x = 0;
-                if(mousePos.x > (Camera.main.pixelWidth/2))
+                float width = spawnedTooltipRect.rect.width * spawnedTooltip.transform.lossyScale.x;
+                float height = spawnedTooltipRect.rect.height * spawnedTooltip.transform.lossyScale.y;
+                if (mousePos.x > (Camera.main.pixelWidth/2))
                 {
-                    x = mousePos.x - (spawnedTooltipRect.rect.width / 2);
+                    x = mousePos.x - (width / 2);
                 }
                 else
                 {
-                    x = mousePos.x + (spawnedTooltipRect.rect.width / 2);
+                    x = mousePos.x + (width / 2);
                 }
 
-                float y = mousePos.y - spawnedTooltipRect.rect.height / 2;                
+                float y = mousePos.y - height / 2;                
 
-                if (y - spawnedTooltipRect.rect.height/2 < 0)
+                if (y - height / 2 < 0)
                 {
-                    y = spawnedTooltipRect.rect.height/2;
+                    y = height / 2;
                 }
   
                 spawnedTooltip.transform.position = new Vector3(x, y);

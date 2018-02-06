@@ -113,6 +113,73 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &6174409
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4914905680874010, guid: 0b04a6d6c30056141a8bbd6fd9b4e6fc, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 496.01746
+      objectReference: {fileID: 0}
+    - target: {fileID: 4914905680874010, guid: 0b04a6d6c30056141a8bbd6fd9b4e6fc, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 330.50598
+      objectReference: {fileID: 0}
+    - target: {fileID: 4914905680874010, guid: 0b04a6d6c30056141a8bbd6fd9b4e6fc, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4914905680874010, guid: 0b04a6d6c30056141a8bbd6fd9b4e6fc, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4914905680874010, guid: 0b04a6d6c30056141a8bbd6fd9b4e6fc, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4914905680874010, guid: 0b04a6d6c30056141a8bbd6fd9b4e6fc, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4914905680874010, guid: 0b04a6d6c30056141a8bbd6fd9b4e6fc, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4914905680874010, guid: 0b04a6d6c30056141a8bbd6fd9b4e6fc, type: 2}
+      propertyPath: m_RootOrder
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 95632211103814944, guid: 0b04a6d6c30056141a8bbd6fd9b4e6fc,
+        type: 2}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: aea3e17b4bc2d5847b0a3ce4d4f21386, type: 2}
+    - target: {fileID: 114638276081218238, guid: 0b04a6d6c30056141a8bbd6fd9b4e6fc,
+        type: 2}
+      propertyPath: stats.baseStats.armour.value
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114638276081218238, guid: 0b04a6d6c30056141a8bbd6fd9b4e6fc,
+        type: 2}
+      propertyPath: stats.baseStats.maxHealth.value
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 114638276081218238, guid: 0b04a6d6c30056141a8bbd6fd9b4e6fc,
+        type: 2}
+      propertyPath: stats.baseStats.movement.value
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114638276081218238, guid: 0b04a6d6c30056141a8bbd6fd9b4e6fc,
+        type: 2}
+      propertyPath: stats.baseStats.speed.value
+      value: 6
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 0b04a6d6c30056141a8bbd6fd9b4e6fc, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1001 &20747199
 Prefab:
   m_ObjectHideFlags: 0
@@ -1048,6 +1115,12 @@ Prefab:
       value: 
       objectReference: {fileID: 1542313980632146, guid: ea248219411f91e439f216eeedabfd42,
         type: 2}
+    - target: {fileID: 114637171243740534, guid: 29f3c2112389ac347842441ff473694d,
+        type: 2}
+      propertyPath: Amare
+      value: 
+      objectReference: {fileID: 1542313980632146, guid: 87944e7c9b1b59443b9fe19eb9b02dba,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 29f3c2112389ac347842441ff473694d, type: 2}
   m_IsPrefabParent: 0
@@ -1057,6 +1130,36 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 20747199}
   m_Script: {fileID: 11500000, guid: 00b0333ba9372b54ab3084a0a92ac5ac, type: 3}
+--- !u!21 &879116710
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Sprites/Outline
+  m_Shader: {fileID: 4800000, guid: 6ef5390d7132bd7468da1905350a05c9, type: 3}
+  m_ShaderKeywords: ETC1_EXTERNAL_ALPHA
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - PixelSnap: 0
+    - _AlphaThreshold: 0.01
+    - _IsOutlineEnabled: 0
+    - _OutlineSize: 1
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _OutlineColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &935783042 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1666058636540270, guid: fc9690e3e0fac7840815619f111928c5,
@@ -1222,40 +1325,10 @@ Prefab:
         type: 2}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 1212823950}
+      objectReference: {fileID: 879116710}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ea248219411f91e439f216eeedabfd42, type: 2}
   m_IsPrefabParent: 0
---- !u!21 &1212823950
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: Sprites/Outline
-  m_Shader: {fileID: 4800000, guid: 6ef5390d7132bd7468da1905350a05c9, type: 3}
-  m_ShaderKeywords: ETC1_EXTERNAL_ALPHA
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Floats:
-    - PixelSnap: 0
-    - _AlphaThreshold: 0.01
-    - _IsOutlineEnabled: 0
-    - _OutlineSize: 1
-    m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _OutlineColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1306889556
 GameObject:
   m_ObjectHideFlags: 0
@@ -1370,7 +1443,7 @@ Prefab:
         type: 2}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 1212823950}
+      objectReference: {fileID: 879116710}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 44292aa0d5cf05a479877f5d6fcf40f3, type: 2}
   m_IsPrefabParent: 0

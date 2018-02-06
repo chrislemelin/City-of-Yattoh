@@ -67,7 +67,6 @@ namespace Placeholdernamespace.Battle.Env
                     }
                     if( c == WALL)
                     {
-                        Position newPosition = new Position(x, y);
                         GameObject newTile = Instantiate(wall);
                         newTile.transform.position = transform.position + (x * right) + (y * up);
                         //newTile.GetComponent<Tile>().Init(newPosition, tileManager);

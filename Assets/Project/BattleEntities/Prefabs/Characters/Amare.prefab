@@ -222,7 +222,7 @@ Animator:
   m_GameObject: {fileID: 1083589137289046}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: a3b1fc54575cbd746be48b11d3b2936b, type: 2}
+  m_Controller: {fileID: 9100000, guid: f7a523a07763eb641a8635f1d46f0bfc, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -360,7 +360,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 562850e52a28c1f4f95fafc53f2f9637, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  profileImage: {fileID: 21300000, guid: d425ca8cbeb23fd4881bea5444243761, type: 3}
+  profileImage: {fileID: 21300000, guid: 2729d8a859d0cd146a1162c44a9f18ab, type: 3}
   healthBar: {fileID: 1075659018159238, guid: a0ae54a5f3f969d418b6a279f613a09d, type: 2}
   team: 0
   stats:

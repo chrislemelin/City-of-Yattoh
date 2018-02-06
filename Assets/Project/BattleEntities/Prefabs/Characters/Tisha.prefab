@@ -93,9 +93,9 @@ GameObject:
   - component: {fileID: 4914905680874010}
   - component: {fileID: 114029403163052804}
   - component: {fileID: 114638276081218238}
-  - component: {fileID: 114638451551122402}
+  - component: {fileID: 114746715654401382}
   m_Layer: 0
-  m_Name: Dadi
+  m_Name: Tisha
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -222,7 +222,7 @@ Animator:
   m_GameObject: {fileID: 1083589137289046}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: b2720547a2bed6d4cb3eb4682fd4e6c3, type: 2}
+  m_Controller: {fileID: 9100000, guid: aea3e17b4bc2d5847b0a3ce4d4f21386, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -360,25 +360,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 562850e52a28c1f4f95fafc53f2f9637, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  profileImage: {fileID: 21300000, guid: 2599ea49fee8a5b45a93e6f8232a7990, type: 3}
+  profileImage: {fileID: 21300000, guid: 67368dc22414a404eac96d2d5d127058, type: 3}
   healthBar: {fileID: 1075659018159238, guid: a0ae54a5f3f969d418b6a279f613a09d, type: 2}
   team: 0
   stats:
     baseStats:
       armour:
-        value: 1
+        value: 2
         display: 0
       inteligence:
         value: 0
         display: 0
       maxHealth:
-        value: 20
+        value: 22
         display: 0
       movement:
-        value: 5
+        value: 3
         display: 0
       speed:
-        value: 10
+        value: 6
         display: 0
       strength:
         value: 8
@@ -389,23 +389,12 @@ MonoBehaviour:
       apGain:
         value: 2
         display: 0
-  name: Dadi
+  name: Tisha
   characterAnimation: {fileID: 114139175213496152}
   charactersprite: {fileID: 1083589137289046}
-  charContainer: {fileID: 114638451551122402}
+  charContainer: {fileID: 114746715654401382}
   speed: 1
   enemyAIBasic1: {fileID: 0}
---- !u!114 &114638451551122402
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1542313980632146}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3af1fa84fcdb094ebce63954ef8f5d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114653560778829354
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -449,6 +438,17 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114746715654401382
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1542313980632146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa354f486456a154b9eb83cb5613c93d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114876492714574670
 MonoBehaviour:
   m_ObjectHideFlags: 1

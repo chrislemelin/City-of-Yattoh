@@ -31,6 +31,9 @@ namespace Placeholdernamespace.Battle
         public GameObject Bongani;
         public GameObject Lesidi;
         public GameObject Dadi;
+        public GameObject Amare;
+        public GameObject Tisha;
+
         public GameObject Player1;
         public GameObject Player2;
         public GameObject Enemy1;
@@ -43,14 +46,14 @@ namespace Placeholdernamespace.Battle
             tileManager.Init(turnManager, profile);
             GameObject BE;
 
-            BE = Instantiate(Lesidi);
-            BE.GetComponent<CharacterBoardEntity>().Init(new Position(2, 2), turnManager, tileManager, boardEntitySelector, battleCalulator);
+            //BE = Instantiate(Lesidi);
+            //BE.GetComponent<CharacterBoardEntity>().Init(new Position(2, 2), turnManager, tileManager, boardEntitySelector, battleCalulator);
 
-            BE = Instantiate(Dadi);
-            BE.GetComponent<CharacterBoardEntity>().Init(new Position(3, 3), turnManager, tileManager, boardEntitySelector, battleCalulator);
+            BE = Instantiate(Amare);
+            BE.GetComponent<CharacterBoardEntity>().Init(new Position(0, 0), turnManager, tileManager, boardEntitySelector, battleCalulator);
 
-            //BE = Instantiate(Bongani);
-            //BE.GetComponent<CharacterBoardEntity>().Init(new Position(1, 1), turnManager, tileManager, boardEntitySelector, battleCalulator);
+            BE = Instantiate(Tisha);
+            BE.GetComponent<CharacterBoardEntity>().Init(new Position(0, 1), turnManager, tileManager, boardEntitySelector, battleCalulator);
 
             //BE = Instantiate(Jaz);
             //BE.GetComponent<CharacterBoardEntity>().Init(new Position(1, 0), turnManager, tileManager, boardEntitySelector, battleCalulator);

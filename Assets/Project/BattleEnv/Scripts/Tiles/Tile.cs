@@ -1,4 +1,5 @@
 using Placeholdernamespace.Battle.Entities;
+using Placeholdernamespace.Battle.Entities.Passives;
 using Placeholdernamespace.Battle.Interaction;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace Placeholdernamespace.Battle.Env
         public  List<TileListener> TileListeners
         {
             get { return new List<TileListener>(tileListeners); }
-        }
+        }           
 
         private TileManager tileManager = null;
         public bool canRemove = false;

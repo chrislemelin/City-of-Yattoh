@@ -8,29 +8,23 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 {
     public class BuffTaunt : Buff
     {
-        private HashSet<Tile> tauntTiles = new HashSet<Tile>();
         private CharacterBoardEntity tauntedBy;
 
-        public BuffTaunt(HashSet<Tile> tauntTiles, CharacterBoardEntity tauntedBy ):base()
+        public BuffTaunt(CharacterBoardEntity tauntedBy ):base()
         {
             type = PassiveType.Debuff;
-            this.tauntTiles = tauntTiles;
             this.tauntedBy = tauntedBy;
             description = "can only move adjacent to " + tauntedBy.Name;
         }
 
         public override HashSet<Tile> GetTauntTiles()
         {
-            return tauntTiles;
-        }
-
-        public override void LeaveTile(Tile t)
-        {
-            if(!tauntTiles.Contains(t))
+            HashSet<Tile> set = new HashSet<Tile>();
+            foreach (Tile t in tileManager.GetTilesDiag(tauntedBy.Position))
             {
-                Remove();
+                set.Add(t);
             }
-            base.LeaveTile(t);
+            return set;
         }
 
 
