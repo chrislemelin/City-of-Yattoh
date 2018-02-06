@@ -164,6 +164,16 @@ namespace Placeholdernamespace.Battle.Managers
             }
         }
 
+        public void CheckEntitiesForDeath()
+        {
+            foreach(CharacterBoardEntity character in Entities)
+            {
+                if(character.Stats.GetMutableStat(StatType.Health).Value == 0)
+                {
+                    character.Die();
+                }
+            }
+        }
 
         private List<BoardEntity> ReCalcQueueHelper()
         {

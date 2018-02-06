@@ -28,7 +28,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             {
                 if (boardEntity is CharacterBoardEntity && boardEntity.Team == this.boardEntity.Team)
                 {
-                    boardEntity.AddPassive(new BuffTishaProtect((CharacterBoardEntity)boardEntity, .5f, 2));
+                    boardEntity.AddPassive(new BuffTishaProtect(this.boardEntity, .5f, 2));
                 }
             }
             base.ActionHelperNoPreview(tiles, calback);

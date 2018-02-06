@@ -164,10 +164,24 @@ namespace Placeholdernamespace.Battle.Entities
         {
             foreach(Passive p in Passives)
             {
-                
+                p.Die();
+            }
+            if(stats.GetMutableStat(StatType.Health).Value == 0 )
+            {
+                SetAnimation(AnimatorUtils.animationType.death);
+                turnManager.RemoveBoardEntity(this);
+                Core.CallbackDelay(.8f, () =>Destroy(gameObject));
             }
 
         }
+
+        private void OnDestroy()
+        {
+
+            Destroy(healthBarInstance);
+            Destroy(charactersprite);
+        }
+
 
         public void ExecutePush(Tile tile, AnimatorUtils.animationDirection direction)
         {
@@ -262,7 +276,7 @@ namespace Placeholdernamespace.Battle.Entities
         {
 
             // we gotta check to see if we just walked into a taunt, we will have to do this for stun as well
-            if (GetTauntTiles().Count != 0)
+            /*if (GetTauntTiles().Count != 0)
             {
                 HashSet<Tile> tauntTiles = GetTauntTiles();
                 for(int a = 0; a < path.Count; a++)
@@ -274,6 +288,7 @@ namespace Placeholdernamespace.Battle.Entities
                     }
                 }
             }
+            */
 
             if(path.Count > 0)
             {
@@ -476,7 +491,7 @@ namespace Placeholdernamespace.Battle.Entities
 
         public override void AddSkill(Skill skill)
         {
-            skill.Init(tileManager, this, battleCalculator);
+            skill.Init(tileManager, this, battleCalculator, turnManager);
             skills.Add(skill);
         }
 
@@ -538,6 +553,8 @@ namespace Placeholdernamespace.Battle.Entities
         }
 
         private AnimatorUtils.animationDirection? lastDirection = AnimatorUtils.animationDirection.right;
+
+
 
         public bool ChangeDirection(AnimatorUtils.animationDirection direction)
         {

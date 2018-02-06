@@ -3,6 +3,7 @@ using Placeholdernamespace.Battle.Entities.AttributeStats;
 using Placeholdernamespace.Battle.Entities.Passives;
 using Placeholdernamespace.Battle.Env;
 using Placeholdernamespace.Battle.Interaction;
+using Placeholdernamespace.Battle.Managers;
 using Placeholdernamespace.Battle.UI;
 using Placeholdernamespace.Common.Animator;
 using System;
@@ -25,6 +26,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         protected TileManager tileManager;
         protected CharacterBoardEntity boardEntity;
         protected BattleCalculator battleCalculator;
+        protected TurnManager turnManager;
         protected AnimatorUtils.animationType animationType = AnimatorUtils.animationType.attack;
         protected string flavorText;
         protected bool targetSelfTeam = false;
@@ -142,11 +144,12 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             return GetRangeInternal() == RANGE_SELF;
         }    
 
-        public void Init(TileManager tileManager, CharacterBoardEntity boardEntity, BattleCalculator battleCalculator)
+        public void Init(TileManager tileManager, CharacterBoardEntity boardEntity, BattleCalculator battleCalculator, TurnManager turnManager)
         {
             this.tileManager = tileManager;
             this.boardEntity = boardEntity;
             this.battleCalculator = battleCalculator;
+            this.turnManager = turnManager;
         }
 
         public void StartTurn()
@@ -345,7 +348,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
                 passive.ExecutedSkill(this, report);
             }
             skillModifiers = new List<SkillModifier>();
-            
+            turnManager.CheckEntitiesForDeath();
 
             DoCallback(callback);
         }
@@ -368,7 +371,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
         public virtual bool IsActive()
         {
-            return CanAffortAPCost() && currentCoolDown == 0;
+            return CanAffortAPCost() && currentCoolDown == 0 && !PathOnClick.pause;
         }
 
         public SkillReport TheoreticalAction(Tile t)

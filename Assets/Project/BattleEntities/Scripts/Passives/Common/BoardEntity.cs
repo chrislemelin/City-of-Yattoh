@@ -28,7 +28,8 @@ namespace Placeholdernamespace.Battle.Entities
         }
 
         [SerializeField]
-        private GameObject healthBar;
+        protected GameObject healthBar;
+        protected GameObject healthBarInstance;
 
         [SerializeField]
         protected Team team;
@@ -99,11 +100,11 @@ namespace Placeholdernamespace.Battle.Entities
 
         public virtual void Init(Position startingPosition, TurnManager turnManager, TileManager tileManager, BoardEntitySelector boardEntitySelector, BattleCalculator battleCalculator)
         {
-            healthBar = Instantiate(healthBar);
-            healthBar.transform.SetParent(FindObjectOfType<Canvas>().gameObject.transform);
-            healthBar.GetComponent<UIFollow>().target = gameObject;
-            healthBar.transform.SetAsFirstSibling();
-            healthBar.transform.position = new Vector3(100000, 100000);
+            healthBarInstance = Instantiate(healthBar);
+            healthBarInstance.transform.SetParent(FindObjectOfType<Canvas>().gameObject.transform);
+            healthBarInstance.GetComponent<UIFollow>().target = gameObject;
+            healthBarInstance.transform.SetAsFirstSibling();
+            healthBarInstance.transform.position = new Vector3(100000, 100000);
 
             this.turnManager = turnManager;
             this.tileManager = tileManager;
@@ -130,10 +131,10 @@ namespace Placeholdernamespace.Battle.Entities
 
         public void UpdateUi()
         {
-            if (healthBar != null)
+            if (healthBarInstance != null)
             {
                 float newHealth = (float)Stats.GetMutableStat(StatType.Health).Value / (float)Stats.GetStatInstance().getValue(StatType.Health);
-                healthBar.GetComponent<UIBar>().SetValue(newHealth);
+                healthBarInstance.GetComponent<UIBar>().SetValue(newHealth);
             }
         }
 

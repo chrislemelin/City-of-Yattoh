@@ -23,7 +23,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         {
             if(IsActive())
             {
-                if (lastReturn.type > TakeDamageReturnType.Reflect)
+                if (lastReturn.type < TakeDamageReturnType.Reflect)
                 {
                     return new TakeDamageReturn() { type = TakeDamageReturnType.Reflect, value = value };
                 }
@@ -33,10 +33,10 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         private bool IsActive()
         {
-            List<Tile> tiles = tileManager.GetTilesDiag(boardEntity.Position, 1);
+            List<Tile> tiles = tileManager.GetTilesDiag(character.Position, 1);
             foreach(Tile t in tiles)
             {
-                if(t.BoardEntity == boardEntity)
+                if(t.BoardEntity == boardEntity || t.BoardEntity == character)
                 {
                     return true;
                 }

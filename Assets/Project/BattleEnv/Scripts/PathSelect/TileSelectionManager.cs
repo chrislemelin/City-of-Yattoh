@@ -10,7 +10,8 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace Placeholdernamespace.Battle.Interaction
 {
-    public class TileSelectionManager : MonoBehaviour
+    public class 
+        TileSelectionManager : MonoBehaviour
     {
         private Profile profile;
         private Dictionary<Tile, TileSelectOption> possibleTiles = new Dictionary<Tile, TileSelectOption>();

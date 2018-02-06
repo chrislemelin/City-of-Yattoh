@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Placeholdernamespace.Battle.Managers;
 
 namespace Placeholdernamespace.Battle.Interaction
 {
@@ -24,11 +25,14 @@ namespace Placeholdernamespace.Battle.Interaction
         private GameObject skillOptionContainer;
 
         private List<GameObject> skillButtons = new List<GameObject>();
+        private Dictionary<Button, Func<bool>> buttonToActive = new Dictionary<Button, Func<bool>>();
+
         private List<Skill> skills;
         private Skill selectedSkill;
         private Action skillSelected;
         private Profile profile;
         private GameObject cancelButton;
+        private TurnManager turnManager;
 
         public Skill SelectedSkill
         {
@@ -39,12 +43,13 @@ namespace Placeholdernamespace.Battle.Interaction
         private Action selectionCancel;
         private Func<BoardEntity> getHoverEntity;
 
-        public void Init(TileSelectionManager tileSelectionManager, Action selectionCancel, Func<BoardEntity> getHoverEntity, Profile profile)
+        public void Init(TileSelectionManager tileSelectionManager, Action selectionCancel, Func<BoardEntity> getHoverEntity, Profile profile, TurnManager turnManager)
         {
             this.tileSelectionManager = tileSelectionManager;
             this.selectionCancel = selectionCancel;
             this.profile = profile;
             this.getHoverEntity = getHoverEntity;
+            this.turnManager = turnManager;
         }
 
         public void SetBoardEntity(CharacterBoardEntity boardEntity)
@@ -62,6 +67,7 @@ namespace Placeholdernamespace.Battle.Interaction
             {
                 buildSkillButton(skill);
             }
+            buildEndTurnButton();
 
         }
 
@@ -110,30 +116,58 @@ namespace Placeholdernamespace.Battle.Interaction
 
         private GameObject buildSkillButton(Skill skill)
         {
-            bool interactable = skill.IsActive();
             GameObject skillButton = buildSkillButton(skill.GetTitle(), () => { SetSelectedSkill(skill); }, skill.GetDescription, 
-                skill.GetFlavorText, interactable);
+                skill.GetFlavorText, skill.IsActive);
             return skillButton;
         }
 
         private void buildCancelSkillButton()
         {
-            cancelButton = buildSkillButton("Cancel", () => { tileSelectionManager.CancelSelection(); ExecuteSkill(null); },() => { return null; },
-                () => { return null; });
+            cancelButton = buildSkillButton("Cancel", () => { tileSelectionManager.CancelSelection(); ExecuteSkill(null); }, returnNull,
+                returnNull, defaultActive, Color.white);
         }
 
-        private GameObject buildSkillButton(string title, Action onClick, Func<String> getDescription,
-            Func<string>getFlavorText, bool interactable = true)
+        private void buildEndTurnButton()
+        {
+            cancelButton = buildSkillButton("End Turn", turnManager.NextTurn, returnNull,
+              returnNull, defaultActive, Color.white);
+        }
+
+        private bool defaultActive()
+        {
+            return !PathOnClick.pause;
+        }
+
+        private string returnNull()
+        {
+            return null;
+        }
+
+        private GameObject buildSkillButton(string title, Action onClick, Func<String> getDescription ,
+            Func<string> getFlavorText, Func<bool> active, Color? color = null)
         {
             GameObject skillButton = Instantiate(skillOptionButton);
             skillButton.GetComponent<TooltipSpawner>().Init(() => { return null; }, getDescription, getFlavorText);
-            skillButton.GetComponent<Button>().interactable = interactable;
+            skillButton.GetComponent<Button>().interactable = active();            
             skillButton.GetComponentInChildren<TextMeshProUGUI>().text = title;
             skillButton.transform.SetParent(skillOptionContainer.transform, false);
-            skillButton.GetComponent<Button>().onClick.AddListener(() => onClick());
+            skillButton.GetComponent<Button>().onClick.AddListener(() => onClick());   
+            buttonToActive.Add(skillButton.GetComponent<Button>(), active);
             skillButtons.Add(skillButton);
+            if (color != null)
+            {                
+                skillButton.GetComponent<Image>().color = (Color)color;
+            }
             skillButton.SetActive(true);
             return skillButton;
+        }
+
+        private void OnGUI()
+        {
+            foreach(KeyValuePair<Button, Func<bool>> value in buttonToActive)
+            {
+                value.Key.interactable = value.Value();
+            }
         }
 
         private void ExecuteSkill(TileSelectOption tile)
@@ -163,6 +197,7 @@ namespace Placeholdernamespace.Battle.Interaction
             {
                 Destroy(g);
             }
+            buttonToActive.Clear();
             skillButtons.Clear();
             cancelButton = null;
         }

@@ -35,6 +35,9 @@ namespace Placeholdernamespace.Battle.Interaction
         [SerializeField]
         private Color hoverColor;
 
+        [SerializeField]
+        private TurnManager turnManager;
+
         private BoardEntity selectedBoardEntity;
         public BoardEntity SelectedBoardEntity
         {
@@ -48,7 +51,7 @@ namespace Placeholdernamespace.Battle.Interaction
         {
             tileSelectionManager.Init(profile);
             skillSelector.Init(tileSelectionManager, () => { setSelectedBoardEntity(selectedBoardEntity); buildMoveOptions(); } ,
-                getHoverEntity, profile);
+                getHoverEntity, profile, turnManager);
         }
 
         public void setSelectedBoardEntity(BoardEntity boardEntity)
