@@ -20,10 +20,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4914905680874010}
   - component: {fileID: 114249362209101460}
-  - component: {fileID: 114785801429616296}
   - component: {fileID: 114393733064351964}
+  - component: {fileID: 114782030445776876}
   m_Layer: 0
-  m_Name: EnemyBoard
+  m_Name: EnemySpeedy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -222,7 +222,7 @@ Animator:
   m_GameObject: {fileID: 1624195209641910}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 879567fe950a8fd42a0e78a84ce44ac0, type: 2}
+  m_Controller: {fileID: 9100000, guid: 355f9201e11d8134ba3874e4c60e1c7c, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -322,7 +322,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ffb99f67b59661428a4cf4257aeb964, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterBoardEntity: {fileID: 114785801429616296}
+  characterBoardEntity: {fileID: 114782030445776876}
 --- !u!114 &114589942358633666
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -361,7 +361,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ffb99f67b59661428a4cf4257aeb964, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterBoardEntity: {fileID: 114785801429616296}
+  characterBoardEntity: {fileID: 0}
 --- !u!114 &114653560778829354
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -378,7 +378,7 @@ MonoBehaviour:
   _glowColor: {r: 2, g: 0, b: 1.7793102, a: 1}
   _outlineWidth: 10
   _alphaThreshold: 0
---- !u!114 &114785801429616296
+--- !u!114 &114782030445776876
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -386,7 +386,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1542313980632146}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9275d3059f60e114b8e6048874f25b46, type: 3}
+  m_Script: {fileID: 11500000, guid: 562850e52a28c1f4f95fafc53f2f9637, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   profileImage: {fileID: 21300000, guid: 9dd65b2a7099b464ba0c17ad5ab99114, type: 3}
@@ -395,22 +395,22 @@ MonoBehaviour:
   stats:
     baseStats:
       armour:
-        value: 1
+        value: 0
         display: 0
       inteligence:
         value: 0
         display: 0
       maxHealth:
-        value: 10
+        value: 14
         display: 0
       movement:
         value: 6
         display: 0
       speed:
-        value: 3
+        value: 12
         display: 0
       strength:
-        value: 6
+        value: 5
         display: 0
       ap:
         value: 2
@@ -418,7 +418,7 @@ MonoBehaviour:
       apGain:
         value: 8
         display: 0
-  name: Enemy 1
+  name: Enemy Speedy
   characterAnimation: {fileID: 114151050746152352}
   charactersprite: {fileID: 1624195209641910}
   charContainer: {fileID: 0}

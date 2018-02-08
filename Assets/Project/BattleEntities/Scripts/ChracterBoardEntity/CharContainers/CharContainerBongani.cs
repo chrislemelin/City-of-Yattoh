@@ -9,13 +9,14 @@ namespace Placeholdernamespace.Battle.Entities.Instances
 
     public class CharContainerBongani : CharContainer
     {
-        public override void Init(CharacterBoardEntity character)
+
+        public CharContainerBongani()
         {
-            character.AddPassive(new PassiveBongani());
-            character.AddPassive(new TalentBongani2());
-            character.AddPassive(new TalentTriggerBongani2());
-            character.AddSkill(new SkillBongani3());
-            character.AddSkill(new SkillBongani2());
+            talent = new TalentBongani2();
+            talentTrigger = new TalentTriggerBongani();
+            passive = new PassiveBongani();
+            skills.Add(new SkillBongani1());
+            skills.Add(new SkillBongani2());
         }
     
     }

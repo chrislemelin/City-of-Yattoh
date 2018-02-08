@@ -10,15 +10,14 @@ namespace Placeholdernamespace.Battle.Entities.Instances
     public class CharContainerDadi : CharContainer
     {
 
-        public override void Init(CharacterBoardEntity character)
-        {
-            
-            character.AddPassive(new TalentTriggerDadi());
-            character.AddPassive(new PassiveDadi());
-            character.AddPassive(new TalentDadi());
-            character.AddSkill(new SkillDadi1());
-            character.AddSkill(new SkillDadi2());
 
+        public CharContainerDadi()
+        {
+            talent = new TalentDadi();
+            talentTrigger = new TalentTriggerDadi();
+            passive = new PassiveDadi();
+            skills.Add(new SkillDadi1());
+            skills.Add(new SkillDadi2());
         }
     }
 }

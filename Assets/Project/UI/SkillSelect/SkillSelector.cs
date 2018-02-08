@@ -129,7 +129,7 @@ namespace Placeholdernamespace.Battle.Interaction
 
         private void buildEndTurnButton()
         {
-            cancelButton = buildSkillButton("End Turn", turnManager.NextTurn, returnNull,
+            cancelButton = buildSkillButton("End Turn", boardEntity.EndMyTurn, returnNull,
               returnNull, defaultActive, Color.white);
         }
 

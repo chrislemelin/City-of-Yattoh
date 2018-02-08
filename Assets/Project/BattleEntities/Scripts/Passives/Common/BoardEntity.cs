@@ -12,6 +12,7 @@ using Placeholdernamespace.Battle.Entities.Skills;
 using Placeholdernamespace.Battle.Calculator;
 using UnityEngine.UI;
 using Placeholdernamespace.Battle.Entities.Passives;
+using Placeholdernamespace.Battle.Entities.Kas;
 
 namespace Placeholdernamespace.Battle.Entities
 {
@@ -38,11 +39,7 @@ namespace Placeholdernamespace.Battle.Entities
             get { return team; }
         }
 
-        protected List<Skill> skills = new List<Skill>();
-        public List<Skill> Skills
-        {
-            get { return skills; }
-        }
+   
 
         protected BoardEntitySelector boardEntitySelector;
         bool isInit = false;
@@ -98,7 +95,8 @@ namespace Placeholdernamespace.Battle.Entities
 
         protected BattleCalculator  battleCalculator;
 
-        public virtual void Init(Position startingPosition, TurnManager turnManager, TileManager tileManager, BoardEntitySelector boardEntitySelector, BattleCalculator battleCalculator)
+        public virtual void Init(Position startingPosition, TurnManager turnManager, TileManager tileManager, BoardEntitySelector boardEntitySelector, 
+            BattleCalculator battleCalculator, Ka ka = null)
         {
             healthBarInstance = Instantiate(healthBar);
             healthBarInstance.transform.SetParent(FindObjectOfType<Canvas>().gameObject.transform);

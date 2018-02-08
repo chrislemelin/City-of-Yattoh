@@ -16,6 +16,8 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             title = "Battle Cry";
             description = "Give all alies one armour for each adjacent enemy";
             range = RANGE_SELF;
+            coolDown = 3;
+            apCost = 2;
         }
 
         protected override SkillReport ActionHelper(List<Tile> t)

@@ -8,19 +8,15 @@ namespace Placeholdernamespace.Battle.Entities.Instances
 {
     public class CharContainerJaz : CharContainer {
 
-        public override void Init(CharacterBoardEntity character)
+        public CharContainerJaz()
         {
-            character.setRange(4);
-
-            character.AddPassive(new PassivePiercingJaz());
-            character.AddPassive(new TalentJaz());
-            character.AddPassive(new TalentTriggerJaz());
-
-            character.AddSkill(new SkillJaz1());
-            character.AddSkill(new SkillJaz2());
+            range = 4;
+            talent = new TalentJaz();
+            talentTrigger = new TalentTriggerJaz();
+            passive = new PassivePiercingJaz();
+            skills.Add(new SkillJaz1());
+            skills.Add(new SkillJaz2());
         }
-
-
 
     }
 }

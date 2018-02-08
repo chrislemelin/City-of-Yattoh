@@ -1,6 +1,7 @@
 ﻿using Placeholdernamespace.Battle;
 using Placeholdernamespace.Battle.Calculator;
 using Placeholdernamespace.Battle.Entities;
+using Placeholdernamespace.Battle.Entities.Kas;
 using Placeholdernamespace.Battle.Env;
 using Placeholdernamespace.Battle.Interaction;
 using Placeholdernamespace.Battle.Managers;
@@ -34,9 +35,10 @@ namespace Placeholdernamespace.Battle
         public GameObject Amare;
         public GameObject Tisha;
 
-        public GameObject Player1;
-        public GameObject Player2;
-        public GameObject Enemy1;
+        public GameObject EnemyTank;
+        public GameObject EnemyRanged;
+        public GameObject EnemyBalanced;
+        public GameObject EnemySpeedy;
 
         // Use this for initialization
         void Start()
@@ -46,31 +48,26 @@ namespace Placeholdernamespace.Battle
             tileManager.Init(turnManager, profile);
             GameObject BE;
 
-            //BE = Instantiate(Lesidi);
-            //BE.GetComponent<CharacterBoardEntity>().Init(new Position(2, 2), turnManager, tileManager, boardEntitySelector, battleCalulator);
+            MakeCharacter(Amare, new Position(0, 0));
+            MakeCharacter(Tisha, new Position(0, 1));
+            MakeCharacter(Lesidi, new Position(1, 0));
+            MakeCharacter(Jaz, new Position(1, 1));
 
-            BE = Instantiate(Amare);
-            BE.GetComponent<CharacterBoardEntity>().Init(new Position(0, 0), turnManager, tileManager, boardEntitySelector, battleCalulator);
-
-            BE = Instantiate(Tisha);
-            BE.GetComponent<CharacterBoardEntity>().Init(new Position(0, 1), turnManager, tileManager, boardEntitySelector, battleCalulator);
-
-            //BE = Instantiate(Jaz);
-            //BE.GetComponent<CharacterBoardEntity>().Init(new Position(1, 0), turnManager, tileManager, boardEntitySelector, battleCalulator);
-
-            BE = Instantiate(Enemy1);
-            BE.GetComponent<CharacterBoardEntity>().Init(new Position(4, 4), turnManager, tileManager, boardEntitySelector, battleCalulator);
-
-            BE = Instantiate(Enemy1);
-            BE.GetComponent<CharacterBoardEntity>().Init(new Position(3, 4), turnManager, tileManager, boardEntitySelector, battleCalulator);
-
-            BE = Instantiate(Enemy1);
-            BE.GetComponent<CharacterBoardEntity>().Init(new Position(4, 3), turnManager, tileManager, boardEntitySelector, battleCalulator);
+            MakeCharacter(EnemyRanged, new Position(5, 5));
+            MakeCharacter(EnemySpeedy, new Position(6, 4));
+            MakeCharacter(EnemyTank, new Position(4, 6));
+            MakeCharacter(EnemyBalanced, new Position(7, 3));
 
             turnManager.init(boardEntitySelector, tileSelectionManager);
             turnManager.ReCalcQueue();
             turnManager.startGame();
 
+        }
+
+        private void MakeCharacter(GameObject character, Position position, Ka ka = null)
+        {
+            GameObject BE = Instantiate(character);
+            BE.GetComponent<CharacterBoardEntity>().Init(position, turnManager, tileManager, boardEntitySelector, battleCalulator, ka);
         }
     }
 }

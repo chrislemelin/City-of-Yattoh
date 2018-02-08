@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Placeholdernamespace.Battle.Entities.Passives;
 using Placeholdernamespace.Battle.Entities.Skills;
+using Placeholdernamespace.Battle.Entities.Kas;
 
 namespace Placeholdernamespace.Battle.Entities
 { 
@@ -23,7 +24,7 @@ namespace Placeholdernamespace.Battle.Entities
             throw new NotImplementedException();
         }
 
-        public override void Init(Position startingPosition, TurnManager turnManager, TileManager tileManager, BoardEntitySelector boardEntitySelector, BattleCalculator battleCalculator)
+        public override void Init(Position startingPosition, TurnManager turnManager, TileManager tileManager, BoardEntitySelector boardEntitySelector, BattleCalculator battleCalculator, Ka ka = null)
         {
             base.Init(startingPosition, turnManager, tileManager, boardEntitySelector, battleCalculator);
         }

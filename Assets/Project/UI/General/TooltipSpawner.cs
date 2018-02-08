@@ -47,8 +47,8 @@ namespace Placeholdernamespace.Common.UI
                 && hover 
                 && (Time.time - enterTime)
                 > waitTime 
-                && (getDescription() != null 
-                || getTitle() != null))
+                && (getDescription != null 
+                || getTitle != null))
             {
                 spawnedTooltip = Instantiate(tooltip);
                 spawnedTooltip.GetComponent<Tooltip>().setDescription(getDescription());
@@ -102,8 +102,8 @@ namespace Placeholdernamespace.Common.UI
             else
             {
                 this.getFlavorText = () => { return null; };
-            }
-            this.getDescription = getDescription;
+            }            
+            this.getDescription = getDescription;          
             this.getTitle = getTitle;
         }
 

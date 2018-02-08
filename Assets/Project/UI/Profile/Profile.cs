@@ -32,7 +32,7 @@ namespace Placeholdernamespace.Battle.UI
         [SerializeField]
         private Color negColor = Color.red;
 
-        private List<StatType> displayOrder = new List<StatType>() { StatType.Health, StatType.AP, StatType.Movement, StatType.Strength, StatType.Armour, StatType.Speed, StatType.Inteligence };
+        private List<StatType> displayOrder = new List<StatType>() { StatType.Health, StatType.AP, StatType.Movement, StatType.Strength, StatType.Armour, StatType.Speed };
 
         private List<GameObject> texts = new List<GameObject>();
         private List<GameObject> passives = new List<GameObject>();
@@ -150,8 +150,26 @@ namespace Placeholdernamespace.Battle.UI
                 }
                 AddText(text, Stats.StatTypeToTooltip(type));
             }
+            AddRangeText(boardEntity);
         }
         
+        private void AddRangeText(BoardEntity boardEntity)
+        {
+            string rangeText;
+            if(boardEntity is CharacterBoardEntity)
+            {
+                if(((CharacterBoardEntity)boardEntity).Range == Skill.RANGE_ADJACENT)
+                {
+                    AddText("Range: ADJACENT",null);
+                }
+                else
+                {
+                    AddText("Range: " + ((CharacterBoardEntity)boardEntity).Range, null);
+                }
+            }
+        }
+
+
         private Color? GetStatChangeColor(BoardEntity boardEntity, Stats previewStats, StatType type)
         {
             int before = boardEntity.Stats.GetDefaultStat(type).Value;

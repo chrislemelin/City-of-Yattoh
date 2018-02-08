@@ -9,14 +9,13 @@ namespace Placeholdernamespace.Battle.Entities.Instances
 
     public class CharContainerAmare : CharContainer
     {
-        public override void Init(CharacterBoardEntity character)
+        public CharContainerAmare()
         {
-            character.AddPassive(new PassiveAmare());
-            character.AddPassive(new TalentAmare());
-            character.AddPassive(new TalentTriggerAmare());
-
-            character.AddSkill(new SkillAmare1());
-            character.AddSkill(new SkillAmare2());
+            talent = new TalentAmare();
+            talentTrigger = new TalentTriggerAmare();
+            passive = new PassiveAmare();
+            skills.Add(new SkillAmare1());
+            skills.Add(new SkillAmare2());
         }
     }
 }

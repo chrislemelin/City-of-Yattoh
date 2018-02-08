@@ -170,7 +170,7 @@ namespace Placeholdernamespace.Battle.Interaction
                     
                     tileSelectionManager.SelectTile(selectedBoardEntity, options, sendMoveToBoardEntity, isMovement:true);               
                     skillSelector.SetBoardEntity((CharacterBoardEntity)selectedBoardEntity);
-                    skillSelector.SetSkills(selectedBoardEntity.Skills);
+                    skillSelector.SetSkills(((CharacterBoardEntity)selectedBoardEntity).Skills);
                 }
                 else
                 {

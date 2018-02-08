@@ -15,6 +15,8 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             title = "Guard Up";
             description = "Mitigate half damage taken by self and allies adjacent and return it back if the target is also adjacent";
             range = RANGE_SELF;
+            coolDown = 5;
+            apCost = 1;
         }
 
         protected override SkillReport ActionHelper(List<Tile> t)

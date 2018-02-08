@@ -9,17 +9,15 @@ namespace Placeholdernamespace.Battle.Entities.Instances
 
     public class CharContainerLesidi : CharContainer
     {
-
-        // Use this for initialization
-        public override void Init(CharacterBoardEntity character)
+        public CharContainerLesidi()
         {
-            character.setRange(4);
-
-            character.AddPassive(new PassiveLesidi());
-            character.AddPassive(new TalentTriggerLesidi());
-            character.AddPassive(new TalentLesidi());
-            character.AddSkill(new SkillLesidi1());
-            character.AddSkill(new SkillLesidi2());
+            range = 3;
+            talent = new TalentLesidi();
+            talentTrigger = new TalentTriggerLesidi();
+            passive = new PassiveLesidi();
+            skills.Add(new SkillLesidi1());
+            skills.Add(new SkillLesidi2());
         }
+    
     }
 }

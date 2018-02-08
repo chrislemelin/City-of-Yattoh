@@ -16,6 +16,7 @@ using Placeholdernamespace.Battle.Entities.AI;
 using Placeholdernamespace.Common.Animator;
 using Placeholdernamespace.Battle.Entities.Instances;
 using Placeholdernamespace.Common.UI;
+using Placeholdernamespace.Battle.Entities.Kas;
 
 namespace Placeholdernamespace.Battle.Entities
 {
@@ -27,6 +28,13 @@ namespace Placeholdernamespace.Battle.Entities
         protected GameObject charactersprite;
         [SerializeField]
         protected CharContainer charContainer;
+
+        protected Ka ka;
+        public Ka Ka
+        {
+            get { return ka; }
+        }
+       
 
         private static List<CharacterBoardEntity> allCharacterBoardEntities = new List<CharacterBoardEntity>();
         public static List<CharacterBoardEntity> AllCharacterBoardEntities
@@ -56,7 +64,24 @@ namespace Placeholdernamespace.Battle.Entities
         protected List<Passive> passives = new List<Passive>();
         public List<Passive> Passives
         {
-            get { return new List<Passive>(passives); }
+            get {
+                List<Passive> returnPassives = new List<Passive>(passives);
+                if(ka != null)
+                    returnPassives.AddRange(ka.Passives);
+                return returnPassives;
+            }
+        }
+
+        protected List<Skill> skills = new List<Skill>();
+        public List<Skill> Skills
+        {
+            get
+            {
+                List<Skill> returnSkills = new List<Skill>(skills);
+                if (ka != null)
+                    returnSkills.AddRange(ka.Skills);
+                return returnSkills;
+            }
         }
 
         protected List<Talent> talents = new List<Talent>();
@@ -87,7 +112,8 @@ namespace Placeholdernamespace.Battle.Entities
         private Action<bool> moveDoneCallback;
 
 
-        public override void Init(Position startingPosition, TurnManager turnManager, TileManager tileManager, BoardEntitySelector boardEntitySelector, BattleCalculator battleCalculator)
+        public override void Init(Position startingPosition, TurnManager turnManager, TileManager tileManager, 
+            BoardEntitySelector boardEntitySelector, BattleCalculator battleCalculator, Ka ka = null)
         {
             base.Init(startingPosition, turnManager, tileManager, boardEntitySelector, battleCalculator);
 
@@ -109,16 +135,15 @@ namespace Placeholdernamespace.Battle.Entities
                 charContainer.Init(this);
             }
             floatingTextGenerator = GetComponent<FloatingTextGenerator>();
-            /*
-            basicAttack = new BasicAttack(tileManager, this, battleCalculator);
-            skills.Add(basicAttack);
-            basicAttack = new BasicAttack(tileManager, this, battleCalculator);
-            skills.Add(basicAttack);
-            basicAttack = new BasicAttack(tileManager, this, battleCalculator);
-            skills.Add(basicAttack);
-            basicAttack = new BasicAttack(tileManager, this, battleCalculator);
-            skills.Add(basicAttack);
-           */
+            ka = this.ka;
+            if(ka != null)
+            {
+                ka.Init(this);
+            }
+            foreach(Passive p in Passives)
+            {
+                p.StartBattle();
+            }
 
         }
 
@@ -170,6 +195,7 @@ namespace Placeholdernamespace.Battle.Entities
             {
                 SetAnimation(AnimatorUtils.animationType.death);
                 turnManager.RemoveBoardEntity(this);
+                GetTile().SetBoardEntity(null);
                 Core.CallbackDelay(.8f, () =>Destroy(gameObject));
             }
 
@@ -362,7 +388,7 @@ namespace Placeholdernamespace.Battle.Entities
         public void SetUpMyTurn()
         {
             stats.NewTurn();
-            foreach (Skill skill in skills)
+            foreach (Skill skill in Skills)
             {
                 skill.StartTurn();
             }
@@ -410,7 +436,7 @@ namespace Placeholdernamespace.Battle.Entities
 
         public void ReduceCooldowns()
         {
-            foreach(Skill skill in skills)
+            foreach(Skill skill in Skills)
             {
                 skill.ReduceCooldowns();
             }
@@ -479,7 +505,7 @@ namespace Placeholdernamespace.Battle.Entities
 
         public bool HasPassiveType(PassiveType type)
         {
-            foreach (Passive p in passives)
+            foreach (Passive p in Passives)
             {
                 if(p.Type == type)
                 {
@@ -498,7 +524,7 @@ namespace Placeholdernamespace.Battle.Entities
         protected bool AddBuff(Buff buff)
         {
             buff.Init(passives.Remove);
-            foreach(Passive p in passives)
+            foreach(Passive p in Passives)
             {
                 if(buff.GetType() == p.GetType())
                 {

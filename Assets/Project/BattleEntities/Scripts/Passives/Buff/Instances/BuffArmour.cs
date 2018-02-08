@@ -13,7 +13,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         public BuffArmour(int value, int stacks): base(stacks)
         {
             description = "add " + value + " to armour";
-            statModifiers = new List<StatModifier>() { new StatModifier(StatType.Health, StatModifierType.Add, value)};
+            statModifiers = new List<StatModifier>() { new StatModifier(StatType.Armour, StatModifierType.Add, value)};
         }
 
 

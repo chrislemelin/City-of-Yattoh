@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Placeholdernamespace.Battle.Entities.Passives
 {
-    public class TalentTriggerLesidi : Passive
+    public class TalentTriggerLesidi : TalentTrigger
     {
 
         bool trigger = false;
@@ -18,7 +18,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         {
             if(trigger)
             {
-                boardEntity.TriggerTalents();
+                Trigger();
             }
             trigger = false;
         }

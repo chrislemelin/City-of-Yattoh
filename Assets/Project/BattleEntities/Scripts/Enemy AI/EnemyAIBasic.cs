@@ -77,9 +77,11 @@ namespace Placeholdernamespace.Battle.Entities.AI
 
                 }
 
-                int movementScore = tileManager.DFS(m.destination.Position, targetPosition, characterBoardEntity.Team).Count;
+                float distance = targetPosition.GetDistance(m.destination.Position);
+                
+                int movementScore = m.path.Count;
    
-                AiMove aiMove = new AiMove(int.MaxValue, movementScore);
+                AiMove aiMove = new AiMove(int.MaxValue, (int)distance);
                 if(m.destination != characterBoardEntity.GetTile())
                 {
                     aiMove.AddMoveAction(characterBoardEntity, m, DoNextAction);
@@ -91,7 +93,7 @@ namespace Placeholdernamespace.Battle.Entities.AI
                     if(t.BoardEntity != null)
                     {
                         // must attack the raged target if there is one
-                        if (ragedBy == null || ragedBy == t.BoardEntity && !((CharacterBoardEntity)t.BoardEntity).IsStealthed())
+                        if ((ragedBy == null || ragedBy == t.BoardEntity) && !((CharacterBoardEntity)t.BoardEntity).IsStealthed())
                         {
                             aiMove = new AiMove(targetScore(t.BoardEntity), 0);
                             if (m.destination != characterBoardEntity.GetTile())
