@@ -12,7 +12,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         [SerializeField]
         public float damagePercentage = .1f;
 
-        public TalentTriggerJaz(): base()
+        public TalentTriggerJaz()
         {
             description = "TALEN TRIGGER: When you take off " + (damagePercentage * 100) + "% damage in a single hit, trigger TALENT";
         }

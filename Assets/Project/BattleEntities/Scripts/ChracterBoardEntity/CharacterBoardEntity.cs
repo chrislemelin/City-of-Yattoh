@@ -29,6 +29,13 @@ namespace Placeholdernamespace.Battle.Entities
         [SerializeField]
         protected CharContainer charContainer;
 
+        [SerializeField]
+        protected CharacterType characterType;
+        public CharacterType CharcaterType
+        {
+            get { return characterType; }
+        }
+
         protected Ka ka;
         public Ka Ka
         {
@@ -218,7 +225,9 @@ namespace Placeholdernamespace.Battle.Entities
             SetAnimationDirection(direction);
             SetAnimation(AnimatorUtils.animationType.damage);
             
-            path.Add(tile);            
+            path.Add(tile);
+            GetTile().SetBoardEntity(null);
+            tile.SetBoardEntity(this);
             ChangeTarget();
         }
 
@@ -278,6 +287,7 @@ namespace Placeholdernamespace.Battle.Entities
             path.Clear();
             interupted = true;
             interuptClearMovement = true;
+          
         }
 
         private void checkAtTarget()
@@ -357,12 +367,15 @@ namespace Placeholdernamespace.Battle.Entities
                 OutlineOnHover.disabled = false;
                 if (moveDoneCallback != null)
                 {
-                    if(characterAnimation != null)
+                    Action<bool> tempMoveDoneCallback = moveDoneCallback;
+                    moveDoneCallback = null;
+                    if (characterAnimation != null)
                     {
                         characterAnimation.OnButtonClick(0);
                     }
-                    moveDoneCallback(interupted);
+                    tempMoveDoneCallback(interupted);
                 }
+                
                 if (charging)
                 {
                     Position targetTile = position + direction;

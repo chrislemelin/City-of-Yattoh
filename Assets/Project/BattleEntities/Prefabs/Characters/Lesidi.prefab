@@ -383,7 +383,7 @@ MonoBehaviour:
         value: 0
         display: 0
       maxHealth:
-        value: 1
+        value: 13
         display: 0
       movement:
         value: 4
@@ -404,6 +404,7 @@ MonoBehaviour:
   characterAnimation: {fileID: 114139175213496152}
   charactersprite: {fileID: 1083589137289046}
   charContainer: {fileID: 114246899739308330}
+  characterType: 2
   speed: 1
   enemyAIBasic1: {fileID: 0}
 --- !u!114 &114653560778829354

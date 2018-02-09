@@ -13,10 +13,10 @@ namespace Placeholdernamespace.Battle.Entities.Instances
         public CharContainerBongani()
         {
             talent = new TalentBongani2();
-            talentTrigger = new TalentTriggerBongani();
+            talentTrigger = new TalentTriggerBongani2();
             passive = new PassiveBongani();
-            skills.Add(new SkillBongani1());
             skills.Add(new SkillBongani2());
+            skills.Add(new SkillBongani3());
         }
     
     }

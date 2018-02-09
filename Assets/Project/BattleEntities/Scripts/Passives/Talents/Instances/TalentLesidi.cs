@@ -7,6 +7,11 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 {
     public class TalentLesidi : Talent
     {
+        public TalentLesidi()
+        {
+            description = "TALENT reduces cooldown of self and adjacent allies";
+        }
+
         public override void Activate()
         {
             List<BoardEntity> enitites = tileManager.GetBoardEntityDiag(boardEntity.GetTile().Position, 1);

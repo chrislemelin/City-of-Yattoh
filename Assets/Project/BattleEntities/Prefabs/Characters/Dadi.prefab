@@ -393,6 +393,7 @@ MonoBehaviour:
   characterAnimation: {fileID: 114139175213496152}
   charactersprite: {fileID: 1083589137289046}
   charContainer: {fileID: 114638451551122402}
+  characterType: 5
   speed: 1
   enemyAIBasic1: {fileID: 0}
 --- !u!114 &114638451551122402

@@ -9,6 +9,12 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
     public class TalentTriggerBongani : TalentTrigger
     {
+
+        public TalentTriggerBongani()
+        {
+            description = "TALENT Apply a -1 strength debuff on all adjacent allies";
+        }
+
         public override void AboutToExecuteAction(Skill skill, List<Tile> tiles)
         {
             if(skill is BasicAttack)

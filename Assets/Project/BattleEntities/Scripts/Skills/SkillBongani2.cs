@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Placeholdernamespace.Battle.Env;
 using UnityEngine;
 using System;
+using Placeholdernamespace.Battle.Entities.Passives;
 
 namespace Placeholdernamespace.Battle.Entities.Skills
 {
@@ -11,7 +12,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
         public SkillBongani2():base()
         {
-            description = "lays down a trap which applies a -1 strength debuff";
+            description = "lays down a trap which interupts movement";
             title = "Lay Trap";
             apCost = 2;
             coolDown = 3;
@@ -36,7 +37,8 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             if(character.Team == OtherTeam())
             {
                 character.Stats.SetMutableStat(AttributeStats.StatType.Movement, 0);
-                character.InteruptMovment();
+                character.AddPassive(new BuffBleed(2));
+                //character.InteruptMovment();
                 return true;
 
             }

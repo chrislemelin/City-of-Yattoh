@@ -11,6 +11,11 @@ namespace Placeholdernamespace.Battle.Entities.Passives
     {
         private List<Tile> influenceTiles = new List<Tile>();
 
+        public TalentTriggerBongani2()
+        {
+            description = "When enemy enters adjacency TRIGGER";
+        }
+
         public override void Init(BattleCalculator battleCalculator, CharacterBoardEntity boardEntity, TileManager tileManager)
         {
             base.Init(battleCalculator, boardEntity, tileManager);

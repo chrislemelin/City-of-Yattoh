@@ -4,4 +4,10 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/CharacterSelection.unity
+    guid: d81d3a8dd9562ad469b41b8153e43596
+  - enabled: 1
+    path: Assets/Scenes/Battlefield.unity
+    guid: 26d453320298b82438ea554695124b66

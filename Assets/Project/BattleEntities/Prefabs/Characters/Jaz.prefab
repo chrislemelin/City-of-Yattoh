@@ -451,15 +451,16 @@ MonoBehaviour:
         value: 9
         display: 0
       ap:
-        value: 2
+        value: 8
         display: 0
       apGain:
-        value: 8
+        value: 2
         display: 0
   name: Jaz
   characterAnimation: {fileID: 114815535030796286}
   charactersprite: {fileID: 1422958045928576}
   charContainer: {fileID: 114057334828296064}
+  characterType: 0
   speed: 1
   enemyAIBasic1: {fileID: 0}
 --- !u!114 &114910173449349550

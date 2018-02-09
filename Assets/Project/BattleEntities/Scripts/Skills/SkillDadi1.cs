@@ -13,6 +13,10 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
         public SkillDadi1(): base()
         {
+            title = "Charge";
+            description = "do a charge";
+            apCost = 1;
+            coolDown = 3;
             animationType = AnimatorUtils.animationType.none;
         }
 

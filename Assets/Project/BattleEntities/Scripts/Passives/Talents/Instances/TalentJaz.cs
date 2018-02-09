@@ -8,7 +8,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 {
     public class TalentJaz : Talent {
 
-        public TalentJaz() :base()
+        public TalentJaz()
         {
             type = PassiveType.Talent;
             description = "TALENT: Next attack will have double range";

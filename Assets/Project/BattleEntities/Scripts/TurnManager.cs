@@ -57,7 +57,6 @@ namespace Placeholdernamespace.Battle.Managers
         {
             enities.Add(boardEntity);
             ReCalcQueue();
-            //NextTurn();
         }
 
         public void RemoveBoardEntity(BoardEntity boardEntity)

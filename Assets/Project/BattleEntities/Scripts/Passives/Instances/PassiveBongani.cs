@@ -11,7 +11,8 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         public PassiveBongani():base()
         {
             turnOrderFirst = true;
-        }
-       
+            description = "Always go first in the turn order";
+        }       
+
     }
 }

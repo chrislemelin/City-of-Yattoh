@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Placeholdernamespace.Battle.Entities.Skills;
 using UnityEngine;
 
 namespace Placeholdernamespace.Battle.Entities.Passives
@@ -12,6 +13,11 @@ namespace Placeholdernamespace.Battle.Entities.Passives
             stealthed = true;
             description = "Cant be targeted by enemies";
         }
-       
+
+        public override void ExecutedSkill(Skill skill, SkillReport skillreport)
+        {
+            Remove();
+        }
+
     }
 }

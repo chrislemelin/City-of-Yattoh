@@ -7,8 +7,14 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 {
     public class TalentBongani2 : Talent
     {
+        public TalentBongani2()
+        {
+            description = "Weaken adjacent enemies";
+        }
+
         public override void Activate()
         {
+         
             List<Tile> tiles = tileManager.GetTilesDiag(boardEntity.GetTile().Position, 1);
 
             foreach(CharacterBoardEntity character in tileManager.TilesToCharacterBoardEntities(tiles))

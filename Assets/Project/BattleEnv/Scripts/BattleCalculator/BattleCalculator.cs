@@ -97,7 +97,7 @@ namespace Placeholdernamespace.Battle.Calculator
                 {
                     targetAfter = targetBefore.GetCopy();
 
-                    int newTargetHealthDamage = HealthAfterDamage(report, targetAfter, source, package);
+                    int newTargetHealthDamage = HealthAfterDamage(report, targetAfter, package);
                     targetAfter.SetMutableStat(StatType.Health, newTargetHealthDamage);
                 }
                 else if (usingTakeDamageReturn.type == TakeDamageReturnType.NoDamage)
@@ -110,7 +110,7 @@ namespace Placeholdernamespace.Battle.Calculator
 
                     int newDamage = (int)(package.Damage * (1 - usingTakeDamageReturn.value));
                     DamagePackage newDamagePackage = new DamagePackage(newDamage, package.Type, package.Piercing);
-                    int newReflectTargetHealthDamage = HealthAfterDamage(report, targetAfter, source, newDamagePackage);
+                    int newReflectTargetHealthDamage = HealthAfterDamage(report, targetAfter, newDamagePackage);
                     targetAfter.SetMutableStat(StatType.Health, newReflectTargetHealthDamage);
                 }
                 else if(usingTakeDamageReturn.type == TakeDamageReturnType.Reflect)
@@ -124,8 +124,8 @@ namespace Placeholdernamespace.Battle.Calculator
                     DamagePackage newDamagePackage = new DamagePackage(newDamage, package.Type, package.Piercing);
                     DamagePackage reflectDamagePackage = new DamagePackage(reflectDamage, DamageType.physical);
 
-                    int newReflectTargetHealthDamage = HealthAfterDamage(report, targetAfter, source, newDamagePackage);
-                    int newReflectSourceHealthDamage = HealthAfterDamage(report, sourceAfter, target, reflectDamagePackage);
+                    int newReflectTargetHealthDamage = HealthAfterDamage(report, targetAfter, newDamagePackage);
+                    int newReflectSourceHealthDamage = HealthAfterDamage(report, sourceAfter, reflectDamagePackage);
 
                     targetAfter.SetMutableStat(StatType.Health, newReflectTargetHealthDamage);
                     sourceAfter.SetMutableStat(StatType.Health, newReflectSourceHealthDamage);
@@ -147,9 +147,21 @@ namespace Placeholdernamespace.Battle.Calculator
 
         }
 
-        private int HealthAfterDamage(SkillReport report,Stats targetStats, CharacterBoardEntity source, DamagePackage damage)
+        public void QuickDamage(CharacterBoardEntity target, List<DamagePackage> damages)
         {
+            foreach(DamagePackage package in damages)
+            {
+                SkillReport report = new SkillReport();
+                HealthAfterDamage(report, target.Stats, package);
+                ExecuteSkillReport(report);
+            }
 
+        }
+
+        private int HealthAfterDamage(SkillReport report,Stats targetStats, DamagePackage damage)
+        {
+            Stats beforeStats = targetStats.GetCopy();
+            Stats afterStats = targetStats.GetCopy();
             int tempArmour = 0;
             if (damage.Type == DamageType.physical)
             {
@@ -190,6 +202,10 @@ namespace Placeholdernamespace.Battle.Calculator
                     damageDisplay.color = Color.magenta;
                 }
                 report.DamageDisplays.Add(damageDisplay);
+
+                afterStats.SetMutableStat(StatType.Health, newHealth);
+                report.targetAfter = afterStats;
+                report.targetBefore = beforeStats;                
 
                 return newHealth;
             }

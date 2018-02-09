@@ -13,7 +13,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         {
             title = "All Out";
             description = "spend all ap and do 2 basic attacks at half power for each ap spent";
-            apCost = 1;
+            apCost = 0;
             coolDown = 2;
         }
 

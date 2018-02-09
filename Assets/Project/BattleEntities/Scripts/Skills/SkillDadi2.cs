@@ -16,6 +16,8 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         {
             title = "Battle Cry";
             description = "all enemies 2 tiles away must attack this character for 2 turns";
+            apCost = 0;
+            coolDown = 4;
             range = 2;
         }
 
