@@ -26,8 +26,12 @@ namespace Placeholdernamespace.Battle.Entities
         protected CharacterAnimation characterAnimation;
         [SerializeField]
         protected GameObject charactersprite;
+
         [SerializeField]
         protected CharContainer charContainer;
+        
+        [SerializeField]
+        protected GameObject charKaAura;
 
         [SerializeField]
         protected CharacterType characterType;
@@ -35,6 +39,11 @@ namespace Placeholdernamespace.Battle.Entities
         {
             get { return characterType; }
         }
+        public void SetCharacterType(CharacterType type)
+        {
+            characterType = type;
+        }
+
 
         protected Ka ka;
         public Ka Ka
@@ -142,10 +151,17 @@ namespace Placeholdernamespace.Battle.Entities
                 charContainer.Init(this);
             }
             floatingTextGenerator = GetComponent<FloatingTextGenerator>();
-            ka = this.ka;
+            this.ka = ka;
             if(ka != null)
             {
                 ka.Init(this);
+                if(charKaAura != null)
+                {
+                    charKaAura.SetActive(true);
+                    Color newColor = new Color(ka.KaColor.r, ka.KaColor.g, ka.KaColor.b, charKaAura.GetComponent<Image>().color.a);
+                    charKaAura.GetComponent<Image>().color = newColor;
+
+                }
             }
             foreach(Passive p in Passives)
             {
@@ -463,7 +479,7 @@ namespace Placeholdernamespace.Battle.Entities
         /// <param name="passive"></param>
         public override void AddPassive(Passive passive)
         {
-            passive.Init(battleCalculator, this, tileManager);
+            InitPassive(passive);
             bool add = true;
             if (passive is Buff)
             {
@@ -478,10 +494,14 @@ namespace Placeholdernamespace.Battle.Entities
                 Talents.Add((Talent)passive);
             }
             if(add)
-                passives.Add(passive);
-
-            
+                passives.Add(passive);            
         }
+
+        public void InitPassive(Passive passive)
+        {
+            passive.Init(battleCalculator, this, tileManager);
+        }
+        
 
         public void RemoveBuff<buffClass>()
         {
@@ -510,9 +530,12 @@ namespace Placeholdernamespace.Battle.Entities
 
         public void TriggerTalents()
         {
-            foreach(Talent talent in talents)
+            foreach(Passive passive in Passives)
             {
-                talent.Activate();
+                if(passive is Talent)
+                {
+                    ((Talent)passive).Activate();
+                }
             }
         }
 
@@ -530,8 +553,13 @@ namespace Placeholdernamespace.Battle.Entities
 
         public override void AddSkill(Skill skill)
         {
-            skill.Init(tileManager, this, battleCalculator, turnManager);
+            InitSkill(skill);
             skills.Add(skill);
+        }
+
+        public void InitSkill(Skill skill)
+        {
+            skill.Init(tileManager, this, battleCalculator, turnManager);
         }
 
         protected bool AddBuff(Buff buff)

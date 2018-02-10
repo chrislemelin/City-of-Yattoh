@@ -28,9 +28,30 @@ namespace Placeholdernamespace.Battle.Entities.Kas
             get { return new List<Passive>(passives); }
         }
 
+        Dictionary<CharacterType, Color> typeToColor = new Dictionary<CharacterType, Color>() {
+            { CharacterType.PlayerAmare, Color.red},
+            { CharacterType.PlayerBongani, Color.red},
+            { CharacterType.PlayerDadi, Color.red},
+            { CharacterType.PlayerJaz, Color.red},
+            { CharacterType.PlayerLesidi, Color.red},
+            { CharacterType.PlayerTisha, Color.red},
+        };
+
+        private Color kaColor = Color.grey;
+        public Color KaColor
+        {
+            get { return kaColor; }
+        }
+
+
         public Ka(CharContainer character)
         {
+            if(typeToColor.ContainsKey(character.Type))
+            {
+                kaColor = typeToColor[character.Type];
+            }
             talent = character.Talent;
+            AddPassive(talent);
         }
 
         public void AddPassive(Passive passive)
@@ -46,15 +67,14 @@ namespace Placeholdernamespace.Battle.Entities.Kas
         public void Init(CharacterBoardEntity character)
         {
             this.character = character;
-            foreach(Passive p in passives)
+            foreach(Passive passive in passives)
             {
-                character.AddPassive(p);
+                character.InitPassive(passive);
             }
-            foreach(Skill skill in skills)
+            foreach(Skill skill in Skills)
             {
-                character.AddSkill(skill);
+                character.InitSkill(skill);
             }
-
         }
 
 

@@ -1,11 +1,13 @@
 ﻿using Placeholdernamespace.Battle;
 using Placeholdernamespace.Battle.Calculator;
 using Placeholdernamespace.Battle.Entities;
+using Placeholdernamespace.Battle.Entities.Instances;
 using Placeholdernamespace.Battle.Entities.Kas;
 using Placeholdernamespace.Battle.Env;
 using Placeholdernamespace.Battle.Interaction;
 using Placeholdernamespace.Battle.Managers;
 using Placeholdernamespace.Battle.UI;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -49,11 +51,20 @@ namespace Placeholdernamespace.Battle
 
             tileManager.Init(turnManager, profile);
             GameObject BE;
-            
-            MakeCharacter(ScenePropertyManager.Instance.characters[0], new Position(1, 1));
+
+            Position currentPosition = new Position(0, 0);
+            foreach(Tuple<CharacterType,Ka> character in ScenePropertyManager.Instance.characters2)
+            {
+                MakeCharacter(character.first, currentPosition, character.second);
+                currentPosition = currentPosition + new Position(0, 1);
+            }
+
+            /*
+            MakeCharacter(ScenePropertyManager.Instance.characters[0], new Position(1, 1), CharacterType.PlayerAmare);
             MakeCharacter(ScenePropertyManager.Instance.characters[1], new Position(0, 1));
             MakeCharacter(ScenePropertyManager.Instance.characters[2], new Position(1, 0));
             MakeCharacter(ScenePropertyManager.Instance.characters[3], new Position(0, 0));
+            */
 
             MakeCharacter(CharacterType.EnemyRanged, new Position(5, 5));
             MakeCharacter(CharacterType.EnemySpeedy, new Position(6, 4));
@@ -78,6 +89,7 @@ namespace Placeholdernamespace.Battle
         private void MakeCharacter(CharacterType characterType, Position position, Ka ka = null)
         {
             GameObject character = boardEntityCharacters[characterType];
+           
             GameObject BE = Instantiate(character);
             BE.GetComponent<CharacterBoardEntity>().Init(position, turnManager, tileManager, boardEntitySelector, battleCalulator, ka);
         }

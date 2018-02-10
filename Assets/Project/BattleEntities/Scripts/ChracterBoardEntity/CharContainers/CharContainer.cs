@@ -29,13 +29,20 @@ namespace Placeholdernamespace.Battle.Entities.Instances
         protected Passive passive;
         public Passive Passive
         {
-            get{return passive;}
+            get { return passive; }
         }
 
         protected List<Skill> skills = new List<Skill>();
         public List<Skill> Skills
         {
             get { return skills; }
+        }
+
+        [SerializeField]
+        protected CharacterType type;
+        public CharacterType Type
+        {
+            get{return type;}
         }
 
         public virtual void Init(CharacterBoardEntity character)
@@ -54,6 +61,7 @@ namespace Placeholdernamespace.Battle.Entities.Instances
                 character.AddSkill(skill);
             }
 
+            character.SetCharacterType(type);
             character.setRange(range);
 
         } 

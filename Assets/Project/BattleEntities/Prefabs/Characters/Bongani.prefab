@@ -44,7 +44,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1422958045928576
 GameObject:
   m_ObjectHideFlags: 0
@@ -101,7 +101,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1706186086808006
 GameObject:
   m_ObjectHideFlags: 1
@@ -334,6 +334,7 @@ MonoBehaviour:
   characterAnimation: {fileID: 114815535030796286}
   charactersprite: {fileID: 1422958045928576}
   charContainer: {fileID: 114244507700181018}
+  charKaAura: {fileID: 1556269041762160}
   characterType: 1
   speed: 1
   enemyAIBasic1: {fileID: 0}
@@ -349,7 +350,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.666}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.39215687}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -375,6 +376,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47908d1a1955f4f4b90881c11ebb9bcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 1
 --- !u!114 &114245910978165384
 MonoBehaviour:
   m_ObjectHideFlags: 1

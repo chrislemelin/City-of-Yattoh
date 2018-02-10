@@ -25,7 +25,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         public override void EnterTile(Tile tile)
         {
-            foreach (Tile t in tileManager.GetTilesNoDiag(tile.Position))
+            foreach (Tile t in tileManager.GetTilesDiag(tile.Position))
             {
                 influenceTiles.Add(t);
                 t.AddEnterActions(EnterAction);

@@ -1910,7 +1910,6 @@ GameObject:
   - component: {fileID: 384966780}
   - component: {fileID: 384966779}
   - component: {fileID: 384966781}
-  - component: {fileID: 384966782}
   m_Layer: 5
   m_Name: KaSelectionPanel
   m_TagString: Untagged
@@ -1996,18 +1995,6 @@ MonoBehaviour:
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
   m_ChildControlHeight: 0
---- !u!114 &384966782
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 384966777}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c41ab94d9b399746b8277cf3c6eb9cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  goToBattleButton: {fileID: 135596744}
 --- !u!1 &388318256
 GameObject:
   m_ObjectHideFlags: 0
@@ -2379,7 +2366,6 @@ GameObject:
   - component: {fileID: 464179811}
   - component: {fileID: 464179810}
   - component: {fileID: 464179809}
-  - component: {fileID: 464179808}
   m_Layer: 5
   m_Name: CharacterSelectionPanel
   m_TagString: Untagged
@@ -2410,18 +2396,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 966.9879, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &464179808
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 464179806}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c41ab94d9b399746b8277cf3c6eb9cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  goToBattleButton: {fileID: 1255533869}
 --- !u!114 &464179809
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3560,6 +3534,7 @@ GameObject:
   m_Component:
   - component: {fileID: 757411390}
   - component: {fileID: 757411391}
+  - component: {fileID: 757411392}
   m_Layer: 5
   m_Name: GameObject
   m_TagString: Untagged
@@ -3609,6 +3584,20 @@ MonoBehaviour:
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
   m_ChildControlHeight: 0
+--- !u!114 &757411392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 757411389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c41ab94d9b399746b8277cf3c6eb9cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PartySelection: {fileID: 464179806}
+  KaSelection: {fileID: 384966777}
+  goToBattleButton: {fileID: 1255533869}
 --- !u!1 &772473154
 GameObject:
   m_ObjectHideFlags: 0

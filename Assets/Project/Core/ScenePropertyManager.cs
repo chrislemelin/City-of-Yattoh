@@ -1,4 +1,5 @@
 ﻿using Placeholdernamespace.Battle;
+using Placeholdernamespace.Battle.Entities.Kas;
 using Placeholdernamespace.Battle.Env;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,6 +22,13 @@ public class ScenePropertyManager {
    // public Dictionary<Position, CharacterType> characters;
     public List<CharacterType> characters = new List<CharacterType>() {CharacterType.PlayerBongani, CharacterType.PlayerTisha,
         CharacterType.PlayerJaz, CharacterType.PlayerDadi};
+
+    public List<Tuple<CharacterType, Ka>> characters2 = new List<Tuple<CharacterType, Ka>>() {
+        new Tuple<CharacterType, Ka>(CharacterType.PlayerBongani, null),
+        new Tuple<CharacterType, Ka>(CharacterType.PlayerAmare, null),
+        new Tuple<CharacterType, Ka>(CharacterType.PlayerJaz, null),
+        new Tuple<CharacterType, Ka>(CharacterType.PlayerTisha, null)
+    };
 
 
 

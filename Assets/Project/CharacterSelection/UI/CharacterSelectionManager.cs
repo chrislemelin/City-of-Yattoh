@@ -1,4 +1,6 @@
 ﻿using Placeholdernamespace.Battle;
+using Placeholdernamespace.Battle.Entities.Instances;
+using Placeholdernamespace.Battle.Entities.Kas;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,10 +12,28 @@ namespace Placeholdernamespace.CharacterSelection
 
     public class CharacterSelectionManager : MonoBehaviour {
 
-        List<Dropdown> dropDowns = new List<Dropdown>();
-        
+        [SerializeField]
+        GameObject PartySelection;
+
+        [SerializeField]
+        GameObject KaSelection;
+
+        List<Dropdown> partyDropdowns = new List<Dropdown>();
+        List<Dropdown> kaDropDowns = new List<Dropdown>();
+
         HashSet<CharacterType> types = new HashSet<CharacterType>() { CharacterType.PlayerAmare, CharacterType.PlayerBongani, CharacterType.PlayerDadi,
             CharacterType.PlayerJaz, CharacterType.PlayerLesidi, CharacterType.PlayerTisha };
+
+        Dictionary<CharacterType, CharContainer> typeToChar = new Dictionary<CharacterType, CharContainer>()
+        {
+            {CharacterType.PlayerAmare, new CharContainerAmare() },
+            {CharacterType.PlayerBongani, new CharContainerBongani() },
+            {CharacterType.PlayerDadi, new CharContainerDadi() },
+            {CharacterType.PlayerJaz, new CharContainerJaz() },
+            {CharacterType.PlayerLesidi, new CharContainerLesidi() },
+            {CharacterType.PlayerTisha, new CharContainerTisha() }
+        };
+
         Dictionary<string, CharacterType> textToType = new Dictionary<string, CharacterType>();
 
         const string NONE_TEXT = "None";
@@ -29,14 +49,24 @@ namespace Placeholdernamespace.CharacterSelection
                 textToType.Add(type.ToString(),type);
             }
 
-            dropDowns.AddRange(GetComponentsInChildren<Dropdown>());
-            foreach (Dropdown dropdown in dropDowns)
+            partyDropdowns.AddRange(PartySelection.GetComponentsInChildren<Dropdown>());
+            foreach (Dropdown dropdown in partyDropdowns)
             {
                 dropdown.options = GetDropDownOptions(dropdown);
                 dropdown.onValueChanged.AddListener(delegate {
                     DropdownValueChanged(dropdown);
                 });
             }
+
+            kaDropDowns.AddRange(KaSelection.GetComponentsInChildren<Dropdown>());
+            foreach (Dropdown dropdown in kaDropDowns)
+            {
+                dropdown.onValueChanged.AddListener(delegate {
+                    DropdownValueChanged(dropdown);
+                });
+                dropdown.interactable = false;
+            }
+
             goToBattleButton.onClick.AddListener(delegate {
                 GoToBattle();
             });
@@ -58,8 +88,19 @@ namespace Placeholdernamespace.CharacterSelection
 
         private void DropdownValueChanged(Dropdown change)
         {
+            UpdateOptions();
+        }
+
+
+        private void KaDropdownValueChanged(Dropdown change)
+        {
+            UpdateOptions();
+        }
+
+        private void UpdateOptions()
+        {
             availibleTypes = new HashSet<CharacterType>(types);
-            foreach(Dropdown dropdown in dropDowns)
+            foreach (Dropdown dropdown in partyDropdowns)
             {
                 string value = dropdown.options[dropdown.value].text;
                 if (textToType.ContainsKey(value))
@@ -67,13 +108,34 @@ namespace Placeholdernamespace.CharacterSelection
                     availibleTypes.Remove(textToType[value]);
                 }
             }
-            foreach(Dropdown dropdown in dropDowns)
+            foreach (Dropdown dropdown in kaDropDowns)
+            { 
+                if (dropdown.interactable)
+                {
+                    string value = dropdown.options[dropdown.value].text;
+                    if (textToType.ContainsKey(value))
+                    {
+                        availibleTypes.Remove(textToType[value]);
+                    }
+                }
+            }
+            for(int a = 0; a < partyDropdowns.Count; a++)
             {
+                Dropdown dropdown = partyDropdowns[a];
                 List<Dropdown.OptionData> options = new List<Dropdown.OptionData>();
-                if(textToType.ContainsKey(dropdown.options[dropdown.value].text))
+                if (textToType.ContainsKey(dropdown.options[dropdown.value].text))
                 {
                     options.Add(new Dropdown.OptionData(dropdown.options[dropdown.value].text));
-                }              
+                    SetKaOptions(kaDropDowns[a]);
+                    kaDropDowns[a].interactable = true;
+
+                }
+                else
+                {
+                    kaDropDowns[a].ClearOptions();
+                    kaDropDowns[a].interactable = false;
+                    
+                }
                 options.AddRange(GetDropDownOptions(dropdown));
                 dropdown.options = options;
                 dropdown.value = 0;
@@ -81,10 +143,22 @@ namespace Placeholdernamespace.CharacterSelection
             goToBattleButton.interactable = CanGoToBattle();
         }
 
+        private void SetKaOptions(Dropdown dropdown)
+        {
+            List<Dropdown.OptionData> options = new List<Dropdown.OptionData>();
+            if (dropdown.interactable && textToType.ContainsKey(dropdown.options[dropdown.value].text))
+            {
+                options.Add(new Dropdown.OptionData(dropdown.options[dropdown.value].text));
+            }
+            options.AddRange(GetDropDownOptions(dropdown));
+            dropdown.options = options;
+            dropdown.value = 0;
+        }
+
         private bool CanGoToBattle()
         {
             bool returnBool = true;
-            foreach(Dropdown dropdown in dropDowns)
+            foreach(Dropdown dropdown in partyDropdowns)
             {
                 if(!textToType.ContainsKey(dropdown.options[dropdown.value].text))
                 {
@@ -97,9 +171,20 @@ namespace Placeholdernamespace.CharacterSelection
         private void GoToBattle()
         {
             ScenePropertyManager.Instance.characters = new List <CharacterType>();
-            foreach (Dropdown dropdown in dropDowns)
+            ScenePropertyManager.Instance.characters2.Clear();
+            for (int a = 0; a < partyDropdowns.Count; a++)
             {
-                ScenePropertyManager.Instance.characters.Add(textToType[dropdown.options[dropdown.value].text]);
+                Dropdown dropdown = partyDropdowns[a];
+                Dropdown kaDropdown = kaDropDowns[a];
+                Ka ka = null;
+                if(textToType.ContainsKey(kaDropdown.options[kaDropdown.value].text))
+                {
+                    CharacterType kaType = textToType[kaDropdown.options[kaDropdown.value].text];
+                    ka = new Ka(typeToChar[kaType]);
+                }
+                ScenePropertyManager.Instance.characters2.Add( new Tuple<CharacterType, Ka>(
+                    textToType[dropdown.options[dropdown.value].text], ka));
+
             }
             SceneManager.LoadScene("Battlefield");
         }
