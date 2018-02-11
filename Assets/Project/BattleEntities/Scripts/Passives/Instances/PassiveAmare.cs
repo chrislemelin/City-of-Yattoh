@@ -8,6 +8,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
     {
         public PassiveAmare(): base()
         {
+            title = "Battle Ready";
             description = "start the battle stealthed";
         }
 

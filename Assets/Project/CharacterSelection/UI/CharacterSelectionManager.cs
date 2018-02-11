@@ -24,15 +24,6 @@ namespace Placeholdernamespace.CharacterSelection
         HashSet<CharacterType> types = new HashSet<CharacterType>() { CharacterType.PlayerAmare, CharacterType.PlayerBongani, CharacterType.PlayerDadi,
             CharacterType.PlayerJaz, CharacterType.PlayerLesidi, CharacterType.PlayerTisha };
 
-        Dictionary<CharacterType, CharContainer> typeToChar = new Dictionary<CharacterType, CharContainer>()
-        {
-            {CharacterType.PlayerAmare, new CharContainerAmare() },
-            {CharacterType.PlayerBongani, new CharContainerBongani() },
-            {CharacterType.PlayerDadi, new CharContainerDadi() },
-            {CharacterType.PlayerJaz, new CharContainerJaz() },
-            {CharacterType.PlayerLesidi, new CharContainerLesidi() },
-            {CharacterType.PlayerTisha, new CharContainerTisha() }
-        };
 
         Dictionary<string, CharacterType> textToType = new Dictionary<string, CharacterType>();
 
@@ -170,7 +161,6 @@ namespace Placeholdernamespace.CharacterSelection
 
         private void GoToBattle()
         {
-            ScenePropertyManager.Instance.characters = new List <CharacterType>();
             ScenePropertyManager.Instance.characters2.Clear();
             for (int a = 0; a < partyDropdowns.Count; a++)
             {
@@ -180,7 +170,7 @@ namespace Placeholdernamespace.CharacterSelection
                 if(textToType.ContainsKey(kaDropdown.options[kaDropdown.value].text))
                 {
                     CharacterType kaType = textToType[kaDropdown.options[kaDropdown.value].text];
-                    ka = new Ka(typeToChar[kaType]);
+                    ka = new Ka(ScenePropertyManager.Instance.typeToContainer[kaType]);
                 }
                 ScenePropertyManager.Instance.characters2.Add( new Tuple<CharacterType, Ka>(
                     textToType[dropdown.options[dropdown.value].text], ka));

@@ -10,6 +10,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         public TalentDadi()
         {
+            title = "Rage";
             description = "Talent: Applies rage";
         }
 

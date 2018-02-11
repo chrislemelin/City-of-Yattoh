@@ -14,6 +14,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         public TalentTriggerJaz()
         {
+            title = "Bull's eye";
             description = "TALEN TRIGGER: When you take off " + (damagePercentage * 100) + "% damage in a single hit, trigger TALENT";
         }
 

@@ -10,6 +10,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         public TalentTriggerTisha(): base()
         {
+            title = "Overwhelming Odds";
             description = "When you end your turn adjacent to 2 or more enemies TRIGGER";
         }
 

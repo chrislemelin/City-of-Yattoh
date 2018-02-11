@@ -8,9 +8,9 @@ namespace Placeholdernamespace.Battle.Entities.Passives {
 
         public PassiveTisha(): base()
         {
+            title = "Unkillable";
             description = "Revive self once a game";
-            
-
+           
         }
 
         public override void Die()

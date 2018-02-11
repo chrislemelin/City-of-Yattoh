@@ -28,6 +28,12 @@ namespace Placeholdernamespace.Battle.Entities.Kas
             get { return new List<Passive>(passives); }
         }
 
+        private CharacterType characterType;
+        public CharacterType CharacterType
+        {
+            get { return characterType; }
+        }
+
         Dictionary<CharacterType, Color> typeToColor = new Dictionary<CharacterType, Color>() {
             { CharacterType.PlayerAmare, Color.red},
             { CharacterType.PlayerBongani, Color.red},
@@ -46,6 +52,7 @@ namespace Placeholdernamespace.Battle.Entities.Kas
 
         public Ka(CharContainer character)
         {
+            characterType = character.Type;
             if(typeToColor.ContainsKey(character.Type))
             {
                 kaColor = typeToColor[character.Type];

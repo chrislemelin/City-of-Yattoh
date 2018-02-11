@@ -104,7 +104,14 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
         protected override int? GetStrengthInternal()
         {
-            return boardEntity.BasicAttack.GetStrength()/2;
+            if(boardEntity.Initalized)
+            {
+                return boardEntity.BasicAttack.GetStrength() / 2;
+            }
+            else
+            {
+                return boardEntity.Stats.GetNonMuttableStat(AttributeStats.StatType.Strength).Value/ 2;
+            }
         }
 
         protected override int? GetRangeInternal()

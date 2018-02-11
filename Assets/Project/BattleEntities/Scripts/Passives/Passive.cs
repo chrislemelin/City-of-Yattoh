@@ -48,6 +48,11 @@ namespace Placeholdernamespace.Battle.Entities.Passives
             this.tileManager = tileManager;
         }
 
+        public void PartialInit(CharacterBoardEntity boardEntity)
+        {
+            this.boardEntity = boardEntity;
+        }
+
         /// <summary>
         /// for things that cannot be expressed by the skill modifiers, just directly change the damage package
         /// </summary>
@@ -91,14 +96,13 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         /// when a skill is executed
         /// </summary>
         /// <param name="skillreport"></param>
-        public virtual void ExecutedSkill(Skill skill, SkillReport skillreport)
-        {
+        public virtual void ExecutedSkill(Skill skill, SkillReport skillreport){ }
 
-        }
+        public virtual void ExecutedSkillFast(Skill skill, SkillReport skillReport){ }
 
         public virtual string GetTitle()
         {
-            return title;
+            return title+" (PASSIVE)";
         }
         
         public virtual string GetDescription()

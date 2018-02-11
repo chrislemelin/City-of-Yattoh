@@ -10,6 +10,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
     {
         public PassiveDadi(): base()
         {
+            title = "Instincts";
             description = "gain extra ap each turn equal to number of adjacent enemies divided by 2";
         }
 

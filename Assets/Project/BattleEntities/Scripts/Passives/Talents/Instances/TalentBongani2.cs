@@ -9,6 +9,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
     {
         public TalentBongani2()
         {
+            title = "weaken";
             description = "Weaken adjacent enemies";
         }
 

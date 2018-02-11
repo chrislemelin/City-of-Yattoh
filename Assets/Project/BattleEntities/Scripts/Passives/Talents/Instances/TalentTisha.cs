@@ -9,6 +9,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
     {
         public TalentTisha(): base()
        {
+            title = "Challenger";
             description = "TALENT: adjacent enemies cannot leave tiles adjacent to character";
         }
 

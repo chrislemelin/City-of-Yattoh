@@ -13,6 +13,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         public TalentTriggerDadi(): base()
         {
+            title = "Battle Rage";
             description = "Triggers when you 1/4 health damage since last turn";
         }
 

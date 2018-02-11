@@ -1,8 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ColorEffectManager : MonoBehaviour {
+
+    [SerializeField]
+    private List<Image> targets = new List<Image>();
 
     public Color DefaultColor;
     private SpriteRenderer spriteRenderer;
@@ -13,9 +17,44 @@ public class ColorEffectManager : MonoBehaviour {
     private Stack<Color> colorStack = new Stack<Color>();
 
     public void Start()
-    {
+    { 
         spriteRenderer = GetComponent<SpriteRenderer>();
         alpha = DefaultColor.a;
+       
+    }
+
+    public void SetAlpha(float alpha)
+    {
+        this.alpha = alpha;
+        SetColor(GetCurrentColor());
+    }
+
+    private Color GetCurrentColor()
+    {
+        if (colorStack.Count > 0)
+        {
+            return GetColor(colorStack.Peek());
+        }
+        else
+        {
+            return GetColor(DefaultColor);
+        }
+    }
+
+    private Color GetColor(Color col)
+    {
+        return new Color(col.r, col.g, col.b, alpha);
+    }
+
+    private void SetColor(Color col)
+    {
+        if(spriteRenderer != null)
+            spriteRenderer.color = GetCurrentColor();
+        foreach(Image image in targets)
+        {
+            image.color = GetCurrentColor();
+        }
+       
     }
 
     /// <summary>
@@ -37,7 +76,8 @@ public class ColorEffectManager : MonoBehaviour {
                 }
                 this.lastCalled = caller;
                 this.stopOtherGlows = stopOtherGlows;
-                spriteRenderer.color = newCol;
+                SetColor(newCol);
+   
             }
         }
 
@@ -46,22 +86,15 @@ public class ColorEffectManager : MonoBehaviour {
     /// <summary>
     /// requires a reference to object calling to ensure caller has 'authority' to turn it off
     /// </summary>
-    public void TurnOff(object caller)
+    public void TurnOff(object caller, Color? lastColor = null)
     {
-        if (lastCalled == null || this.lastCalled.Equals(caller))
+        if (lastCalled == null || this.lastCalled.Equals(caller) &&  (lastColor == null || colorStack.Peek().Equals(lastColor)))
         {
             if (colorStack.Count > 0)
             {
                 colorStack.Pop();
             }
-            if (colorStack.Count > 0)
-            {
-                spriteRenderer.color = colorStack.Peek();
-            }
-            else
-            {
-                spriteRenderer.color = DefaultColor;
-            }
+            SetColor(GetCurrentColor());
         }
     }
 

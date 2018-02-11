@@ -45,6 +45,9 @@ namespace Placeholdernamespace.Battle.Entities.Instances
             get{return type;}
         }
 
+        [SerializeField]
+        private Sprite profileImage;
+
         public virtual void Init(CharacterBoardEntity character)
         {
             if (talent != null)

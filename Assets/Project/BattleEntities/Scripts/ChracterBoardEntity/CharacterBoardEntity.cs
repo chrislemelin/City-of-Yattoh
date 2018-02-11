@@ -126,7 +126,16 @@ namespace Placeholdernamespace.Battle.Entities
         
         private Dictionary<Tile, Move> cachedMoves = new Dictionary<Tile, Move>();
         private Action<bool> moveDoneCallback;
+        private bool initalized = false;
+        public bool Initalized
+        {
+            get { return initalized; }
+        }
 
+        public void PartialInit()
+        {
+            stats.Start(this);
+        }
 
         public override void Init(Position startingPosition, TurnManager turnManager, TileManager tileManager, 
             BoardEntitySelector boardEntitySelector, BattleCalculator battleCalculator, Ka ka = null)
@@ -163,10 +172,21 @@ namespace Placeholdernamespace.Battle.Entities
 
                 }
             }
-            foreach(Passive p in Passives)
+            initalized = true;
+            foreach (Skill skill in skills)
+            {
+                InitSkill(skill);
+            }
+            foreach (Passive passive in passives)
+            {
+                InitPassive(passive);
+            }
+            foreach (Passive p in Passives)
             {
                 p.StartBattle();
             }
+           
+
 
         }
 
@@ -208,6 +228,11 @@ namespace Placeholdernamespace.Battle.Entities
             
         }
 
+        public void SetAplha(float aplha)
+        {
+            charactersprite.GetComponent<ColorEffectManager>().SetAlpha(aplha);
+        }
+
         public void Die()
         {
             foreach(Passive p in Passives)
@@ -217,11 +242,28 @@ namespace Placeholdernamespace.Battle.Entities
             if(stats.GetMutableStat(StatType.Health).Value == 0 )
             {
                 SetAnimation(AnimatorUtils.animationType.death);
-                turnManager.RemoveBoardEntity(this);
-                GetTile().SetBoardEntity(null);
-                Core.CallbackDelay(.8f, () =>Destroy(gameObject));
+                Core.CallbackDelay(.8f, () => DieHelper());
+ 
             }
 
+        }
+
+        private void DieHelper()
+        {
+            if(ka == null)
+            {
+                turnManager.RemoveBoardEntity(this);
+                GetTile().SetBoardEntity(null);
+                Destroy(gameObject);
+            }
+            else
+            {
+                stats.SetMutableStat(StatType.Health, 1);
+                SetAnimation(AnimatorUtils.animationType.idle);
+                ka = null;
+                charKaAura.SetActive(false);
+            }
+      
         }
 
         private void OnDestroy()
@@ -479,7 +521,14 @@ namespace Placeholdernamespace.Battle.Entities
         /// <param name="passive"></param>
         public override void AddPassive(Passive passive)
         {
-            InitPassive(passive);
+            if (initalized)
+            {
+                InitPassive(passive);
+            }
+            else
+            {
+                passive.PartialInit(this);
+            }
             bool add = true;
             if (passive is Buff)
             {
@@ -553,7 +602,14 @@ namespace Placeholdernamespace.Battle.Entities
 
         public override void AddSkill(Skill skill)
         {
-            InitSkill(skill);
+            if(initalized)
+            {
+                InitSkill(skill);
+            }
+            else
+            {
+                skill.PartialInit(this);
+            }
             skills.Add(skill);
         }
 

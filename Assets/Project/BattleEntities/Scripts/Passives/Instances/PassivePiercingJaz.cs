@@ -10,6 +10,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         public PassivePiercingJaz():base()
         {
+            title = "armour piering rounds";
             description = "adds PIERCING equal to half of your strength";
         }
 

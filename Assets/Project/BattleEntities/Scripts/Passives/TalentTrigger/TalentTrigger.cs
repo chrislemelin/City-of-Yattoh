@@ -14,6 +14,11 @@ namespace Placeholdernamespace.Battle.Entities.Passives
             type = PassiveType.TalentTrigger;
         }
 
+        public override string GetTitle()
+        {
+            return title + " (TALENT TRIGGER)";
+        }
+
         public void Trigger()
         {
             ((CharacterBoardEntity)boardEntity).FloatingTextGenerator.AddTextDisplay(new Common.UI.TextDisplay() { target = boardEntity, text = "talent trigger" });

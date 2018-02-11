@@ -27,8 +27,10 @@ namespace Placeholdernamespace.Battle.UI
         private GameObject passiveGameObject;
 
         [SerializeField]
-        private Color posColor = Color.green;
+        private bool showPassives = true;
 
+        [SerializeField]
+        private Color posColor = Color.green;
         [SerializeField]
         private Color negColor = Color.red;
 
@@ -86,9 +88,12 @@ namespace Placeholdernamespace.Battle.UI
             }
             AddTitle(boardEntity.Name);
             EvaluateStats(boardEntity, previewStats, skillreport);
-            if (boardEntity is CharacterBoardEntity)
+            if (showPassives)
             {
-                AddPassives(((CharacterBoardEntity)boardEntity).Passives);
+                if (boardEntity is CharacterBoardEntity)
+                {
+                    AddPassives(((CharacterBoardEntity)boardEntity).Passives);
+                }
             }
         }
 
@@ -208,6 +213,7 @@ namespace Placeholdernamespace.Battle.UI
         {
             GameObject titleName = Instantiate(titleGameObject);   
             titleName.GetComponent<TextMeshProUGUI>().text = text;
+            titleName.GetComponent<TextMeshProUGUI>().fontStyle = FontStyles.Bold;
             titleName.transform.SetParent(profilePanel.transform, false);
             texts.Add(titleName);
         }

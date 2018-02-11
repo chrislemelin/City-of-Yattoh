@@ -9,7 +9,8 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         public TalentTriggerLesidi()
         {
-            description = "when you move and end your turn next to an ally TRIGGERr";
+            title = "Community";
+            description = "when you move and end your turn next to an ally TRIGGER";
         }
 
         bool trigger = false;

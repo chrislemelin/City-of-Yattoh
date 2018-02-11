@@ -12,6 +12,12 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         public Talent() :base()
         {
             type = PassiveType.Talent;
+
+        }
+
+        public override string GetTitle()
+        {
+            return title + " (TALENT)";
         }
 
         public abstract void Activate();

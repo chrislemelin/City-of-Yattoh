@@ -152,6 +152,11 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             this.turnManager = turnManager;
         }
 
+        public void PartialInit(CharacterBoardEntity boardEntity)
+        {
+            this.boardEntity = boardEntity;
+        }
+
         public void StartTurn()
         {
             //ReduceCooldowns();
@@ -345,8 +350,15 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             // tell the passives what just happened
             foreach (Passive passive in boardEntity.Passives)
             {
+                passive.ExecutedSkillFast(this, report);
+            }
+
+            // tell the passives what just happened
+            foreach (Passive passive in boardEntity.Passives)
+            {
                 passive.ExecutedSkill(this, report);
             }
+         
             skillModifiers = new List<SkillModifier>();
             turnManager.CheckEntitiesForDeath();
 
