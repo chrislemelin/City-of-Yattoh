@@ -29,6 +29,8 @@ namespace Placeholdernamespace.CharacterSelection
         List<Skill> skills = new List<Skill>();
         CharacterBoardEntity boardEntity;
         List<GameObject> buttonList = new List<GameObject>();
+        List<GameObject> buttonClickList = new List<GameObject>();
+
         Dictionary<Skill, GameObject> skillToButton = new Dictionary<Skill, GameObject>();
         Dictionary<Passive, GameObject> passiveToButton = new Dictionary<Passive, GameObject>();
         object selected;
@@ -48,6 +50,18 @@ namespace Placeholdernamespace.CharacterSelection
                 Hide();
             }
 
+        }
+
+        public void SetKa(Ka ka)
+        {
+            foreach(Skill skill in ka.Skills)
+            {
+                SkillButtonClick(skill);
+            }
+            foreach (Passive passive in ka.Passives)
+            {
+                PassiveButtonClick(passive);
+            }
         }
 
         private bool ActiveSkill(Skill skill)
@@ -79,7 +93,7 @@ namespace Placeholdernamespace.CharacterSelection
             ClearButtonList();
             foreach (Skill skill in skills)
             {
-                buildSkillButton(skill);
+                BuildSkillButton(skill);
             }
         }
 
@@ -137,7 +151,7 @@ namespace Placeholdernamespace.CharacterSelection
 
         private void SetColors(GameObject buttonClicked)
         {
-            foreach(GameObject button in buttonList)
+            foreach(GameObject button in buttonClickList)
             {
                 if(button == buttonClicked)
                 {
@@ -150,19 +164,31 @@ namespace Placeholdernamespace.CharacterSelection
             }
         }
 
-        private GameObject buildSkillButton(Skill skill)
+        private GameObject BuildSkillButton(Skill skill)
         {
             GameObject skillButton = buildSkillButton(skill.GetTitle(), () => SkillButtonClick(skill), skill.GetDescription,
                 skill.GetFlavorText, () => ActiveSkill(skill));
             skillToButton.Add(skill, skillButton);
+            buttonList.Add(skillButton);
+            buttonClickList.Add(skillButton);
             return skillButton;
         }
 
         private GameObject BuildPassiveButton(Passive passive)
         {
+            Color? color = null;
+            if(passive is Talent && kaPreview)
+            {
+                color = Color.green;
+            }
             GameObject skillButton = buildSkillButton(passive.GetTitle(), () => PassiveButtonClick(passive), passive.GetDescription,
-              () => null, () => ActivePassive(passive));
+              () => null, () => ActivePassive(passive), color);
             passiveToButton.Add(passive, skillButton);
+  
+             buttonList.Add(skillButton);
+            if (!(passive is Talent))
+                buttonClickList.Add(skillButton);
+
             return skillButton;
         }
 
@@ -182,7 +208,6 @@ namespace Placeholdernamespace.CharacterSelection
             skillButton.GetComponentInChildren<TextMeshProUGUI>().text = title;
             skillButton.transform.SetParent(skillOptionContainer.transform, false);
             skillButton.GetComponent<Button>().onClick.AddListener(() => onClick());
-            buttonList.Add(skillButton);
             if (color != null)
             {
                 skillButton.GetComponent<Image>().color = (Color)color;

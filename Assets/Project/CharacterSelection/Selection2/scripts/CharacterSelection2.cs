@@ -1,4 +1,6 @@
-﻿using Placeholdernamespace.Battle.Entities;
+﻿using Placeholdernamespace.Battle;
+using Placeholdernamespace.Battle.Entities;
+using Placeholdernamespace.Battle.Entities.Kas;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -93,39 +95,56 @@ namespace Placeholdernamespace.CharacterSelection {
         {
             if (characterView.SelectingKa)
             {
-                if(character != selectedCharacter)
-                {
-                    characterView.DisplayKa(character);
-                    ClearBorders(new List<CharacterBoardEntity>() { selectedCharacter, character });
-                    selectedKaCharacter = character;
-                }
+                SetSelectedKa(character);
             }
             else
             {
-                if(selectedCharacter != null)
-                {
-                    charToButton[selectedCharacter].GetComponent<ColorEffectManager>().TurnOff(this);
-                }
-                characterView.DisplayCharacter(character);
-                if (selectedKaCharacter != null)
-                {
-                    charToButton[selectedKaCharacter].GetComponent<ColorEffectManager>().TurnOff(this);
-                }
-                charToButton[character].GetComponent<ColorEffectManager>().TurnOn(this, Color.yellow);
-                selectedCharacter = character;
-                
-                selectedKaCharacter = null;
+                SetSelectedCharacter(character);
+            }
+        }
+        
+        public void SetSelectedCharacter(CharacterBoardEntity character)
+        {
+            if (selectedCharacter != null)
+            {
+                charToButton[selectedCharacter].GetComponent<ColorEffectManager>().TurnOff(this);
+            }
+            characterView.DisplayCharacter(character);
+            Ka ka = null;
+            foreach(Tuple<CharacterType,Ka> thingy in ScenePropertyManager.Instance.characters2)
+            {
+                if (thingy.first == character.CharcaterType)
+                    ka = thingy.second;
+            }
+            characterView.DisplayKaSet(ka);
+            if (selectedKaCharacter != null)
+            {
+                charToButton[selectedKaCharacter].GetComponent<ColorEffectManager>().TurnOff(this);
+            }
+            charToButton[character].GetComponent<ColorEffectManager>().TurnOn(this, Color.yellow);
+            selectedCharacter = character;
+            selectedKaCharacter = null;
+        }
 
+        public void SetSelectedKa(CharacterBoardEntity character)
+        {
+            if (character != selectedCharacter)
+            {
+                characterView.DisplayKa(character);
+
+                ClearBorders(new List<CharacterBoardEntity>() { selectedCharacter, character });
+                selectedKaCharacter = character;
             }
         }
 
-        public void ClearParty()
+    public void ClearParty()
         {
             foreach(GameObject button in charToButton.Values)
             {
                 button.GetComponent<ColorEffectManager>().TurnOff(this);
                 button.GetComponent<ColorEffectManager>().TurnOff(characterView);
             }
+            SetUpInitalSetup();
         }
 
         

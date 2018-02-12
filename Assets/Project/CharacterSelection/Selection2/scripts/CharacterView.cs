@@ -46,7 +46,7 @@ namespace Placeholdernamespace.CharacterSelection
 
         public void LockIn()
         {
-           
+
             Ka ka = null;
             if (selectedKaCharacter != null)
             {
@@ -55,13 +55,14 @@ namespace Placeholdernamespace.CharacterSelection
             kaSkillView.InitKa(ka);
 
             // filter out
-            for(int a = 0; a < ScenePropertyManager.Instance.characters2.Count; a++)
+            for (int a = 0; a < ScenePropertyManager.Instance.characters2.Count; a++)
             {
                 Tuple<CharacterType, Ka> tuple = ScenePropertyManager.Instance.characters2[a];
                 if (tuple.first == selectedCharacter.CharcaterType)
                 {
                     ScenePropertyManager.Instance.characters2.RemoveAt(a);
                     a--;
+                    continue;
                 }
                 if (tuple.second != null && tuple.second.CharacterType == selectedCharacter.CharcaterType)
                 {
@@ -102,7 +103,7 @@ namespace Placeholdernamespace.CharacterSelection
             kaProfile.UpdateProfile(character);
             kaSkillView.SetBoardEntity(character);
             selectingKa = false;
-            if(character != null)
+            if (character != null)
             {
                 selectedKa = true;
                 selectDeselectButton.GetComponentInChildren<Text>().text = "Deselect Ka";
@@ -111,6 +112,27 @@ namespace Placeholdernamespace.CharacterSelection
             {
                 selectedKa = false;
                 selectDeselectButton.GetComponentInChildren<Text>().text = "Select Ka";
+            }
+        }
+
+        public void DisplayKaSet(Ka ka)
+        {
+            if (ka != null)
+            {
+                selectedKaCharacter = ScenePropertyManager.Instance.BoardEntityCharacters[ka.CharacterType].GetComponent<CharacterBoardEntity>();
+                kaProfile.UpdateProfile(selectedKaCharacter);
+                kaSkillView.SetBoardEntity(selectedKaCharacter);
+                kaSkillView.SetKa(ka);
+                if (ka != null)
+                {
+                    selectedKa = true;
+                    selectDeselectButton.GetComponentInChildren<Text>().text = "Deselect Ka";
+                }
+                else
+                {
+                    selectedKa = false;
+                    selectDeselectButton.GetComponentInChildren<Text>().text = "Select Ka";
+                }
             }
         }
 
