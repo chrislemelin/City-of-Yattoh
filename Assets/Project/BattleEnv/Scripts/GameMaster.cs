@@ -38,7 +38,7 @@ namespace Placeholdernamespace.Battle
         public BoardEntitySelector boardEntitySelector;
         public TileSelectionManager tileSelectionManager;
 
-        public Dictionary<CharacterType, GameObject> boardEntityCharacters = new Dictionary<CharacterType, GameObject>();
+        public Dictionary<CharacterType, CharacterBoardEntity> boardEntityCharacters = new Dictionary<CharacterType, CharacterBoardEntity>();
 
         public List<GameObject> boardEntities;
       
@@ -53,7 +53,7 @@ namespace Placeholdernamespace.Battle
             GameObject BE;
 
             Position currentPosition = new Position(0, 0);
-            foreach(Tuple<CharacterType,Ka> character in ScenePropertyManager.Instance.characters2)
+            foreach(Tuple<CharacterBoardEntity, Ka> character in ScenePropertyManager.Instance.getCharacterParty())
             {
                 MakeCharacter(character.first, currentPosition, character.second);
                 currentPosition = currentPosition + new Position(0, 1);
@@ -66,10 +66,10 @@ namespace Placeholdernamespace.Battle
             MakeCharacter(ScenePropertyManager.Instance.characters[3], new Position(0, 0));
             */
 
-            MakeCharacter(CharacterType.EnemyRanged, new Position(5, 5));
-            MakeCharacter(CharacterType.EnemySpeedy, new Position(6, 4));
-            MakeCharacter(CharacterType.EnemyTank, new Position(4, 6));
-            MakeCharacter(CharacterType.EnemyBalanced, new Position(7, 3));
+            MakeCharacter(GetCharacterBoardEntity(CharacterType.EnemyBalanced), new Position(5, 5));
+            MakeCharacter(GetCharacterBoardEntity(CharacterType.EnemyBalanced), new Position(6, 4));
+            MakeCharacter(GetCharacterBoardEntity(CharacterType.EnemyBalanced), new Position(4, 6));
+            MakeCharacter(GetCharacterBoardEntity(CharacterType.EnemyBalanced), new Position(7, 3));
             
             turnManager.init(boardEntitySelector, tileSelectionManager);
             turnManager.ReCalcQueue();
@@ -82,16 +82,29 @@ namespace Placeholdernamespace.Battle
             foreach(GameObject character in boardEntities)
             {
                 if(character.GetComponent<CharacterBoardEntity>() != null)
-                    boardEntityCharacters.Add(character.GetComponent<CharacterBoardEntity>().CharcaterType, character);               
+                    boardEntityCharacters.Add(character.GetComponent<CharacterBoardEntity>().CharcaterType, character.GetComponent<CharacterBoardEntity>());               
             }
         }
 
-        private void MakeCharacter(CharacterType characterType, Position position, Ka ka = null)
+        private void MakeCharacter(CharacterBoardEntity character, Position position, Ka ka = null)
         {
-            GameObject character = boardEntityCharacters[characterType];
+            GameObject characterObj = character.gameObject;
            
-            GameObject BE = Instantiate(character);
+            GameObject BE = Instantiate(characterObj);
             BE.GetComponent<CharacterBoardEntity>().Init(position, turnManager, tileManager, boardEntitySelector, battleCalulator, ka);
+        }
+
+        private CharacterBoardEntity GetCharacterBoardEntity(CharacterType type)
+        {
+            foreach(CharacterBoardEntity compareType in boardEntityCharacters.Values)
+            {
+                if(compareType.CharcaterType == type)
+                {
+                    return compareType;
+                }
+            }
+            return null;
+
         }
     }
 }

@@ -12,11 +12,11 @@ public class ColorEffectManager : MonoBehaviour {
     private SpriteRenderer spriteRenderer;
     private object lastCalled;
     private bool stopOtherGlows = false;
-    private float alpha;
+    private float alpha = 1f;
 
     private Stack<Color> colorStack = new Stack<Color>();
 
-    public void Start()
+    public void Awake()
     { 
         spriteRenderer = GetComponent<SpriteRenderer>();
         alpha = DefaultColor.a;

@@ -30,6 +30,10 @@ ExportedObj/
 sysinfo.txt
 
 # no meta
+<<<<<<< HEAD
+=======
+.meta
+>>>>>>> c53cf9c08b426efdb04e954253f92ff68e9be5e2
 
 # Builds
 *.apk

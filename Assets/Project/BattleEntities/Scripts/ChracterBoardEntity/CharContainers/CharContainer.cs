@@ -50,22 +50,24 @@ namespace Placeholdernamespace.Battle.Entities.Instances
 
         public virtual void Init(CharacterBoardEntity character)
         {
-            if (talent != null)
-                character.AddPassive(talent);
-
-            if(talentTrigger != null)
-                character.AddPassive(talentTrigger);
-
             if (passive != null)
                 character.AddPassive(passive);
 
-            foreach(Skill skill in skills)
+            if (talentTrigger != null)
+                character.AddPassive(talentTrigger);
+
+            if (talent != null)
+                character.AddPassive(talent);
+ 
+
+            foreach (Skill skill in skills)
             {
                 character.AddSkill(skill);
             }
 
             character.SetCharacterType(type);
             character.setRange(range);
+            
 
         } 
 

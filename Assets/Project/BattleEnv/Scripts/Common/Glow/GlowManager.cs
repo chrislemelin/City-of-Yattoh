@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GlowManager : MonoBehaviour {
-
+    /*
     private SpriteGlow spriteGlow;
     private object lastCalled;
     private bool stopOtherGlows = false;
@@ -68,6 +68,6 @@ public class GlowManager : MonoBehaviour {
             }
         }
     }
-
+    */
 
 }
