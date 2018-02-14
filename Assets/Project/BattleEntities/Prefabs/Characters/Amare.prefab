@@ -424,6 +424,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   profileImage: {fileID: 21300000, guid: 2729d8a859d0cd146a1162c44a9f18ab, type: 3}
+  profileImageCircle: {fileID: 21300000, guid: 53860f3d1b1d4a74c9ea28e57f018064, type: 3}
   healthBar: {fileID: 1075659018159238, guid: a0ae54a5f3f969d418b6a279f613a09d, type: 2}
   team: 0
   stats:
@@ -539,6 +540,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 3
+  profileImage: {fileID: 0}
 --- !u!114 &114971248896219136
 MonoBehaviour:
   m_ObjectHideFlags: 1

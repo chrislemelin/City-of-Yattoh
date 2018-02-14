@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using TMPro;
+using System;
 
 namespace Placeholdernamespace.Common.UI
 {
 
-    public class Tooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+    public class Tooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerClickHandler
     {
 
         [SerializeField]
@@ -18,6 +19,13 @@ namespace Placeholdernamespace.Common.UI
 
         [SerializeField]
         private TextMeshProUGUI flavorText;
+
+        private Action clickAction;
+
+        public void Init(Action clickAction)
+        {
+            this.clickAction = clickAction;
+        }
 
         private bool hover = false;
         public bool Hover
@@ -62,5 +70,21 @@ namespace Placeholdernamespace.Common.UI
             hover = false;
         }
 
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            if (clickAction != null)
+            {
+                //clickAction();
+            }
+        }
+
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if (clickAction != null)
+            {
+                clickAction();
+            }
+        }
     }
 }

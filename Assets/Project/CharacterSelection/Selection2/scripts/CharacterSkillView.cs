@@ -37,7 +37,9 @@ namespace Placeholdernamespace.CharacterSelection
 
         public void SetBoardEntity(CharacterBoardEntity boardEntity)
         {
-            if(boardEntity != null)
+            skillToButton.Clear();
+            buttonClickList.Clear();
+            if (boardEntity != null)
             {
                 Show();
                 this.boardEntity = boardEntity;
@@ -60,7 +62,8 @@ namespace Placeholdernamespace.CharacterSelection
             }
             foreach (Passive passive in ka.Passives)
             {
-                PassiveButtonClick(passive);
+                if(!(passive is Talent))
+                    PassiveButtonClick(passive);
             }
         }
 

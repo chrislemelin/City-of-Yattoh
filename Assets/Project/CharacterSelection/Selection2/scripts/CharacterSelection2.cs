@@ -11,27 +11,26 @@ namespace Placeholdernamespace.CharacterSelection {
 
     public class CharacterSelection2 :  MonoBehaviour{
 
+        public enum ColorLocks { primary, secondary }
+
         [SerializeField]
         private CharacterView characterView;
 
         [SerializeField]
         private GameObject charButton;
 
-        private CharacterBoardEntity initalCharacterBoardEntity;
-        private CharacterBoardEntity selectedCharacter;
-        private CharacterBoardEntity selectedKaCharacter;
+        //private CharacterBoardEntity initalCharacterBoardEntity;
+        //private CharacterBoardEntity selectedCharacter;
+        //private CharacterBoardEntity selectedKaCharacter;
         private List<GameObject> charButtons = new List<GameObject>();
         private Dictionary<CharacterBoardEntity, GameObject> charToButton = new Dictionary<CharacterBoardEntity, GameObject>();
 
         // Use this for initialization
-        void Start() {
+        void Awake() {
                      
             foreach(GameObject character in ScenePropertyManager.Instance.BoardEntityCharacters.Values)
             {
-                if(initalCharacterBoardEntity == null)
-                {
-                    initalCharacterBoardEntity = character.GetComponent<CharacterBoardEntity>();
-                }
+                
                 charButtons.Add(MakeButton(character.GetComponent<CharacterBoardEntity>()));
             }
             SetUpInitalSetup();
@@ -40,19 +39,8 @@ namespace Placeholdernamespace.CharacterSelection {
 
         private void SetUpInitalSetup()
         {
-            SelectCharacter(initalCharacterBoardEntity);
-            characterView.DisplayKa(null);
-        }
-
-        public void SelectKa(CharacterBoardEntity character)
-        {
-            foreach(GameObject button in charButtons)
-            {
-                if (charToButton[selectedCharacter] != button)
-                {
-                    button.GetComponent<ColorEffectManager>().TurnOn(this, Color.red);
-                }
-            }
+            //SelectCharacter(initalCharacterBoardEntity);
+            //characterView.DisplayKa(null);
         }
 
         private GameObject MakeButton(CharacterBoardEntity character)
@@ -66,105 +54,60 @@ namespace Placeholdernamespace.CharacterSelection {
             
         }
 
-        public void ClearBorders(CharacterBoardEntity exclude)
-        {
-            ClearBorders(new List<CharacterBoardEntity>() { exclude });
-        }
+ 
 
-        public void ClearBorders(List<CharacterBoardEntity> exclude = null)
-        {
-            List<GameObject> excludeButtons = new List<GameObject>();
-            if(exclude != null)
-            {
-                foreach(CharacterBoardEntity character in exclude)
-                {
-                    excludeButtons.Add(charToButton[character]);
-                }
-            }
-            foreach (GameObject button in charButtons)
-            {
-                if (!excludeButtons.Contains(button))
-                {
-                    button.GetComponent<ColorEffectManager>().TurnOff(this);
-                }
 
-            }
-        }
 
         private void SelectCharacter(CharacterBoardEntity character)
         {
-            if (characterView.SelectingKa)
-            {
-                SetSelectedKa(character);
-            }
-            else
-            {
-                SetSelectedCharacter(character);
-            }
+            characterView.SetCharacter(character);
         }
         
         public void SetSelectedCharacter(CharacterBoardEntity character)
         {
-            if (selectedCharacter != null)
+            ClearParty((int)ColorLocks.primary);
+            if(character != null)
+                charToButton[character].GetComponent<ColorEffectManager>().TurnOn((int)ColorLocks.primary, Color.yellow);
+        }
+
+        public void HighLightKaSelection(CharacterBoardEntity character)
+        {
+            foreach(KeyValuePair<CharacterBoardEntity, GameObject> thing in charToButton)
             {
-                charToButton[selectedCharacter].GetComponent<ColorEffectManager>().TurnOff(this);
+                if(thing.Key != character)
+                {
+                    thing.Value.GetComponent<ColorEffectManager>().TurnOn((int)ColorLocks.secondary, Color.red);
+                }
             }
-            characterView.DisplayCharacter(character);
-            Ka ka = null;
-            foreach(Tuple<CharacterType,Ka> thingy in ScenePropertyManager.Instance.characters2)
-            {
-                if (thingy.first == character.CharcaterType)
-                    ka = thingy.second;
-            }
-            characterView.DisplayKaSet(ka);
-            if (selectedKaCharacter != null)
-            {
-                charToButton[selectedKaCharacter].GetComponent<ColorEffectManager>().TurnOff(this);
-            }
-            charToButton[character].GetComponent<ColorEffectManager>().TurnOn(this, Color.yellow);
-            selectedCharacter = character;
-            selectedKaCharacter = null;
         }
 
         public void SetSelectedKa(CharacterBoardEntity character)
         {
-            if (character != selectedCharacter)
-            {
-                characterView.DisplayKa(character);
+            ClearParty((int)ColorLocks.secondary);
+            if (character != null)
+                charToButton[character].GetComponent<ColorEffectManager>().TurnOn((int)ColorLocks.secondary, Color.red);
+            
 
-                ClearBorders(new List<CharacterBoardEntity>() { selectedCharacter, character });
-                selectedKaCharacter = character;
-            }
         }
 
-    public void ClearParty()
+        public void ClearParty(int locky)
         {
             foreach(GameObject button in charToButton.Values)
             {
-                button.GetComponent<ColorEffectManager>().TurnOff(this);
-                button.GetComponent<ColorEffectManager>().TurnOff(characterView);
+                button.GetComponent<ColorEffectManager>().TurnOff(locky) ;
+                //button.GetComponent<ColorEffectManager>().TurnOff(characterView);
             }
             SetUpInitalSetup();
         }
 
-        
-
-        public void LockIn()
+        public void ClearEverything()
         {
-            if(selectedCharacter!= null)
-            {
-                charToButton[selectedCharacter].GetComponent<ColorEffectManager>().TurnOff(this);
-                charToButton[selectedCharacter].GetComponent<ColorEffectManager>().TurnOff(characterView);
-                charToButton[selectedCharacter].GetComponent<ColorEffectManager>().TurnOn(characterView, Color.green);
-            }
-            if (selectedKaCharacter != null)
-            {
-                charToButton[selectedKaCharacter].GetComponent<ColorEffectManager>().TurnOff(this);
-                charToButton[selectedKaCharacter].GetComponent<ColorEffectManager>().TurnOff(characterView);
-                charToButton[selectedKaCharacter].GetComponent<ColorEffectManager>().TurnOn(characterView, Color.grey);
-            }
-        }
+            ClearParty((int)ColorLocks.primary);
+            ClearParty((int)ColorLocks.secondary);
+            ClearParty((int)ColorLocks.primary);
+            ClearParty((int)ColorLocks.primary);
 
+        }
 
 
     }

@@ -4,6 +4,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using Placeholdernamespace.Common.Sound;
+using Placeholdernamespace.Battle;
+using Placeholdernamespace.Battle.Entities.Kas;
+using Placeholdernamespace.Battle.Entities;
 
 namespace Placeholdernamespace.CharacterSelection
 {
@@ -21,7 +25,7 @@ namespace Placeholdernamespace.CharacterSelection
         // Use this for initialization
         void Start()
         {
-            ScenePropertyManager.Instance.characters2.Clear();
+            ScenePropertyManager.Instance.setCharacterParty(new List<Tuple<CharacterBoardEntity, Ka>>());
             UpdateGoToBattle();
         }
 
@@ -33,17 +37,17 @@ namespace Placeholdernamespace.CharacterSelection
 
         public void UpdateGoToBattle()
         {
-            if(ScenePropertyManager.Instance.characters2.Count == 4)
+            if(ScenePropertyManager.Instance.getCharacterParty().Count == 4)
             {
                 goToBattleButton.interactable = true;
                 text.text = "Ready to go";
             }
-            if(ScenePropertyManager.Instance.characters2.Count < 4)
+            if(ScenePropertyManager.Instance.getCharacterParty().Count < 4)
             {
                 goToBattleButton.interactable = false;
-                text.text = "select " + (4 - ScenePropertyManager.Instance.characters2.Count) + " more to fight";
+                text.text = "select " + (4 - ScenePropertyManager.Instance.getCharacterParty().Count) + " more to fight";
             }
-            if (ScenePropertyManager.Instance.characters2.Count > 4)
+            if (ScenePropertyManager.Instance.getCharacterParty().Count > 4)
             {
                 goToBattleButton.interactable = false;
                 text.text = "too many character selected fam";
@@ -52,13 +56,13 @@ namespace Placeholdernamespace.CharacterSelection
 
         public void GoToBattle()
         {
+            SoundManager.Instance.SetMusic(Soundtrack.battle);
             SceneManager.LoadScene("Battlefield");
         }
 
         public void ClearParty()
         {
-            characterSelection2.ClearParty();
-            ScenePropertyManager.Instance.characters2.Clear();
+            ScenePropertyManager.Instance.setCharacterParty(new List<Tuple<CharacterBoardEntity, Ka>>());
         }
     }
 }
