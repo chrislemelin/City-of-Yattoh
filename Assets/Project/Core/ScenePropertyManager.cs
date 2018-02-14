@@ -3,6 +3,7 @@ using Placeholdernamespace.Battle.Entities;
 using Placeholdernamespace.Battle.Entities.Instances;
 using Placeholdernamespace.Battle.Entities.Kas;
 using Placeholdernamespace.Battle.Env;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -62,14 +63,25 @@ public class ScenePropertyManager : MonoBehaviour {
     public List<CharacterType> characters = new List<CharacterType>() {CharacterType.PlayerBongani, CharacterType.PlayerTisha,
         CharacterType.PlayerJaz, CharacterType.PlayerDadi};
 
-    public List<Tuple<CharacterType, Ka>> characters2 = new List<Tuple<CharacterType, Ka>>() {};
+    public event Action updatedParty;
+
+    private List<Tuple<CharacterBoardEntity, Ka>> characterParty = new List<Tuple<CharacterBoardEntity, Ka>>() {};
+    public List<Tuple<CharacterBoardEntity, Ka>> getCharacterParty()
+    {
+        return characterParty;
+    }
+    public void setCharacterParty(List<Tuple<CharacterBoardEntity, Ka>> newParty)
+    {
+        characterParty = newParty;
+        if(updatedParty != null)
+        {
+            updatedParty();
+        }
+    }
 
     private void  initCharacters2()
     {
-        characters2.Add(new Tuple<CharacterType, Ka>(CharacterType.PlayerBongani, new Ka(typeToContainer[CharacterType.PlayerLesidi])));
-        characters2.Add(new Tuple<CharacterType, Ka>(CharacterType.PlayerAmare, null));
-        characters2.Add(new Tuple<CharacterType, Ka>(CharacterType.PlayerJaz, null));
-        characters2.Add(new Tuple<CharacterType, Ka>(CharacterType.PlayerTisha, null));
+  
     }
 
 }

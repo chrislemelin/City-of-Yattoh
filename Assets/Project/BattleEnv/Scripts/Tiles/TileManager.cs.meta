@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 93a4cd378ff63ef4ba21c8e5d8593632
+timeCreated: 1517522311
+licenseType: Free
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - boardEntitySelector: {instanceID: 0}
+  - generator: {instanceID: 0}
+  - trap: {fileID: 1618618898786550, guid: 5e0643f414a2e0e458d087ac23eff1c8, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

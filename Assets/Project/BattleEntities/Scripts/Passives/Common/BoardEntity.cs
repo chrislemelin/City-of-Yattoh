@@ -26,6 +26,13 @@ namespace Placeholdernamespace.Battle.Entities
         public Sprite ProfileImage
         {
             get { return profileImage; }
+
+        }
+        [SerializeField]
+        private Sprite profileImageCircle;
+        public Sprite ProfileImageCircle
+        {
+            get { return profileImageCircle; }
         }
 
         [SerializeField]
@@ -37,9 +44,7 @@ namespace Placeholdernamespace.Battle.Entities
         public Team Team
         {
             get { return team; }
-        }
-
-   
+        }  
 
         protected BoardEntitySelector boardEntitySelector;
         bool isInit = false;

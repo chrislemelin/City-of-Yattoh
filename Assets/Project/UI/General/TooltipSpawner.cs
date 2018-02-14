@@ -4,12 +4,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace Placeholdernamespace.Common.UI
 {
     public class TooltipSpawner : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
-        private float waitTime = 1;
+        private float waitTime = .5f;
 
         private float enterTime;
 
@@ -33,12 +34,17 @@ namespace Placeholdernamespace.Common.UI
 
 
         private GameObject spawnedTooltip = null;
-        private RectTransform spawnedTooltipRect = null;     
+        private RectTransform spawnedTooltipRect = null;
+
+        private Action clickAction;
 
         // Use this for initialization
         void Start()
         {
-
+            if(GetComponent<Button>() != null)
+            {
+                clickAction = () => GetComponent<Button>().onClick.Invoke();
+            }
         }
 
         void Update()
@@ -51,29 +57,40 @@ namespace Placeholdernamespace.Common.UI
                 && (getDescription() != null || getTitle() != null) )
             {
                 spawnedTooltip = Instantiate(tooltip);
+                spawnedTooltip.GetComponent<Tooltip>().Init(clickAction);
                 spawnedTooltip.GetComponent<Tooltip>().setDescription(getDescription());
                 spawnedTooltip.GetComponent<Tooltip>().setTitle(getTitle());
                 spawnedTooltip.GetComponent<Tooltip>().setFlavorText(getFlavorText());
                 spawnedTooltip.GetComponent<Tooltip>().setDescriptionFontSize(fontSize);
                 spawnedTooltip.transform.SetParent(FindObjectOfType<Canvas>().transform,false);
                 spawnedTooltip.transform.SetAsLastSibling();
-                spawnedTooltipRect = spawnedTooltip.GetComponent<RectTransform>();
+                spawnedTooltipRect = spawnedTooltip.transform.GetChild(0).GetComponent<RectTransform>();
                 spawnedTooltip.transform.position = new Vector3(10000, 10000);
                 placed = false;
             }
-            if(!placed && spawnedTooltip != null && spawnedTooltipRect.rect.width != 0)
+            if(!placed && spawnedTooltip != null && spawnedTooltipRect.rect.height != 10)
             {
                 Vector3 mousePos = Input.mousePosition;
                 float x = 0;
-                float width = spawnedTooltipRect.rect.width * spawnedTooltip.transform.lossyScale.x;
-                float height = spawnedTooltipRect.rect.height * spawnedTooltip.transform.lossyScale.y;
+                float width = spawnedTooltip.GetComponent<RectTransform>().rect.width * spawnedTooltip.GetComponent<RectTransform>().transform.lossyScale.x;
+                float height = spawnedTooltipRect.rect.height;
+                //float height = spawnedTooltipRect.GetChild(0).Gec
+                float tipWidth = width - (spawnedTooltipRect.rect.width * spawnedTooltipRect.transform.lossyScale.x);
+                
+
                 if (mousePos.x > (Camera.main.pixelWidth/2))
                 {
-                    x = mousePos.x - (width / 2);
+                    x = mousePos.x - width/2;
                 }
                 else
                 {
-                    x = mousePos.x + (width / 2);
+                    float widthValue = width / 2 - tipWidth;
+                    x = mousePos.x + (widthValue);
+                }
+
+                if(mousePos.y < Camera.main.pixelHeight/2)
+                {
+                    spawnedTooltip.GetComponent<RectTransform>().pivot =  new Vector2(.5f,0);
                 }
 
                 float y = mousePos.y - height / 2;                
@@ -82,8 +99,9 @@ namespace Placeholdernamespace.Common.UI
                 {
                     y = height / 2;
                 }
-  
-                spawnedTooltip.transform.position = new Vector3(x, y);
+                //spawnedTooltip.transform.position = new Vector3(mousePos.x, mousePos.y);
+
+                spawnedTooltip.transform.position = new Vector3(x,mousePos.y);
                 placed = true;
             }
             if(spawnedTooltip!= null && !hover && !spawnedTooltip.GetComponent<Tooltip>().Hover)

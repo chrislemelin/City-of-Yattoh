@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: 562850e52a28c1f4f95fafc53f2f9637
+timeCreated: 1517670404
+licenseType: Free
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - profileImage: {instanceID: 0}
+  - healthBar: {fileID: 1075659018159238, guid: a0ae54a5f3f969d418b6a279f613a09d,
+      type: 2}
+  - characterAnimation: {instanceID: 0}
+  - charactersprite: {instanceID: 0}
+  - charContainer: {instanceID: 0}
+  - enemyAIBasic1: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

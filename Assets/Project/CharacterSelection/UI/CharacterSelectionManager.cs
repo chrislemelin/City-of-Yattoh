@@ -1,6 +1,8 @@
 ﻿using Placeholdernamespace.Battle;
+using Placeholdernamespace.Battle.Entities;
 using Placeholdernamespace.Battle.Entities.Instances;
 using Placeholdernamespace.Battle.Entities.Kas;
+using Placeholdernamespace.Common.Sound;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -161,7 +163,7 @@ namespace Placeholdernamespace.CharacterSelection
 
         private void GoToBattle()
         {
-            ScenePropertyManager.Instance.characters2.Clear();
+            ScenePropertyManager.Instance.setCharacterParty(new List<Tuple<CharacterBoardEntity, Ka>>());
             for (int a = 0; a < partyDropdowns.Count; a++)
             {
                 Dropdown dropdown = partyDropdowns[a];
@@ -172,10 +174,11 @@ namespace Placeholdernamespace.CharacterSelection
                     CharacterType kaType = textToType[kaDropdown.options[kaDropdown.value].text];
                     ka = new Ka(ScenePropertyManager.Instance.typeToContainer[kaType]);
                 }
-                ScenePropertyManager.Instance.characters2.Add( new Tuple<CharacterType, Ka>(
-                    textToType[dropdown.options[dropdown.value].text], ka));
+               // ScenePropertyManager.Instance.characterParty.Add( new Tuple<CharacterType, Ka>(
+               //     textToType[dropdown.options[dropdown.value].text], ka));
 
             }
+            SoundManager.Instance.SetMusic(Soundtrack.battle);
             SceneManager.LoadScene("Battlefield");
         }
     }
