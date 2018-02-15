@@ -14,7 +14,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         public TalentTriggerDadi(): base()
         {
             title = "Battle Rage";
-            description = "Triggers when you 1/4 health damage since last turn";
+            description = "When you take 1/4 of your health as damage in a single round, activate talents";
         }
 
         public override void Init(BattleCalculator battleCalculator, CharacterBoardEntity boardEntity, TileManager tileManager)

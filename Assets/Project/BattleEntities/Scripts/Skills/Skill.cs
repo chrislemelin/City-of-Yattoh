@@ -506,7 +506,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         /// override for function based description
         /// </summary>
         /// <returns></returns>
-        protected virtual string GetDescriptionHelper()
+        public virtual string GetDescriptionHelper()
         {
             return description;
         }

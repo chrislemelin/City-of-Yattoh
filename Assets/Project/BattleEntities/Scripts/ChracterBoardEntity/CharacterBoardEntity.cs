@@ -566,6 +566,19 @@ namespace Placeholdernamespace.Battle.Entities
             }
         }
         
+        public List<Passive> GetTalents()
+        {
+            List<Passive> talents = new List<Passive>();
+            foreach(Passive passive in passives)
+            {
+                if(passive is Talent)
+                {
+                    talents.Add(passive);
+                }
+            }
+            return talents;
+        }
+
         public void RemovePassive(Passive passive)
         {
             foreach(Passive p in Passives)

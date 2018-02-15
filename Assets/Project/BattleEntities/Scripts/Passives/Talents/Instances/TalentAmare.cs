@@ -8,7 +8,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         public TalentAmare():base()
         {
             title = "stealth";
-            description = "TALENT make yourself stealthed";
+            description = "make yourself stealthed";
         }
 
         public override void Activate()

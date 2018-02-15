@@ -47,7 +47,7 @@ namespace Placeholdernamespace.CharacterSelection
                     newProfile.transform.GetChild(0).transform.GetChild(0).gameObject.SetActive(true);
                     // oh god
                     Sprite kaProfile =  ScenePropertyManager.Instance.TypeToContainer[character.second.CharacterType].GetComponent<CharacterBoardEntity>().ProfileImageCircle;
-                    newProfile.transform.GetChild(0).transform.GetChild(0).transform.GetChild(0).GetComponent<Image>().sprite = kaProfile;
+                    newProfile.transform.GetChild(0).transform.GetChild(0).GetComponent<Image>().sprite = kaProfile;
                 }
                 profiles.Add(newProfile);
             }

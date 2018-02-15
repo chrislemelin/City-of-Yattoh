@@ -9,15 +9,34 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Placeholdernamespace.Battle.Entities.Passives;
+using Placeholdernamespace.Battle.Entities.Skills;
 
 namespace Placeholdernamespace.CharacterSelection
 {
-    public class CharacterView : MonoBehaviour
+    public class CharacterView2 : MonoBehaviour
     {
         [SerializeField]
-        TextMeshProUGUI bannarMessage;
+        GameObject displaySkill;
+
+        [SerializeField]
+        GameObject talentContainer;
+        List<GameObject> talentDisplays = new List<GameObject>();
+
+        [SerializeField]
+        GameObject skillContainer;
+        List<GameObject> skillDisplays = new List<GameObject>();
+
+        //[SerializeField]
+        //TextMeshProUGUI bannarMessage;
+
         [SerializeField]
         private CharacterSelection2 characterSelection2;
+
+        [SerializeField]
+        private Profile2 profile;
+
+        /*
         [SerializeField]
         private Profile characterProfile;
         [SerializeField]
@@ -26,11 +45,13 @@ namespace Placeholdernamespace.CharacterSelection
         private CharacterSkillView kaSkillView;
         [SerializeField]
         private Profile kaProfile;
-        [SerializeField]
-        private CharacterRightPanel rightPanel;
-        [SerializeField]
-        private GameObject selectDeselectButton;
+        */
+        //[SerializeField]
+        //private CharacterRightPanel rightPanel;
+        //[SerializeField]
+        //private GameObject selectDeselectButton;
         private CharacterBoardEntity selectedCharacter;
+
         public CharacterBoardEntity GetSelectedCharacter()
         {
             return selectedCharacter;
@@ -48,9 +69,9 @@ namespace Placeholdernamespace.CharacterSelection
             get { return selectingKa; }
         }
 
-        private string bannarCharacterSelectMessage = "Equip Support Character, or Add to Party";
-        private string bannarKaSelectMessage = "Select skill to inherit";
-        private string bannarAddedToPartyMessage = "Choose another character";
+        //private string bannarCharacterSelectMessage = "Equip Support Character, or Add to Party";
+        //private string bannarKaSelectMessage = "Select skill to inherit";
+        //private string bannarAddedToPartyMessage = "Choose another character";
 
         //private string 
 
@@ -64,7 +85,7 @@ namespace Placeholdernamespace.CharacterSelection
             {
                 ka = new Ka(selectedKaCharacter.GetComponent<CharContainer>());
             }
-            kaSkillView.InitKa(ka);
+            //kaSkillView.InitKa(ka);
             List<Tuple<CharacterBoardEntity, Ka>> party = new List<Tuple<CharacterBoardEntity, Ka>>(ScenePropertyManager.Instance.getCharacterParty());
 
             // filter out
@@ -99,7 +120,7 @@ namespace Placeholdernamespace.CharacterSelection
 
             party.Add(new Tuple<CharacterBoardEntity, Ka>(selectedCharacter, ka));
             ScenePropertyManager.Instance.setCharacterParty(party);
-            rightPanel.UpdateGoToBattle();
+            //rightPanel.UpdateGoToBattle();
             //characterSelection2.LockIn();
         }
 
@@ -114,17 +135,14 @@ namespace Placeholdernamespace.CharacterSelection
             }
         }
 
-        public void DisplayCharacter(CharacterBoardEntity character, bool displayStuff = true, bool moveArrow = true)
+        public void DisplayCharacter(CharacterBoardEntity character, bool moveArrow = true)
         {
             selectedCharacter = character;
-            characterProfile.UpdateProfile(character);
-            characterSkillView.SetBoardEntity(character);
+            //characterProfile.UpdateProfile(character);
+            //characterSkillView.SetBoardEntity(character);
             DisplayKa(null);
             characterSelection2.SetSelectedCharacter(character, moveArrow);
-            if(displayStuff)
-            {
-                bannarMessage.text = bannarCharacterSelectMessage;
-            }
+  
         }
 
         private void DisplayKaHelper(Ka ka)
@@ -132,25 +150,86 @@ namespace Placeholdernamespace.CharacterSelection
             if (ka != null)
             {
                 selectedKaCharacter = ScenePropertyManager.Instance.BoardEntityCharacters[ka.CharacterType].GetComponent<CharacterBoardEntity>();
-                kaProfile.UpdateProfile(selectedKaCharacter);
-                kaSkillView.SetBoardEntity(selectedKaCharacter);
-                kaSkillView.SetKa(ka);
-                    
-                selectDeselectButton.GetComponentInChildren<Text>().text = "Deselect Secondary Charcter 'Ka'";
-                bannarMessage.text = bannarKaSelectMessage;
+                if(selectedKaCharacter == selectedCharacter)
+                {
+                    selectedKaCharacter = null;
+                }
+                profile.gameObject.SetActive(true);
+                profile.SetProfilePic(selectedCharacter, selectedKaCharacter);
+                DisplayHelper();
+                //kaProfile.UpdateProfile(selectedKaCharacter);
+                //kaSkillView.SetBoardEntity(selectedKaCharacter);
+                //kaSkillView.SetKa(ka);
             }
             else
             {
-                kaProfile.UpdateProfile(null);
-                kaSkillView.SetBoardEntity(null);
+                //kaProfile.UpdateProfile(null);
+                //kaSkillView.SetBoardEntity(null);
                 selectedKaCharacter = null;
-
-                selectDeselectButton.GetComponentInChildren<Text>().text = "Equip Secondary Charcter 'Ka'";
-                bannarMessage.text = bannarCharacterSelectMessage;
+                profile.gameObject.SetActive(false);
             }
             characterSelection2.SetSelectedKa(selectedKaCharacter);
 
         }
+
+        private void DisplayHelper()
+        {
+            foreach(GameObject talent in talentDisplays)
+            {
+                Destroy(talent);
+            }
+            talentDisplays.Clear();
+
+            foreach (GameObject skill in skillDisplays)
+            {
+                Destroy(skill);
+            }
+            skillDisplays.Clear();
+
+            List<Passive> tempPassives = selectedCharacter.Passives;
+            List<Passive> passives = new List<Passive>();
+            List<Passive> talents = new List<Passive>();
+            foreach (Passive passive in tempPassives)
+            {
+                if(passive is Talent)
+                {
+                    talents.Add(passive);
+                }
+                else
+                {
+                    passives.Add(passive);
+                }
+            }
+            if(selectedKaCharacter != null)
+            {
+                talents.AddRange(selectedKaCharacter.GetTalents());
+            }
+
+            foreach(Passive talent in talents)
+            {
+                DisplayObjectHelper(talent.GetTitle(), talent.GetDescriptionHelper(), talentDisplays, talentContainer);
+            }
+
+            foreach (Skill skill in selectedCharacter.Skills)
+            {
+                DisplayObjectHelper(skill.GetTitle(), skill.GetDescriptionHelper(), skillDisplays, skillContainer);
+            }
+            foreach (Passive passive in passives)
+            {
+                DisplayObjectHelper(passive.GetTitleHelper(), passive.GetDescription(), skillDisplays, skillContainer);
+            }
+
+        }
+
+        private void DisplayObjectHelper(string title, string description, List<GameObject> list, GameObject container)
+        {
+            GameObject display =  Instantiate(displaySkill);
+            display.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = title;
+            display.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = description;
+            list.Add(display);
+            display.transform.SetParent(container.transform,false);
+        }
+
 
         public void DisplayKa(CharacterBoardEntity character)
         {
@@ -172,24 +251,20 @@ namespace Placeholdernamespace.CharacterSelection
 
         public void SetCharacter(CharacterBoardEntity character)
         {
-            if(!selectingKa)
-            {
-                DisplayCharacter(character);
-                DisplayKa(null);
-               
-            }
-            else
-            {
-                selectingKa = false;
-                DisplayKa(character);
-                characterSelection2.SetSelectedKa(character);
-            }
+            DisplayCharacter(character);
+      
         }
 
-       
+        public void SetKa(CharacterBoardEntity character)
+        {
+            DisplayKa(character);
+            //characterSelection2.SetSelectedKa(character);
+        }
+
+        /*
         public void SelectionDeselectButtonClick()
         {
-            if(selectedKaCharacter != null)
+            if (selectedKaCharacter != null)
             {
                 DisplayKa(null);
             }
@@ -205,6 +280,9 @@ namespace Placeholdernamespace.CharacterSelection
                 DisplayKa(null);
             }
         }
+        */
 
     }
 }
+
+

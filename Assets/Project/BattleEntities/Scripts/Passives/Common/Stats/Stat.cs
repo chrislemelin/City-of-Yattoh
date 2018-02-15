@@ -14,7 +14,29 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
     [System.Serializable]
     public class Stat
     {
-       
+
+        Dictionary<StatType, int> belowAverageCeiling = new Dictionary<StatType, int>()
+        {
+            { StatType.Health, 15 },
+            { StatType.Movement, 5 },
+            { StatType.Armour, 1 },
+            { StatType.Strength, 8},
+            { StatType.Speed, 8 }
+        };
+        Dictionary<StatType, int> averageCeiling = new Dictionary<StatType, int>()
+        {
+            { StatType.Health, 15 },
+            { StatType.Movement, 5 },
+            { StatType.Armour, 1 },
+            { StatType.Strength, 8},
+            { StatType.Speed, 8 }
+        };
+
+        public string GetAverageHelper()
+        {
+            return "";
+        }
+
         [SerializeField]
         private StatType type;
         public StatType Type

@@ -14,7 +14,6 @@ public class ScenePropertyManager : MonoBehaviour {
     public static ScenePropertyManager Instance
     {
         get {
-
             return instance;
         }
     }

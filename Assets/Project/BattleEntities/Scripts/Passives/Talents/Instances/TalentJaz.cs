@@ -12,7 +12,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         {
             title = "Eagle Eye";
             type = PassiveType.Talent;
-            description = "TALENT: Next attack will have double range";
+            description = "Next attack will have double range";
 
         }
 

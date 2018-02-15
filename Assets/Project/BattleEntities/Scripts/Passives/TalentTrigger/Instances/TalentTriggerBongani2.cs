@@ -14,7 +14,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         public TalentTriggerBongani2()
         {
             title = "Prepared";
-            description = "When enemy enters adjacency TRIGGER";
+            description = "When enemy enters adjacency range, activate talents";
         }
 
         public override void Init(BattleCalculator battleCalculator, CharacterBoardEntity boardEntity, TileManager tileManager)

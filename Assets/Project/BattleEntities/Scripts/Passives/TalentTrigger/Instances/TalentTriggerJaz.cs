@@ -10,15 +10,13 @@ namespace Placeholdernamespace.Battle.Entities.Passives
     {
 
         [SerializeField]
-        public float damagePercentage = .1f;
+        public float damagePercentage = .5f;
 
         public TalentTriggerJaz()
         {
-            title = "Bull's eye";
-            description = "TALEN TRIGGER: When you take off " + (damagePercentage * 100) + "% damage in a single hit, trigger TALENT";
+            title = "Bulleye";
+            description = "When you take off " + (damagePercentage * 100) + "% damage in a single hit, activate talents";
         }
-
-
 
         public override void ExecutedSkill(Skill skill, SkillReport skillReport)
         {

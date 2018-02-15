@@ -16,12 +16,17 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         public override string GetTitle()
         {
-            return title + " (TALENT TRIGGER)";
+            return title;
+        }
+
+        public override string GetDescription()
+        {
+            return "Talent Trigger: "+description ;
         }
 
         public void Trigger()
         {
-            ((CharacterBoardEntity)boardEntity).FloatingTextGenerator.AddTextDisplay(new Common.UI.TextDisplay() { target = boardEntity, text = "talent trigger" });
+            boardEntity.FloatingTextGenerator.AddTextDisplay(new Common.UI.TextDisplay() { target = boardEntity, text = "talent trigger" });
             boardEntity.TriggerTalents();
         }
 
