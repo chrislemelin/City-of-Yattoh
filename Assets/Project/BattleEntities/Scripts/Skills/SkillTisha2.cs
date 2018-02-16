@@ -12,8 +12,8 @@ namespace Placeholdernamespace.Battle.Entities.Skills
     {
         public SkillTisha2(): base()
         {
-            title = "Guard Up";
-            description = "Mitigate half damage taken by self and allies adjacent and return it back if the target is also adjacent";
+            title = "Vengeful Guardian";
+            description = "Reflect half of all damage dealt to adjacent allies and self";
             range = RANGE_SELF;
             coolDown = 5;
             apCost = 1;

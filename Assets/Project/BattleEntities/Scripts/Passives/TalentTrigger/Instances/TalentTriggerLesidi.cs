@@ -9,7 +9,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         public TalentTriggerLesidi()
         {
-            title = "Community";
+            title = "Side by Side";
             description = "When you move and end your turn next to an ally, activate talents";
         }
 

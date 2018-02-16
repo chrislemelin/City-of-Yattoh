@@ -17,7 +17,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             title = "Piercing Shot";
             apCost = 2;
             coolDown = 3;
-            description = "Deal half of power as damage and armour damage to enemies a single direction, has range equal to basic attack";
+            description = "Attack all enemies in a line for half power and strip their armour for two turns";
         }
 
         protected override SkillReport GetSkillReport(Tile t)

@@ -11,8 +11,8 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         public PassiveLesidi():base()
         {
-            title = "Pure weapons";
-            description = "Adds 3 pure damage on attacks";
+            title = "Righteous Blows";
+            description = "Attacks deal aditional pure damage";
         }
 
         public override List<DamagePackage> GetDamagePackage(Skill skill)

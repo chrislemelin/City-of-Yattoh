@@ -30,6 +30,11 @@ namespace Placeholdernamespace.CharacterSelection
             UpdateGoToBattle();
         }
 
+        private void OnDestroy()
+        {
+            ScenePropertyManager.Instance.updatedParty -= UpdateGoToBattle;
+        }
+
         // Update is called once per frame
         void Update()
         {

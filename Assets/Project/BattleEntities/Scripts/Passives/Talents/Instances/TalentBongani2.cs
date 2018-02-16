@@ -9,8 +9,8 @@ namespace Placeholdernamespace.Battle.Entities.Passives
     {
         public TalentBongani2()
         {
-            title = "weaken";
-            description = "Weaken adjacent enemies";
+            title = "Take the High Ground";
+            description = "Weaken all adjacent enemies";
         }
 
         public override void Activate()

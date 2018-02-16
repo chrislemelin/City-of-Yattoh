@@ -13,8 +13,9 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
         public SkillDadi1(): base()
         {
-            title = "Charge";
-            description = "do a charge";
+            title = "Relentless Assult";
+            description = "Charge up to your movment pushing an enemy and " +
+                "dealing damage based on distance pushed";
             apCost = 1;
             coolDown = 3;
             animationType = AnimatorUtils.animationType.none;
@@ -91,15 +92,15 @@ namespace Placeholdernamespace.Battle.Entities.Skills
                 {
                     if (tile.BoardEntity.Team == boardEntity.Team && hitEnemy)
                     {
+                        returnTiles.RemoveAt(returnTiles.Count - 1);
                         break;
                     }
                     if(tile.BoardEntity.Team != boardEntity.Team)
                     {
                         if(hitEnemy)
                         {
-                            returnTiles.RemoveAt(returnTiles.Count - 1);
+                            returnTiles.RemoveAt(returnTiles.Count - 1); 
                             break;
-                            
                         }
                         else
                         {

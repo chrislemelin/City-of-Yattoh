@@ -13,8 +13,8 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         public TalentTriggerBongani2()
         {
-            title = "Prepared";
-            description = "When enemy enters adjacency range, activate talents";
+            title = "Ever-Vigilant";
+            description = "When enemy enters attack range, activate talents";
         }
 
         public override void Init(BattleCalculator battleCalculator, CharacterBoardEntity boardEntity, TileManager tileManager)

@@ -53,6 +53,11 @@ namespace Placeholdernamespace.CharacterSelection {
             //RemakeKaButtons();
         }
 
+        private void OnDestroy()
+        {
+            ScenePropertyManager.Instance.updatedParty -= GreyOutUsedCharacters;
+        }
+
         public void Clear()
         {
             ClearEverything();
@@ -161,7 +166,11 @@ namespace Placeholdernamespace.CharacterSelection {
                 if(moveArrow && arrow != null)
                 {
                     arrow.SetActive(true);
-                    arrow.GetComponent<RectTransform>().position = new Vector3 (110, charToButton[character].GetComponent<RectTransform>().position.y, 0);
+                    //arrow.transform.position = new Vector3(110, charToButton[character].GetComponent<RectTransform>().position.y, 0);
+                    //ugh this is gross
+                    arrow.GetComponent<RectTransform>().anchoredPosition = new Vector3 (-383,
+                        charToButton[character].GetComponent<RectTransform>().localPosition.y *
+                        charToButton[character].GetComponent<RectTransform>().localScale.y - 300, 0);
                 }
 
             }

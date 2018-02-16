@@ -10,8 +10,8 @@ namespace Placeholdernamespace.Battle.Entities.Passives
     {
         public PassiveDadi(): base()
         {
-            title = "Instincts";
-            description = "gain extra ap each turn equal to number of adjacent enemies divided by 2";
+            title = "Born to Battle";
+            description = "Start each turn with extra energy for every two adjacent enemies";
         }
 
         public override void StartTurn()

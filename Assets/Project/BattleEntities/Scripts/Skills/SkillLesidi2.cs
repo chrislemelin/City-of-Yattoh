@@ -10,9 +10,9 @@ namespace Placeholdernamespace.Battle.Entities.Skills
     {
         public SkillLesidi2() :base()
         {
-            title = "Inspire";
+            title = "Guiding Light";
+            description = "An adjacent ally's stats are increased by one for two turns";
             animationType = Common.Animator.AnimatorUtils.animationType.skill;
-            description = "Buffs all stats by one for two turns for self and adjacent allies";
             apCost = 2;
             coolDown = 4;
             range = 2;

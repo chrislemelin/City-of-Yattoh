@@ -10,8 +10,8 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         public TalentDadi()
         {
-            title = "Rage";
-            description = "Applies rage";
+            title = "Savage Spirit";
+            description = "Rage for two turns, letting you attack without cooldown before becoming exhausted";
         }
         public override void Activate()
         {

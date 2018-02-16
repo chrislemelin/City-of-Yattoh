@@ -56,8 +56,7 @@ namespace Placeholdernamespace.Common.UI
         private void ResetPressed()
         {
             resetButton.SetActive(false);
-            Destroy(ScenePropertyManager.Instance.gameObject);     
-            SceneManager.LoadScene("CharacterSelection2");
+            SceneManager.LoadScene("CharacterSelection3");
         }
     }
 }

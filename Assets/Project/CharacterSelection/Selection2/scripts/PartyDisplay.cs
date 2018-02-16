@@ -23,10 +23,9 @@ namespace Placeholdernamespace.CharacterSelection
             ScenePropertyManager.Instance.updatedParty += UpdateProfile;
         }
 
-        // Update is called once per frame
-        void Update()
+        private void OnDestroy()
         {
-
+            ScenePropertyManager.Instance.updatedParty -= UpdateProfile;
         }
 
         private void UpdateProfile()

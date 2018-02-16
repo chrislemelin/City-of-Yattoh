@@ -11,8 +11,8 @@ namespace Placeholdernamespace.Battle.Entities.Skills
     {
         public SkillAmare2(): base()
         {
-            title = "Dodge";
-            description = "avoid next attack";
+            title = "Survivor's Instinct";
+            description = "Dodge the next attack against you";
             apCost = 1;
             coolDown = 2;
             range = RANGE_SELF;

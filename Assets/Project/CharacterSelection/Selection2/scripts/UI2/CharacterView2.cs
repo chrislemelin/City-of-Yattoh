@@ -193,7 +193,7 @@ namespace Placeholdernamespace.CharacterSelection
                 profile.gameObject.SetActive(true);
                 profile.SetProfilePic(selectedCharacter, selectedKaCharacter);
                 DisplayHelper();
-                kaSkillSelect.Init(selectedKaCharacter, CanAddToParty);
+                kaSkillSelect.Init(selectedKaCharacter, EnableAddToParty);
                 profileDisplay.SetActive(true);
                 profileHidden.SetActive(false);
                 if (selectedKaCharacter != null)
@@ -203,17 +203,11 @@ namespace Placeholdernamespace.CharacterSelection
                 }
                 else
                 {
-                    addToParty.interactable = true;
-                    addToPartyText.text = "";
+                    EnableAddToParty();
                 }
-                //kaProfile.UpdateProfile(selectedKaCharacter);
-                //kaSkillView.SetBoardEntity(selectedKaCharacter);
-                //kaSkillView.SetKa(ka);
             }
             else
             {
-                //kaProfile.UpdateProfile(null);
-                //kaSkillView.SetBoardEntity(null);
                 selectedKaCharacter = null;
                 profile.gameObject.SetActive(false);
             }
@@ -224,9 +218,9 @@ namespace Placeholdernamespace.CharacterSelection
 
     
 
-        public void CanAddToParty()
+        public void EnableAddToParty()
         {
-            addToPartyText.text = "";
+            addToPartyText.text = "Ready to add to party";
             addToParty.interactable = true;
         }
 

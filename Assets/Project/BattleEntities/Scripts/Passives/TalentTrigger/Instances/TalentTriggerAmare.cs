@@ -12,7 +12,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         public TalentTriggerAmare(): base()
         {
-            title = "Killing Blow";
+            title = "Mortal Fixation";
             description = "When you kill an enemy, activate talents";
 
         }

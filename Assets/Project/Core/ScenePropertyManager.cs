@@ -18,6 +18,8 @@ public class ScenePropertyManager : MonoBehaviour {
         }
     }
 
+
+
     private Dictionary<CharacterType, GameObject> boardEntityCharacters = new Dictionary<CharacterType, GameObject>();
     public Dictionary<CharacterType, GameObject> BoardEntityCharacters
     {
@@ -39,8 +41,11 @@ public class ScenePropertyManager : MonoBehaviour {
     [SerializeField]
     private List<GameObject> boardEntities;
 
-
     void Awake()
+    { 
+    }
+
+    public void Init()
     {
         MakeDictionary();
         instance = this;

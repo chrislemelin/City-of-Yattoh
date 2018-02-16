@@ -14,8 +14,8 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         public TalentTriggerJaz()
         {
-            title = "Bulleye";
-            description = "When you take off " + (damagePercentage * 100) + "% damage in a single hit, activate talents";
+            title = "Out For Blood";
+            description = "When you damage an enemy for half of their maximum HP, activate talents";
         }
 
         public override void ExecutedSkill(Skill skill, SkillReport skillReport)

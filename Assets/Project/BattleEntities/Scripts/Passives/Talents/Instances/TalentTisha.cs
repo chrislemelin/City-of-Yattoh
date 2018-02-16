@@ -9,8 +9,8 @@ namespace Placeholdernamespace.Battle.Entities.Passives
     {
         public TalentTisha(): base()
        {
-            title = "Challenger";
-            description = "adjacent enemies cannot leave tiles adjacent to character";
+            title = "Keep Your Enemies Close";
+            description = "Enemies in attack range cannot leave attack range";
         }
 
         public override void Activate()
