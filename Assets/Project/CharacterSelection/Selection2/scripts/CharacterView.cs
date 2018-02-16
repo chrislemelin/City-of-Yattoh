@@ -65,7 +65,7 @@ namespace Placeholdernamespace.CharacterSelection
                 ka = new Ka(selectedKaCharacter.GetComponent<CharContainer>());
             }
             kaSkillView.InitKa(ka);
-            List<Tuple<CharacterBoardEntity, Ka>> party = new List<Tuple<CharacterBoardEntity, Ka>>(ScenePropertyManager.Instance.getCharacterParty());
+            List<Tuple<CharacterBoardEntity, Ka>> party = new List<Tuple<CharacterBoardEntity, Ka>>(ScenePropertyManager.Instance.GetCharacterParty());
 
             // filter out
             for (int a = 0; a < party.Count; a++)

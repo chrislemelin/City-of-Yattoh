@@ -24,6 +24,12 @@ public class ScenePropertyManager : MonoBehaviour {
         get { return new Dictionary<CharacterType, GameObject>(boardEntityCharacters); }
     }
 
+    public Dictionary<CharacterType, CharacterBoardEntity> typeToBE = new Dictionary<CharacterType, CharacterBoardEntity>();
+    public Dictionary<CharacterType, CharacterBoardEntity> TypeToBE
+    {
+        get { return new Dictionary<CharacterType, CharacterBoardEntity>(typeToBE); }
+    }
+
     public Dictionary<CharacterType, CharContainer> typeToContainer = new Dictionary<CharacterType, CharContainer>();
     public Dictionary<CharacterType, CharContainer> TypeToContainer
     {
@@ -50,6 +56,7 @@ public class ScenePropertyManager : MonoBehaviour {
             {
                 CharacterType type = character.GetComponent<CharacterBoardEntity>().CharcaterType;
                 boardEntityCharacters.Add(type, character);
+                typeToBE.Add(type, character.GetComponent<CharacterBoardEntity>());
                 typeToContainer.Add(type, character.GetComponent<CharContainer>());
                 character.GetComponent<CharContainer>().Init(character.GetComponent<CharacterBoardEntity>());
                 character.GetComponent<CharacterBoardEntity>().PartialInit();
@@ -65,7 +72,7 @@ public class ScenePropertyManager : MonoBehaviour {
     public event Action updatedParty;
 
     private List<Tuple<CharacterBoardEntity, Ka>> characterParty = new List<Tuple<CharacterBoardEntity, Ka>>() {};
-    public List<Tuple<CharacterBoardEntity, Ka>> getCharacterParty()
+    public List<Tuple<CharacterBoardEntity, Ka>> GetCharacterParty()
     {
         return characterParty;
     }
@@ -76,6 +83,21 @@ public class ScenePropertyManager : MonoBehaviour {
         {
             updatedParty();
         }
+    }
+
+    public HashSet<CharacterBoardEntity> GetUsedCharacter()
+    {
+        HashSet<CharacterBoardEntity> returnSet = new HashSet<CharacterBoardEntity>();
+        foreach (Tuple <CharacterBoardEntity, Ka> tup in characterParty)
+        {
+            returnSet.Add(tup.first);
+            if(tup.second != null)
+            {
+                returnSet.Add(typeToBE[tup.second.CharacterType]);
+            }
+        }
+        return returnSet;
+
     }
 
     private void  initCharacters2()

@@ -36,6 +36,21 @@ namespace Placeholdernamespace.CharacterSelection
         [SerializeField]
         private Profile2 profile;
 
+        [SerializeField]
+        private KaSkillSelect2 kaSkillSelect;
+
+        [SerializeField]
+        private Button addToParty;
+
+        [SerializeField]
+        private TextMeshProUGUI addToPartyText;
+
+        [SerializeField]
+        GameObject profileDisplay;
+
+        [SerializeField]
+        GameObject profileHidden;
+
         /*
         [SerializeField]
         private Profile characterProfile;
@@ -63,11 +78,8 @@ namespace Placeholdernamespace.CharacterSelection
             return selectedKaCharacter;
         }
 
-        bool selectingKa = false;
-        public bool SelectingKa
-        {
-            get { return selectingKa; }
-        }
+        bool needToSelectSkill = false;
+   
 
         //private string bannarCharacterSelectMessage = "Equip Support Character, or Add to Party";
         //private string bannarKaSelectMessage = "Select skill to inherit";
@@ -79,14 +91,13 @@ namespace Placeholdernamespace.CharacterSelection
 
         public void LockIn()
         {
-
             Ka ka = null;
             if (selectedKaCharacter != null)
             {
                 ka = new Ka(selectedKaCharacter.GetComponent<CharContainer>());
             }
             //kaSkillView.InitKa(ka);
-            List<Tuple<CharacterBoardEntity, Ka>> party = new List<Tuple<CharacterBoardEntity, Ka>>(ScenePropertyManager.Instance.getCharacterParty());
+            List<Tuple<CharacterBoardEntity, Ka>> party = new List<Tuple<CharacterBoardEntity, Ka>>(ScenePropertyManager.Instance.GetCharacterParty());
 
             // filter out
             for (int a = 0; a < party.Count; a++)
@@ -101,7 +112,7 @@ namespace Placeholdernamespace.CharacterSelection
                 if (tuple.second != null && tuple.second.CharacterType == selectedCharacter.CharcaterType)
                 {
                     tuple.second = null;
-                    a--;
+                    //a--;
                 }
                 if (selectedKaCharacter != null)
                 {
@@ -113,15 +124,39 @@ namespace Placeholdernamespace.CharacterSelection
                     if (tuple.second != null && tuple.second.CharacterType == selectedKaCharacter.CharcaterType)
                     {
                         tuple.second = null;
-                        a--;
+                        //a--;
                     }
                 }
             }
 
             party.Add(new Tuple<CharacterBoardEntity, Ka>(selectedCharacter, ka));
-            ScenePropertyManager.Instance.setCharacterParty(party);
+            if (party.Count > 4)
+            {
+                addToPartyText.text = "Can only add 4 to party";
+            }
+            else
+            {
+                Clear();
+                ScenePropertyManager.Instance.setCharacterParty(party);
+                if (party.Count == 4)
+                {
+                    addToPartyText.text = "Ready to go";
+                }
+                else
+                {
+                    addToPartyText.text = "Need " + (4 - party.Count) + " more for a full party";
+                }
+            }
             //rightPanel.UpdateGoToBattle();
             //characterSelection2.LockIn();
+        }
+
+        private void Clear()
+        {
+            characterSelection2.Clear();
+            profileDisplay.SetActive(false);
+            profileHidden.SetActive(true);
+            addToParty.interactable = false;
         }
 
         public void Start()
@@ -138,8 +173,9 @@ namespace Placeholdernamespace.CharacterSelection
         public void DisplayCharacter(CharacterBoardEntity character, bool moveArrow = true)
         {
             selectedCharacter = character;
-            //characterProfile.UpdateProfile(character);
-            //characterSkillView.SetBoardEntity(character);
+            profileDisplay.SetActive(false);
+            profileHidden.SetActive(true);
+            addToParty.interactable = false;
             DisplayKa(null);
             characterSelection2.SetSelectedCharacter(character, moveArrow);
   
@@ -157,6 +193,19 @@ namespace Placeholdernamespace.CharacterSelection
                 profile.gameObject.SetActive(true);
                 profile.SetProfilePic(selectedCharacter, selectedKaCharacter);
                 DisplayHelper();
+                kaSkillSelect.Init(selectedKaCharacter, CanAddToParty);
+                profileDisplay.SetActive(true);
+                profileHidden.SetActive(false);
+                if (selectedKaCharacter != null)
+                {
+                    addToParty.interactable = false;
+                    addToPartyText.text = "Select a support skill";
+                }
+                else
+                {
+                    addToParty.interactable = true;
+                    addToPartyText.text = "";
+                }
                 //kaProfile.UpdateProfile(selectedKaCharacter);
                 //kaSkillView.SetBoardEntity(selectedKaCharacter);
                 //kaSkillView.SetKa(ka);
@@ -168,8 +217,17 @@ namespace Placeholdernamespace.CharacterSelection
                 selectedKaCharacter = null;
                 profile.gameObject.SetActive(false);
             }
+
             characterSelection2.SetSelectedKa(selectedKaCharacter);
 
+        }
+
+    
+
+        public void CanAddToParty()
+        {
+            addToPartyText.text = "";
+            addToParty.interactable = true;
         }
 
         private void DisplayHelper()
@@ -252,7 +310,7 @@ namespace Placeholdernamespace.CharacterSelection
         public void SetCharacter(CharacterBoardEntity character)
         {
             DisplayCharacter(character);
-      
+            
         }
 
         public void SetKa(CharacterBoardEntity character)

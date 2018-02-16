@@ -4,6 +4,7 @@ using Placeholdernamespace.Battle.Entities.Kas;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Placeholdernamespace.CharacterSelection {
 
@@ -13,6 +14,10 @@ namespace Placeholdernamespace.CharacterSelection {
 
         [SerializeField]
         Sprite noneSprite;
+
+        [SerializeField]
+        Color greyOutColor;
+   
 
         public enum ColorLocks { primary, secondary }
         [SerializeField]
@@ -44,7 +49,14 @@ namespace Placeholdernamespace.CharacterSelection {
             {                
                 MakeButton(character.GetComponent<CharacterBoardEntity>());
             }
+            ScenePropertyManager.Instance.updatedParty += GreyOutUsedCharacters;
             //RemakeKaButtons();
+        }
+
+        public void Clear()
+        {
+            ClearEverything();
+            arrow.SetActive(false);
         }
 
         private void RemakeKaButtons()
@@ -57,6 +69,7 @@ namespace Placeholdernamespace.CharacterSelection {
                 bool blank = selectedCharacter == character.GetComponent<CharacterBoardEntity>();
                 MakeKaButton(character.GetComponent<CharacterBoardEntity>(), blank);
             }
+            GreyOutUsedCharacters();
         }
 
         private void ClearKaButtons()
@@ -77,6 +90,37 @@ namespace Placeholdernamespace.CharacterSelection {
             buttonInstance.transform.SetParent(characterSelectionContainer.transform, false);
             return buttonInstance;
             
+        }
+
+        public void GreyOutUsedCharacters()
+        {
+            List<Tuple<CharacterBoardEntity, Ka>> party = ScenePropertyManager.Instance.GetCharacterParty();
+            HashSet<CharacterBoardEntity> usedChars = ScenePropertyManager.Instance.GetUsedCharacter();
+           
+           foreach(CharacterBoardEntity character in charToButton.Keys)
+           {
+                if(!usedChars.Contains(character))
+                {
+                    charToButton[character].transform.GetChild(0).GetComponent<Image>().color = Color.white;
+                }
+                else
+                {
+                    charToButton[character].transform.GetChild(0).GetComponent<Image>().color = greyOutColor;
+                }
+           }
+
+            foreach (CharacterBoardEntity character in kaToButton.Keys)
+            {
+                if (!usedChars.Contains(character))
+                {
+                    kaToButton[character].transform.GetChild(0).GetComponent<Image>().color = Color.white;
+                }
+                else
+                {
+                    kaToButton[character].transform.GetChild(0).GetComponent<Image>().color = greyOutColor;
+                }
+            }
+
         }
 
         private GameObject MakeKaButton(CharacterBoardEntity character, bool blank = false)
@@ -123,7 +167,6 @@ namespace Placeholdernamespace.CharacterSelection {
             }
         }
 
-
         public void HighLightKaSelection(CharacterBoardEntity character)
         {
             foreach(KeyValuePair<CharacterBoardEntity, GameObject> thing in kaToButton)
@@ -161,8 +204,7 @@ namespace Placeholdernamespace.CharacterSelection {
         {
             ClearParty((int)ColorLocks.primary);
             ClearParty((int)ColorLocks.secondary);
-            ClearParty((int)ColorLocks.primary);
-            ClearParty((int)ColorLocks.primary);
+  
 
         }
 

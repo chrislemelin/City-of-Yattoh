@@ -37,7 +37,7 @@ namespace Placeholdernamespace.CharacterSelection
             }
             profiles.Clear();
 
-            foreach(Tuple<CharacterBoardEntity,Ka> character in ScenePropertyManager.Instance.getCharacterParty())
+            foreach(Tuple<CharacterBoardEntity,Ka> character in ScenePropertyManager.Instance.GetCharacterParty())
             {
                 GameObject newProfile = Instantiate(profile);
                 newProfile.transform.GetChild(0).GetComponent<Image>().sprite = character.first.ProfileImage;

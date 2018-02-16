@@ -53,7 +53,7 @@ namespace Placeholdernamespace.Battle
             GameObject BE;
 
             Position currentPosition = new Position(0, 0);
-            foreach(Tuple<CharacterBoardEntity, Ka> character in ScenePropertyManager.Instance.getCharacterParty())
+            foreach(Tuple<CharacterBoardEntity, Ka> character in ScenePropertyManager.Instance.GetCharacterParty())
             {
                 MakeCharacter(character.first, currentPosition, character.second);
                 currentPosition = currentPosition + new Position(0, 1);

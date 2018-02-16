@@ -26,6 +26,7 @@ namespace Placeholdernamespace.CharacterSelection
         void Start()
         {
             ScenePropertyManager.Instance.setCharacterParty(new List<Tuple<CharacterBoardEntity, Ka>>());
+            ScenePropertyManager.Instance.updatedParty += UpdateGoToBattle;
             UpdateGoToBattle();
         }
 
@@ -37,20 +38,17 @@ namespace Placeholdernamespace.CharacterSelection
 
         public void UpdateGoToBattle()
         {
-            if(ScenePropertyManager.Instance.getCharacterParty().Count == 4)
+            if(ScenePropertyManager.Instance.GetCharacterParty().Count == 4)
             {
                 goToBattleButton.interactable = true;
-                text.text = "Ready to go";
             }
-            if(ScenePropertyManager.Instance.getCharacterParty().Count < 4)
+            if(ScenePropertyManager.Instance.GetCharacterParty().Count < 4)
             {
                 goToBattleButton.interactable = false;
-                text.text = "select " + (4 - ScenePropertyManager.Instance.getCharacterParty().Count) + " more to fight";
             }
-            if (ScenePropertyManager.Instance.getCharacterParty().Count > 4)
+            if (ScenePropertyManager.Instance.GetCharacterParty().Count > 4)
             {
                 goToBattleButton.interactable = false;
-                text.text = "too many character selected fam";
             }
         }
 
