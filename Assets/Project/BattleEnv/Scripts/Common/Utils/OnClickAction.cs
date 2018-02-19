@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 public class OnClickAction : MonoBehaviour, IPointerClickHandler{
 
     public Action clickAction;
+    public bool active = false;
 
     private void OnMouseUp()
     {

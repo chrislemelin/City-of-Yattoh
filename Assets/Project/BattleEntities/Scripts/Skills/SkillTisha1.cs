@@ -13,8 +13,8 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
         public SkillTisha1():base()
         {
-            title = "Battle Cry";
-            description = "Give all alies one armour for each adjacent enemy";
+            title = "Ironclad Paragon";
+            description = "All allies gain armour for each adjacent enemy";
             range = RANGE_SELF;
             coolDown = 3;
             apCost = 2;

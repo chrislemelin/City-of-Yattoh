@@ -10,15 +10,13 @@ namespace Placeholdernamespace.Battle.Entities.Passives
     {
 
         [SerializeField]
-        public float damagePercentage = .1f;
+        public float damagePercentage = .5f;
 
         public TalentTriggerJaz()
         {
-            title = "Bull's eye";
-            description = "TALEN TRIGGER: When you take off " + (damagePercentage * 100) + "% damage in a single hit, trigger TALENT";
+            title = "Out For Blood";
+            description = "When you damage an enemy for half of their maximum HP, activate talents";
         }
-
-
 
         public override void ExecutedSkill(Skill skill, SkillReport skillReport)
         {
@@ -30,7 +28,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
                     int damageThreshold = Mathf.CeilToInt(report.second.GetNonMuttableStat(StatType.Health).Value * damagePercentage);
                     if (difference >= damageThreshold)
                     {
-                        boardEntity.TriggerTalents();
+                        Trigger();
                         //this should only trigger once ?? might change
                         break;
                     }

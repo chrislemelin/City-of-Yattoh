@@ -9,8 +9,8 @@ namespace Placeholdernamespace.Battle.Entities.Passives
     {
         public TalentLesidi()
         {
-            title = "Inspiring Words";
-            description = "TALENT reduces cooldown of self and adjacent allies";
+            title = "Motivate";
+            description = "Reduce all cooldowns of adjacent allies and yourself";
         }
 
         public override void Activate()

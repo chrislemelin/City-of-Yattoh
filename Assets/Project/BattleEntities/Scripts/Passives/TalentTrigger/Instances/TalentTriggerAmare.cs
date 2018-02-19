@@ -12,8 +12,8 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         public TalentTriggerAmare(): base()
         {
-            title = "Killing Blow";
-            description = "TRIGGERS talents when you kill an enemy";
+            title = "Mortal Fixation";
+            description = "When you kill an enemy, activate talents";
 
         }
 

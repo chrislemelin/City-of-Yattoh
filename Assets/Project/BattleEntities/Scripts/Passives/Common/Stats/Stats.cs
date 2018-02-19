@@ -207,6 +207,8 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
         {
             // if its less than zero something should probably happen here
             int newValue = GetMutableStat(StatType.Movement).Value - value;
+
+            int valueToSubract= 0;
             while(newValue < 0)
             {
                 newValue += GetNonMuttableStat(StatType.Movement).Value;
@@ -216,19 +218,23 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
                 }
                 else
                 {
-                    SubtractAPPoints(1);
+                    valueToSubract++;
                 }
             }
+            if(valueToSubract > 0) 
+                SubtractAPPoints(valueToSubract, true);
             SetMutableStat(StatType.Movement, newValue);
             return true;
 
         }
 
-        public void SubtractAPPoints(int value)
+        public void SubtractAPPoints(int value, bool display = false)
         {
             // if its less than zero something should probably happen here
             int newValue = GetMutableStat(StatType.AP).Value - value;
             SetMutableStat(StatType.AP, newValue);
+            if(display)
+                ((CharacterBoardEntity)boardEntity).FloatingTextGenerator.AddTextDisplay(new Common.UI.TextDisplay() { text = "-" + value + " AP" });
         }
 
         public void SubtractHealthPoints(int value)

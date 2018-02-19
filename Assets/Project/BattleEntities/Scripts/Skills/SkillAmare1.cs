@@ -11,8 +11,8 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
         public SkillAmare1(): base()
         {
-            title = "All Out";
-            description = "spend all ap and do 2 basic attacks at half power for each ap spent";
+            title = "Desperate Flurry";
+            description = "Exhast all energy to unleash repeated attacks";
             apCost = 0;
             coolDown = 2;
         }

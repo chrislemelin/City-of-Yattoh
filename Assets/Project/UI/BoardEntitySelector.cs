@@ -13,6 +13,9 @@ namespace Placeholdernamespace.Battle.Interaction
     public class BoardEntitySelector :MonoBehaviour{
 
         [SerializeField]
+        Color SelectColor;
+
+        [SerializeField]
         private SkillSelector skillSelector;
         public SkillSelector SkillSelector
         {
@@ -62,15 +65,17 @@ namespace Placeholdernamespace.Battle.Interaction
                 setHoverEntity(null);
                 selectedBoardEntity = null;
                 tileSelectionManager.CancelSelection();
-                profile.UpdateProfile(boardEntity);
 
                 selectedBoardEntity = boardEntity;
+                profile.UpdateProfile(boardEntity);
+
                 buildMoveOptions();
                 if (boardEntity == null)
                 {
                     skillSelector.Hide();
                 }
             }
+            /*
             else
             {
                 if (boardEntity == hoverBoardEntity)
@@ -79,9 +84,10 @@ namespace Placeholdernamespace.Battle.Interaction
                 }
                 else
                 {
-                    setHoverEntity(boardEntity);
+                    //setHoverEntity(boardEntity);
                 }
             }
+            */
         }
 
         private void setHoverEntity(BoardEntity boardEntity)
@@ -93,8 +99,8 @@ namespace Placeholdernamespace.Battle.Interaction
             hoverBoardEntity = boardEntity;
             if (hoverBoardEntity != null)
             {
-                profile.UpdateProfile(boardEntity);
-                hoverBoardEntity.GetTile().PathOnClick.ColorEffectManager.TurnOn(this, Color.blue);
+                //profile.UpdateProfile(boardEntity);
+                //hoverBoardEntity.GetTile().PathOnClick.ColorEffectManager.TurnOn(this, Color.blue);
             }
 
         }
@@ -157,8 +163,8 @@ namespace Placeholdernamespace.Battle.Interaction
                     options.Add(new TileSelectOption()
                     {
                         Selection = selectedBoardEntity.GetTile(),
-                        HighlightColor = Color.black,
-                        HoverColor = Color.black,
+                        HighlightColor = SelectColor,
+                        HoverColor = SelectColor,
                         OnHoverAction = (
                             () => {
                                 if (getHoverEntity() == null)
@@ -167,8 +173,10 @@ namespace Placeholdernamespace.Battle.Interaction
                                 }
                             })
                     });
-                    
-                    tileSelectionManager.SelectTile(selectedBoardEntity, options, sendMoveToBoardEntity, isMovement:true);               
+
+                    tileSelectionManager.SelectTile(selectedBoardEntity, options, sendMoveToBoardEntity, isMovement: true,
+                        hoverExit: () => { if (hoverBoardEntity == null) profile.UpdateProfile(selectedBoardEntity); }
+                        );               
                     skillSelector.SetBoardEntity((CharacterBoardEntity)selectedBoardEntity);
                     skillSelector.SetSkills(((CharacterBoardEntity)selectedBoardEntity).Skills);
                 }
@@ -181,12 +189,14 @@ namespace Placeholdernamespace.Battle.Interaction
 
         private void sendMoveToBoardEntity(TileSelectOption tileOption)
         {
+           
             if (selectedBoardEntity is CharacterBoardEntity)
             {
                 if(tileOption != null)
                 {
                     setHoverEntity(null);
-                    ((CharacterBoardEntity)selectedBoardEntity).ExecuteMove( (Move)tileOption.ReturnObject, (bool ok) => buildMoveOptions());
+                    ((CharacterBoardEntity)selectedBoardEntity).ExecuteMove( (Move)tileOption.ReturnObject, (bool ok) => { buildMoveOptions();
+                        profile.UpdateProfile(selectedBoardEntity); });
                 }
                 else
                 {

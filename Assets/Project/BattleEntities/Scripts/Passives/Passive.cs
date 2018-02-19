@@ -102,10 +102,20 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         public virtual string GetTitle()
         {
-            return title+" (PASSIVE)";
+            return GetTitleHelper() + " (PASSIVE)";
+        }
+
+        public string GetTitleHelper()
+        {
+            return title;
         }
         
         public virtual string GetDescription()
+        {
+            return "Passive: " + GetDescriptionHelper();
+        }
+
+        public string GetDescriptionHelper()
         {
             return description;
         }

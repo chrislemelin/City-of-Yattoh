@@ -41,8 +41,14 @@ namespace Placeholdernamespace.Battle.Managers
         private BoardEntitySelector boardEntitySelector;
         private TileSelectionManager tileSelectionManager;
 
+        public void Awake()
+        {
+            enities.Clear();
+        }
+
         public void startGame()
         {
+            
             NextTurn();
         }
 
@@ -109,17 +115,45 @@ namespace Placeholdernamespace.Battle.Managers
         private void UpdateGui()
         {
             string newText = "";
-            newText += currentBoardEntity.Name;
-
+            int counter = 1;
+            newText += AddOrdinal(counter++) + "  " + currentBoardEntity.Name;
+            
             List<BoardEntity> displayList = turnQueue;
             foreach (BoardEntity entity in displayList)
             {
-                newText += " -> " + entity.Name;
+                newText += "\n"+AddOrdinal(counter++)+"  " + entity.Name;
             }
             if (display != null)
             {
                 display.text = newText;
             }
+        }
+
+        //https://stackoverflow.com/questions/20156/is-there-an-easy-way-to-create-ordinals-in-c
+        private string AddOrdinal(int num)
+        {
+            if (num <= 0) return num.ToString();
+
+            switch (num % 100)
+            {
+                case 11:
+                case 12:
+                case 13:
+                    return num + "th";
+            }
+
+            switch (num % 10)
+            {
+                case 1:
+                    return num + "st";
+                case 2:
+                    return num + "nd";
+                case 3:
+                    return num + "rd";
+                default:
+                    return num + "th";
+            }
+
         }
 
         public void ReCalcQueue()

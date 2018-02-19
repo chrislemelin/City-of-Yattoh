@@ -25,8 +25,8 @@ namespace Placeholdernamespace.Common.UI
         void Start()
         {
             DontDestroyOnLoad(gameObject);
-            soundButton.GetComponent<PointerDownListener>().pressed += SoundPressed;
-            resetButton.GetComponent<PointerDownListener>().pressed += ResetPressed;
+            soundButton.GetComponent<OnPointerDownListener>().pressed += SoundPressed;
+            resetButton.GetComponent<OnPointerDownListener>().pressed += ResetPressed;
             UpdateMuteIcon();
         }
 
@@ -56,8 +56,7 @@ namespace Placeholdernamespace.Common.UI
         private void ResetPressed()
         {
             resetButton.SetActive(false);
-            Destroy(ScenePropertyManager.Instance.gameObject);     
-            SceneManager.LoadScene("CharacterSelection2");
+            SceneManager.LoadScene("CharacterSelection3");
         }
     }
 }

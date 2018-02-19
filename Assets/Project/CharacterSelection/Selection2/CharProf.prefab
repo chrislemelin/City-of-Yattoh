@@ -39,9 +39,9 @@ GameObject:
   - component: {fileID: 224837547672313036}
   - component: {fileID: 222918405536830614}
   - component: {fileID: 114294038688484978}
-  - component: {fileID: 114009231795761806}
   - component: {fileID: 61536674741124168}
   - component: {fileID: 114511334203033978}
+  - component: {fileID: 114535867344988148}
   m_Layer: 5
   m_Name: CharProf
   m_TagString: Untagged
@@ -74,17 +74,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &114009231795761806
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1992951559445944}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bedb97dfbd16c274695c57eceffd5f6b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114294038688484978
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -126,6 +115,18 @@ MonoBehaviour:
   targets:
   - {fileID: 114294038688484978}
   DefaultColor: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &114535867344988148
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1992951559445944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5622ec481898c24195be1a839016a05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  active: 1
 --- !u!114 &114654658094625042
 MonoBehaviour:
   m_ObjectHideFlags: 1

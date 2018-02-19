@@ -27,6 +27,7 @@ namespace Placeholdernamespace.Battle.Interaction
         public Color defaultHoverColor;
 
         private Action<TileSelectOption> selectionCallBack;
+        private Action hoverExit;
         private BoardEntity selectedEntity;
 
         public void Init(Profile profile)
@@ -111,7 +112,15 @@ namespace Placeholdernamespace.Battle.Interaction
             }
             else
             {
-                NewGlowPath(null);                
+                NewGlowPath(null);     
+                if(hoverExit != null)
+                {
+                    hoverExit();
+                }
+                if(pathOnClick.Tile.BoardEntity != null)
+                {
+                    profile.UpdateProfile(pathOnClick.Tile.BoardEntity);
+                }
             }
         }
 
@@ -132,7 +141,7 @@ namespace Placeholdernamespace.Battle.Interaction
         }
 
         public void SelectTile (BoardEntity boardEntity, List<Tile> tiles, Action<TileSelectOption> callBack, Color? highlightColor, Color? hoverColor, 
-            bool isMovement = false)
+            bool isMovement = false, Action HoverExit = null)
         {
             Color highlightColorUsing = (Color)(highlightColor != null ? highlightColor : defaultHighlightColor);
             Color hoverColorUsing = (Color)(hoverColor != null ? hoverColor : defaultHoverColor);
@@ -148,10 +157,11 @@ namespace Placeholdernamespace.Battle.Interaction
                     HoverColor = hoverColorUsing
                 });
             }
-            SelectTile(boardEntity, options, callBack);
+            SelectTile(boardEntity, options, callBack, hoverExit:hoverExit);
         }
 
-        public void SelectTile(BoardEntity boardEntity, List<Move> moves, Action<TileSelectOption> callBack, Color? highlightColor, Color? hoverColor, bool isMovement = false)
+        public void SelectTile(BoardEntity boardEntity, List<Move> moves, Action<TileSelectOption> callBack, Color? highlightColor, Color? hoverColor,
+            bool isMovement = false, Action hoverExit = null)
         {
             Color highlightColorUsing = (Color)(highlightColor!= null ? highlightColor: defaultHighlightColor);
             Color hoverColorUsing = (Color)(hoverColor != null ? hoverColor : defaultHoverColor);
@@ -168,11 +178,14 @@ namespace Placeholdernamespace.Battle.Interaction
                     ReturnObject = m
                 });
             }
-            SelectTile(boardEntity, options, callBack, isMovement);
+            SelectTile(boardEntity, options, callBack, isMovement, hoverExit:hoverExit);
         }
 
-        public void SelectTile(BoardEntity boardEntity, List<TileSelectOption> options, Action<TileSelectOption> callBack, bool isMovement = false)
+        // this is the main one
+        public void SelectTile(BoardEntity boardEntity, List<TileSelectOption> options, Action<TileSelectOption> callBack, bool isMovement = false,
+             Action hoverExit = null)
         {
+            this.hoverExit = hoverExit;
             if (selectionCallBack == null)
             {
                 this.isMovement = isMovement;

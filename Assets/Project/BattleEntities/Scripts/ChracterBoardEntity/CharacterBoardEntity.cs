@@ -166,9 +166,9 @@ namespace Placeholdernamespace.Battle.Entities
                 ka.Init(this);
                 if(charKaAura != null)
                 {
-                    charKaAura.SetActive(true);
-                    Color newColor = new Color(ka.KaColor.r, ka.KaColor.g, ka.KaColor.b, charKaAura.GetComponent<Image>().color.a);
-                    charKaAura.GetComponent<Image>().color = newColor;
+                    //charKaAura.SetActive(true);
+                    //Color newColor = new Color(ka.KaColor.r, ka.KaColor.g, ka.KaColor.b, charKaAura.GetComponent<Image>().color.a);
+                    //charKaAura.GetComponent<Image>().color = newColor;
 
                 }
             }
@@ -254,6 +254,10 @@ namespace Placeholdernamespace.Battle.Entities
             {
                 turnManager.RemoveBoardEntity(this);
                 GetTile().SetBoardEntity(null);
+                if(TurnManager.CurrentBoardEntity == this)
+                {
+                    EndMyTurn();
+                }
                 Destroy(gameObject);
             }
             else
@@ -417,6 +421,7 @@ namespace Placeholdernamespace.Battle.Entities
                 if(interuptClearMovement)
                 {
                     stats.SetMutableStat(AttributeStats.StatType.Movement, 0);
+                    stats.SetMutableStat(AttributeStats.StatType.AP, 0);
                     interuptClearMovement = false;
                 }
                 // all done moving
@@ -566,6 +571,19 @@ namespace Placeholdernamespace.Battle.Entities
             }
         }
         
+        public List<Passive> GetTalents()
+        {
+            List<Passive> talents = new List<Passive>();
+            foreach(Passive passive in passives)
+            {
+                if(passive is Talent)
+                {
+                    talents.Add(passive);
+                }
+            }
+            return talents;
+        }
+
         public void RemovePassive(Passive passive)
         {
             foreach(Passive p in Passives)

@@ -169,6 +169,7 @@ namespace Placeholdernamespace.Battle.Env
 
         public void AddTileListener(TileListener tileListener)
         {
+            tileListener.Init(tileListeners.Remove);
             tileListeners.Add(tileListener);
         }
 

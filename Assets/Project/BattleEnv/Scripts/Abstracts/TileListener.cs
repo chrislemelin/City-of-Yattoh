@@ -11,16 +11,12 @@ namespace Placeholdernamespace.Battle.Env
     public class TileListener: MonoBehaviour
     {
 
-        private Tile tile;
         private Func<TileListener, bool> removeAction;
         private EnterTileAction enterAction;
-        protected Team targetTeam;
 
-        public void Init(Tile tile, Func<TileListener, bool> remove, Team targetTeam)
+        public void Init(Func<TileListener, bool> remove)
         {
-            this.tile = tile;
             removeAction = remove;
-            this.targetTeam = targetTeam;
         }
 
         private void Remove()

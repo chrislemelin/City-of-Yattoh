@@ -12,11 +12,11 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
         public SkillJaz1():base()
         {
-            title = "Take Aim";
+            title = "True Aim";
             range = RANGE_SELF;
             apCost = 1;
             coolDown = 2;
-            description = "Applies buff that increases power, but go away with movement";
+            description = "Deal increased damage, reduced by movement";
         }
 
 

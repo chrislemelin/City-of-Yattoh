@@ -13,8 +13,8 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
         public SkillBongani3(): base()
         {
-            title = "Throw Net";
-            description = "stuns target and all adjacent enemies to that target";
+            title = "Ocean's Embrace";
+            description = "stun an enemy and all adjacent enemies";
             range = RANGE_ADJACENT;
             coolDown = 3;
             apCost = 1;

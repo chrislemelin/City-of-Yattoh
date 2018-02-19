@@ -11,6 +11,9 @@ namespace Placeholdernamespace.CharacterSelection
     public class PartyDisplay : MonoBehaviour
     {
         [SerializeField]
+        private CharacterView2 characterView;
+
+        [SerializeField]
         private GameObject partyDisplayGrid;
 
         [SerializeField]
@@ -23,10 +26,9 @@ namespace Placeholdernamespace.CharacterSelection
             ScenePropertyManager.Instance.updatedParty += UpdateProfile;
         }
 
-        // Update is called once per frame
-        void Update()
+        private void OnDestroy()
         {
-
+            ScenePropertyManager.Instance.updatedParty -= UpdateProfile;
         }
 
         private void UpdateProfile()
@@ -37,21 +39,43 @@ namespace Placeholdernamespace.CharacterSelection
             }
             profiles.Clear();
 
-            foreach(Tuple<CharacterBoardEntity,Ka> character in ScenePropertyManager.Instance.getCharacterParty())
+            foreach(Tuple<CharacterBoardEntity,Ka> character in ScenePropertyManager.Instance.GetCharacterParty())
             {
                 GameObject newProfile = Instantiate(profile);
                 newProfile.transform.GetChild(0).GetComponent<Image>().sprite = character.first.ProfileImage;
                 newProfile.transform.SetParent(partyDisplayGrid.transform, false);
-                if(character.second != null)
+                newProfile.GetComponent<PartyProfile>().Exit.pressed += () => { RemoveCharacter(character.first); };
+                newProfile.GetComponent<PartyProfile>().Profile.pressed += () => { DisplayCharacter(character.first, character.second); };
+                if (character.second != null)
                 {
                     newProfile.transform.GetChild(0).transform.GetChild(0).gameObject.SetActive(true);
                     // oh god
                     Sprite kaProfile =  ScenePropertyManager.Instance.TypeToContainer[character.second.CharacterType].GetComponent<CharacterBoardEntity>().ProfileImageCircle;
-                    newProfile.transform.GetChild(0).transform.GetChild(0).transform.GetChild(0).GetComponent<Image>().sprite = kaProfile;
+                    newProfile.transform.GetChild(0).transform.GetChild(0).GetComponent<Image>().sprite = kaProfile;
                 }
                 profiles.Add(newProfile);
             }
 
+        }
+
+        private void DisplayCharacter(CharacterBoardEntity character, Ka ka)
+        {
+            characterView.DisplayCharacter(character);
+            characterView.DisplayKa(ScenePropertyManager.Instance.TypeToBE[ka.CharacterType]);
+        }
+
+        private void RemoveCharacter(CharacterBoardEntity character)
+        {
+            List<Tuple<CharacterBoardEntity, Ka>> party = ScenePropertyManager.Instance.GetCharacterParty();
+            for(int a = 0; a < party.Count; a++)
+            {
+                if(party[a].first == character)
+                {
+                    party.RemoveAt(a);
+                    break;
+                }
+            }
+            ScenePropertyManager.Instance.SetCharacterParty(party);
         }
     }
 }

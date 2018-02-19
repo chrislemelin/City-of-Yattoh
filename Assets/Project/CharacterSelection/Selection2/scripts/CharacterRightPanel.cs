@@ -25,8 +25,14 @@ namespace Placeholdernamespace.CharacterSelection
         // Use this for initialization
         void Start()
         {
-            ScenePropertyManager.Instance.setCharacterParty(new List<Tuple<CharacterBoardEntity, Ka>>());
+            ScenePropertyManager.Instance.SetCharacterParty(new List<Tuple<CharacterBoardEntity, Ka>>());
+            ScenePropertyManager.Instance.updatedParty += UpdateGoToBattle;
             UpdateGoToBattle();
+        }
+
+        private void OnDestroy()
+        {
+            ScenePropertyManager.Instance.updatedParty -= UpdateGoToBattle;
         }
 
         // Update is called once per frame
@@ -37,20 +43,17 @@ namespace Placeholdernamespace.CharacterSelection
 
         public void UpdateGoToBattle()
         {
-            if(ScenePropertyManager.Instance.getCharacterParty().Count == 4)
+            if(ScenePropertyManager.Instance.GetCharacterParty().Count == 4)
             {
                 goToBattleButton.interactable = true;
-                text.text = "Ready to go";
             }
-            if(ScenePropertyManager.Instance.getCharacterParty().Count < 4)
+            if(ScenePropertyManager.Instance.GetCharacterParty().Count < 4)
             {
                 goToBattleButton.interactable = false;
-                text.text = "select " + (4 - ScenePropertyManager.Instance.getCharacterParty().Count) + " more to fight";
             }
-            if (ScenePropertyManager.Instance.getCharacterParty().Count > 4)
+            if (ScenePropertyManager.Instance.GetCharacterParty().Count > 4)
             {
                 goToBattleButton.interactable = false;
-                text.text = "too many character selected fam";
             }
         }
 
@@ -62,7 +65,7 @@ namespace Placeholdernamespace.CharacterSelection
 
         public void ClearParty()
         {
-            ScenePropertyManager.Instance.setCharacterParty(new List<Tuple<CharacterBoardEntity, Ka>>());
+            ScenePropertyManager.Instance.SetCharacterParty(new List<Tuple<CharacterBoardEntity, Ka>>());
         }
     }
 }

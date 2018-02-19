@@ -11,9 +11,9 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
         public SkillLesidi1():base()
         {
-            title = "heal";
+            title = "Lay on Hands";
+            description = "An adjacent ally or yourself for half of their max health";
             animationType = Common.Animator.AnimatorUtils.animationType.skill;
-            description = "heal ally for half of their max health";
             range = 2;
             apCost = 1;
             coolDown = 2;

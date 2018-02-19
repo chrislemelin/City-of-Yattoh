@@ -10,9 +10,9 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         public TalentJaz()
         {
-            title = "Eagle Eye";
+            title = "Long Arm of the Law";
             type = PassiveType.Talent;
-            description = "TALENT: Next attack will have double range";
+            description = "Next attack has double range";
 
         }
 

@@ -14,8 +14,8 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
         public SkillDadi2():base()
         {
-            title = "Battle Cry";
-            description = "all enemies 2 tiles away must attack this character for 2 turns";
+            title = "Bring it On";
+            description = "Taunt enemies, forcing them to attack you";
             apCost = 0;
             coolDown = 4;
             range = 2;

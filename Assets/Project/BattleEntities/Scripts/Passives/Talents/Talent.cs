@@ -17,7 +17,12 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         public override string GetTitle()
         {
-            return title + " (TALENT)";
+            return title;
+        }
+
+        public override string GetDescription()
+        {
+            return "Talent: "+ description;
         }
 
         public abstract void Activate();

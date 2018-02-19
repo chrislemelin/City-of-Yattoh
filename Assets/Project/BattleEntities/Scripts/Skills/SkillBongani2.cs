@@ -12,10 +12,10 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
         public SkillBongani2():base()
         {
-            description = "lays down a trap which interupts movement";
-            title = "Lay Trap";
-            apCost = 2;
-            coolDown = 3;
+            title = "Hunter's Snare";
+            description = "Lay a trap to damage and interupt movement"; 
+            apCost = 1;
+            coolDown = 2;
             range = 3;
         }
 
@@ -37,7 +37,8 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             if(character.Team == OtherTeam())
             {
                 character.Stats.SetMutableStat(AttributeStats.StatType.Movement, 0);
-                character.AddPassive(new BuffBleed(2));
+                battleCalculator.QuickDamage(character, new List<DamagePackage>() { new DamagePackage(3, DamageType.pure) });
+                //character.AddPassive(new BuffBleed(2));
                 //character.InteruptMovment();
                 return true;
 

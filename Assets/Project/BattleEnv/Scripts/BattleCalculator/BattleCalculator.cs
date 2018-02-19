@@ -2,6 +2,7 @@
 using Placeholdernamespace.Battle.Entities.AttributeStats;
 using Placeholdernamespace.Battle.Entities.Passives;
 using Placeholdernamespace.Battle.Entities.Skills;
+using Placeholdernamespace.Battle.Managers;
 using Placeholdernamespace.Common.UI;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,6 +14,8 @@ namespace Placeholdernamespace.Battle.Calculator
 
     public class BattleCalculator : MonoBehaviour
     {
+        [SerializeField]
+        TurnManager turnManager;
         [SerializeField]
         private GameObject displayDamageObject;
 
@@ -66,6 +69,8 @@ namespace Placeholdernamespace.Battle.Calculator
                 {
                     textDisplay.target.GetComponent<FloatingTextGenerator>().AddTextDisplay(textDisplay);
                 }
+                turnManager.CheckEntitiesForDeath();
+
             }
         }
 
@@ -136,11 +141,13 @@ namespace Placeholdernamespace.Battle.Calculator
                 targetBefore = targetAfter;
 
             }
-            report.targets.Add(new Tuple<Stats, Stats>(targetBefore, targetAfter));
-            report.targets.Add(new Tuple<Stats, Stats>(source.Stats, sourceAfter));
+            report.targets.Add(new Tuple<Stats, Stats>(target.Stats.GetCopy(), targetAfter));
 
             report.targetAfter = targetAfter;
+            report.targetBefore = target.Stats.GetCopy();
             report.sourceAfter = sourceAfter;
+            report.sourceBefore = source.Stats.GetCopy();
+        
             return report;
 
 
@@ -152,10 +159,13 @@ namespace Placeholdernamespace.Battle.Calculator
             foreach(DamagePackage package in damages)
             {
                 SkillReport report = new SkillReport();
-                HealthAfterDamage(report, target.Stats, package);
+                int health = HealthAfterDamage(report, target.Stats, package);
+                Stats afterStats = target.Stats.GetCopy();
+                afterStats.SetMutableStat(StatType.Health, health);
+                report.targets.Add(new Tuple<Stats, Stats>(target.Stats.GetCopy(), afterStats));
                 ExecuteSkillReport(report);
             }
-
+            turnManager.CheckEntitiesForDeath();
         }
 
         private int HealthAfterDamage(SkillReport report,Stats targetStats, DamagePackage damage)

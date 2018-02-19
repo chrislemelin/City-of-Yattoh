@@ -8,8 +8,9 @@ namespace Placeholdernamespace.Battle.Entities.Passives {
 
         public PassiveTisha(): base()
         {
-            title = "Unkillable";
-            description = "Revive self once a game";
+            title = "Refusal to Die";
+            description = "Once per battle, when reduced to 0HP, recover to full " +
+                "for three turns before dropping to 1HP";
            
         }
 

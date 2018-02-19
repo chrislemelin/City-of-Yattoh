@@ -163,7 +163,7 @@ namespace Placeholdernamespace.CharacterSelection
 
         private void GoToBattle()
         {
-            ScenePropertyManager.Instance.setCharacterParty(new List<Tuple<CharacterBoardEntity, Ka>>());
+            ScenePropertyManager.Instance.SetCharacterParty(new List<Tuple<CharacterBoardEntity, Ka>>());
             for (int a = 0; a < partyDropdowns.Count; a++)
             {
                 Dropdown dropdown = partyDropdowns[a];
