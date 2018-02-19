@@ -1,6 +1,7 @@
 ﻿using Placeholdernamespace.Battle;
 using Placeholdernamespace.Battle.Entities;
 using Placeholdernamespace.Battle.Entities.Kas;
+using Placeholdernamespace.Common.UI;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -44,9 +45,10 @@ namespace Placeholdernamespace.CharacterSelection {
 
         // Use this for initialization
         public void  Init() {
-                     
-            foreach(GameObject character in ScenePropertyManager.Instance.BoardEntityCharacters.Values)
-            {                
+            ScenePropertyManager.Instance.SetCharacterParty(new List<Tuple<CharacterBoardEntity, Ka>>());
+
+            foreach (GameObject character in ScenePropertyManager.Instance.BoardEntityCharacters.Values)
+            {
                 MakeButton(character.GetComponent<CharacterBoardEntity>());
             }
             ScenePropertyManager.Instance.updatedParty += GreyOutUsedCharacters;
@@ -69,6 +71,7 @@ namespace Placeholdernamespace.CharacterSelection {
 
             ClearKaButtons();
             CharacterBoardEntity selectedCharacter = characterView.GetSelectedCharacter();
+            HashSet<CharacterBoardEntity> usedChars = ScenePropertyManager.Instance.GetUsedCharacters();
             foreach (GameObject character in ScenePropertyManager.Instance.BoardEntityCharacters.Values)
             {
                 bool blank = selectedCharacter == character.GetComponent<CharacterBoardEntity>();
@@ -77,7 +80,7 @@ namespace Placeholdernamespace.CharacterSelection {
             GreyOutUsedCharacters();
         }
 
-        private void ClearKaButtons()
+        public void ClearKaButtons()
         {
             foreach(GameObject button in kaToButton.Values)             
             {
@@ -91,7 +94,7 @@ namespace Placeholdernamespace.CharacterSelection {
             GameObject buttonInstance = Instantiate(charButton);
             charToButton.Add(character, buttonInstance);
             buttonInstance.GetComponentInChildren<ProfileButton>().SetImage(character.ProfileImage);
-            buttonInstance.GetComponent<OnClickAction>().clickAction = () => SelectCharacter(character);
+            buttonInstance.GetComponent<OnPointerDownListener>().pressed += () => SelectCharacter(character);
             buttonInstance.transform.SetParent(characterSelectionContainer.transform, false);
             return buttonInstance;
             
@@ -99,30 +102,34 @@ namespace Placeholdernamespace.CharacterSelection {
 
         public void GreyOutUsedCharacters()
         {
-            List<Tuple<CharacterBoardEntity, Ka>> party = ScenePropertyManager.Instance.GetCharacterParty();
-            HashSet<CharacterBoardEntity> usedChars = ScenePropertyManager.Instance.GetUsedCharacter();
+            HashSet<CharacterBoardEntity> usedChars = ScenePropertyManager.Instance.GetUsedCharacters();
            
            foreach(CharacterBoardEntity character in charToButton.Keys)
            {
                 if(!usedChars.Contains(character))
                 {
                     charToButton[character].transform.GetChild(0).GetComponent<Image>().color = Color.white;
+                    charToButton[character].GetComponent<OnPointerDownListener>().active = true;
                 }
                 else
                 {
                     charToButton[character].transform.GetChild(0).GetComponent<Image>().color = greyOutColor;
+                    charToButton[character].GetComponent<OnPointerDownListener>().active = false;
+
                 }
-           }
+            }
 
             foreach (CharacterBoardEntity character in kaToButton.Keys)
             {
                 if (!usedChars.Contains(character))
                 {
                     kaToButton[character].transform.GetChild(0).GetComponent<Image>().color = Color.white;
+                    kaToButton[character].GetComponent<OnPointerDownListener>().active = true;
                 }
                 else
                 {
                     kaToButton[character].transform.GetChild(0).GetComponent<Image>().color = greyOutColor;
+                    kaToButton[character].GetComponent<OnPointerDownListener>().active = false;
                 }
             }
 
@@ -132,15 +139,16 @@ namespace Placeholdernamespace.CharacterSelection {
         {
             GameObject buttonInstance = Instantiate(charButton);
             kaToButton.Add(character, buttonInstance);
+            buttonInstance.GetComponent<OnPointerDownListener>().pressed += () => SelectKa(character);
             if (blank)
             {
                 buttonInstance.GetComponentInChildren<ProfileButton>().SetImage(noneSprite);
+                buttonInstance.GetComponent<OnPointerDownListener>().OnPointerDown(null);
             }
             else
             {
                 buttonInstance.GetComponentInChildren<ProfileButton>().SetImage(character.ProfileImage);
             }
-            buttonInstance.GetComponent<OnClickAction>().clickAction = () => SelectKa(character);
 
             buttonInstance.transform.SetParent(kaSelectionContainer.transform, false);
             return buttonInstance;
@@ -148,12 +156,13 @@ namespace Placeholdernamespace.CharacterSelection {
 
         private void SelectCharacter(CharacterBoardEntity character)
         {
-            characterView.SetCharacter(character);
+            characterView.DisplayCharacter(character);
+            
         }
 
         private void SelectKa(CharacterBoardEntity character)
         {
-            characterView.SetKa(character);
+            characterView.DisplayKa(character);
         }
 
         public void SetSelectedCharacter(CharacterBoardEntity character, bool moveArrow = true)
@@ -211,9 +220,9 @@ namespace Placeholdernamespace.CharacterSelection {
 
         public void ClearEverything()
         {
+            ClearKaButtons();
             ClearParty((int)ColorLocks.primary);
             ClearParty((int)ColorLocks.secondary);
-  
 
         }
 

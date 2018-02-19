@@ -344,7 +344,8 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             if(!free)
             {
                 currentCoolDown = GetCoolDown();
-                boardEntity.Stats.SubtractAPPoints(GetAPCost());
+                if(GetAPCost() > 0)
+                    boardEntity.Stats.SubtractAPPoints(GetAPCost(), true);
             }
 
             // tell the passives what just happened

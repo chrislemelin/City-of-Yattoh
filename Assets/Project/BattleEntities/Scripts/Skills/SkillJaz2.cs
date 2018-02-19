@@ -16,7 +16,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         {
             title = "Piercing Shot";
             apCost = 2;
-            coolDown = 3;
+            coolDown = 2;
             description = "Attack all enemies in a line for half power and strip their armour for two turns";
         }
 
@@ -89,6 +89,11 @@ namespace Placeholdernamespace.Battle.Entities.Skills
                 {
                     if (t.BoardEntity != null && TileHasTarget(t))
                     {
+                        // warning hack, I need to refigure out combining skill reports
+                        if(skillReport != null)
+                        {
+                            battleCalculator.ExecuteSkillReport(skillReport);
+                        }
                         skillReport = battleCalculator.ExecuteSkillDamage(boardEntity, this, (CharacterBoardEntity)t.BoardEntity, 
                             GenerateDamagePackages());
                     }

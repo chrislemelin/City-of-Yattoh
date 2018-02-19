@@ -30,6 +30,9 @@ namespace Placeholdernamespace.Battle.UI
         private bool showPassives = true;
 
         [SerializeField]
+        private ApDisplay apDisplay;
+
+        [SerializeField]
         private Color posColor = Color.green;
         [SerializeField]
         private Color negColor = Color.red;
@@ -77,6 +80,14 @@ namespace Placeholdernamespace.Battle.UI
 
         private void processBoardEntity(BoardEntity boardEntity, Stats previewStats = null, SkillReport skillreport = null)
         {
+            if(previewStats != null)
+            {
+                apDisplay.DisplayAp(boardEntity, previewStats);
+            }
+            else
+            {
+                apDisplay.DisplayAp(boardEntity);
+            }
             UpdateProfilePic(boardEntity.ProfileImage);
             foreach (GameObject g in texts)
             {

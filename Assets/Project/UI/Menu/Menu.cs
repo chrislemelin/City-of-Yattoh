@@ -25,8 +25,8 @@ namespace Placeholdernamespace.Common.UI
         void Start()
         {
             DontDestroyOnLoad(gameObject);
-            soundButton.GetComponent<PointerDownListener>().pressed += SoundPressed;
-            resetButton.GetComponent<PointerDownListener>().pressed += ResetPressed;
+            soundButton.GetComponent<OnPointerDownListener>().pressed += SoundPressed;
+            resetButton.GetComponent<OnPointerDownListener>().pressed += ResetPressed;
             UpdateMuteIcon();
         }
 

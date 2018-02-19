@@ -66,11 +66,15 @@ namespace Placeholdernamespace.Battle
             MakeCharacter(ScenePropertyManager.Instance.characters[3], new Position(0, 0));
             */
 
-            MakeCharacter(GetCharacterBoardEntity(CharacterType.EnemyBalanced), new Position(5, 5));
-            MakeCharacter(GetCharacterBoardEntity(CharacterType.EnemyBalanced), new Position(6, 4));
-            MakeCharacter(GetCharacterBoardEntity(CharacterType.EnemyBalanced), new Position(4, 6));
-            MakeCharacter(GetCharacterBoardEntity(CharacterType.EnemyBalanced), new Position(7, 3));
-            
+            MakeCharacter(GetCharacterBoardEntity(CharacterType.EnemyRanged), new Position(9, 0));
+            MakeCharacter(GetCharacterBoardEntity(CharacterType.EnemyRanged), new Position(9, 1));
+            MakeCharacter(GetCharacterBoardEntity(CharacterType.EnemyBalanced), new Position(8, 0));
+            //MakeCharacter(GetCharacterBoardEntity(CharacterType.EnemySpeedy), new Position(6, 0));
+            MakeCharacter(GetCharacterBoardEntity(CharacterType.EnemyTank), new Position(8, 1));
+
+            MakeCharacter(GetCharacterBoardEntity(CharacterType.EnemySpeedy), new Position(9, 8));
+            MakeCharacter(GetCharacterBoardEntity(CharacterType.EnemySpeedy), new Position(9, 7));
+
             turnManager.init(boardEntitySelector, tileSelectionManager);
             turnManager.ReCalcQueue();
             turnManager.startGame();

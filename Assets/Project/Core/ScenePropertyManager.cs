@@ -81,7 +81,7 @@ public class ScenePropertyManager : MonoBehaviour {
     {
         return characterParty;
     }
-    public void setCharacterParty(List<Tuple<CharacterBoardEntity, Ka>> newParty)
+    public void SetCharacterParty(List<Tuple<CharacterBoardEntity, Ka>> newParty)
     {
         characterParty = newParty;
         if(updatedParty != null)
@@ -90,7 +90,7 @@ public class ScenePropertyManager : MonoBehaviour {
         }
     }
 
-    public HashSet<CharacterBoardEntity> GetUsedCharacter()
+    public HashSet<CharacterBoardEntity> GetUsedCharacters()
     {
         HashSet<CharacterBoardEntity> returnSet = new HashSet<CharacterBoardEntity>();
         foreach (Tuple <CharacterBoardEntity, Ka> tup in characterParty)
@@ -107,7 +107,14 @@ public class ScenePropertyManager : MonoBehaviour {
 
     private void  initCharacters2()
     {
-  
+        SetCharacterParty(new List<Tuple<CharacterBoardEntity, Ka>>()
+        {
+            new Tuple<CharacterBoardEntity, Ka>(typeToBE[CharacterType.PlayerBongani], null),
+            new Tuple<CharacterBoardEntity, Ka>(typeToBE[CharacterType.PlayerJaz], null),
+            new Tuple<CharacterBoardEntity, Ka>(typeToBE[CharacterType.PlayerTisha], null),
+            new Tuple<CharacterBoardEntity, Ka>(typeToBE[CharacterType.PlayerJaz], null),
+
+        });
     }
 
 }

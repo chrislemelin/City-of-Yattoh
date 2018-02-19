@@ -21,8 +21,10 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         public override string GetDescription()
         {
-            return "Talent Trigger: "+description ;
+            return "<color=red>Talent Trigger</color> : "+description ;
         }
+
+
 
         public void Trigger()
         {

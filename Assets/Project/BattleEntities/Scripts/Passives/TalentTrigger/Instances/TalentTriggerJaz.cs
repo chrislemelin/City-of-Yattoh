@@ -28,7 +28,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
                     int damageThreshold = Mathf.CeilToInt(report.second.GetNonMuttableStat(StatType.Health).Value * damagePercentage);
                     if (difference >= damageThreshold)
                     {
-                        boardEntity.TriggerTalents();
+                        Trigger();
                         //this should only trigger once ?? might change
                         break;
                     }

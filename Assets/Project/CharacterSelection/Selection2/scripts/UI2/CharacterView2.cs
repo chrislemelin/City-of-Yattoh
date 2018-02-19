@@ -20,15 +20,15 @@ namespace Placeholdernamespace.CharacterSelection
         GameObject displaySkill;
 
         [SerializeField]
+        GameObject supportTalentContainter;
+
+        [SerializeField]
         GameObject talentContainer;
         List<GameObject> talentDisplays = new List<GameObject>();
 
         [SerializeField]
         GameObject skillContainer;
         List<GameObject> skillDisplays = new List<GameObject>();
-
-        //[SerializeField]
-        //TextMeshProUGUI bannarMessage;
 
         [SerializeField]
         private CharacterSelection2 characterSelection2;
@@ -51,20 +51,9 @@ namespace Placeholdernamespace.CharacterSelection
         [SerializeField]
         GameObject profileHidden;
 
-        /*
         [SerializeField]
-        private Profile characterProfile;
-        [SerializeField]
-        private CharacterSkillView characterSkillView;
-        [SerializeField]
-        private CharacterSkillView kaSkillView;
-        [SerializeField]
-        private Profile kaProfile;
-        */
-        //[SerializeField]
-        //private CharacterRightPanel rightPanel;
-        //[SerializeField]
-        //private GameObject selectDeselectButton;
+        KaSkillSelect2 kaSkillSelect2;
+
         private CharacterBoardEntity selectedCharacter;
 
         public CharacterBoardEntity GetSelectedCharacter()
@@ -91,11 +80,7 @@ namespace Placeholdernamespace.CharacterSelection
 
         public void LockIn()
         {
-            Ka ka = null;
-            if (selectedKaCharacter != null)
-            {
-                ka = new Ka(selectedKaCharacter.GetComponent<CharContainer>());
-            }
+            Ka ka = kaSkillSelect2.Ka;
             //kaSkillView.InitKa(ka);
             List<Tuple<CharacterBoardEntity, Ka>> party = new List<Tuple<CharacterBoardEntity, Ka>>(ScenePropertyManager.Instance.GetCharacterParty());
 
@@ -137,7 +122,7 @@ namespace Placeholdernamespace.CharacterSelection
             else
             {
                 Clear();
-                ScenePropertyManager.Instance.setCharacterParty(party);
+                ScenePropertyManager.Instance.SetCharacterParty(party);
                 if (party.Count == 4)
                 {
                     addToPartyText.text = "Ready to go";
@@ -147,8 +132,6 @@ namespace Placeholdernamespace.CharacterSelection
                     addToPartyText.text = "Need " + (4 - party.Count) + " more for a full party";
                 }
             }
-            //rightPanel.UpdateGoToBattle();
-            //characterSelection2.LockIn();
         }
 
         private void Clear()
@@ -186,7 +169,8 @@ namespace Placeholdernamespace.CharacterSelection
             if (ka != null)
             {
                 selectedKaCharacter = ScenePropertyManager.Instance.BoardEntityCharacters[ka.CharacterType].GetComponent<CharacterBoardEntity>();
-                if(selectedKaCharacter == selectedCharacter)
+                characterSelection2.SetSelectedKa(selectedKaCharacter);
+                if (selectedKaCharacter == selectedCharacter)
                 {
                     selectedKaCharacter = null;
                 }
@@ -212,7 +196,7 @@ namespace Placeholdernamespace.CharacterSelection
                 profile.gameObject.SetActive(false);
             }
 
-            characterSelection2.SetSelectedKa(selectedKaCharacter);
+            //characterSelection2.SetSelectedKa(selectedKaCharacter);
 
         }
 
@@ -241,45 +225,61 @@ namespace Placeholdernamespace.CharacterSelection
             List<Passive> tempPassives = selectedCharacter.Passives;
             List<Passive> passives = new List<Passive>();
             List<Passive> talents = new List<Passive>();
+            List<Passive> talentTriggers = new List<Passive>();
+            List<Passive> supportTalents = new List<Passive>();
             foreach (Passive passive in tempPassives)
             {
-                if(passive is Talent)
+                if (passive is Talent)
                 {
                     talents.Add(passive);
+                }
+                else if (passive is TalentTrigger)
+                {
+                    talentTriggers.Add(passive);
                 }
                 else
                 {
                     passives.Add(passive);
                 }
             }
-            if(selectedKaCharacter != null)
+            if (selectedKaCharacter != null)
             {
-                talents.AddRange(selectedKaCharacter.GetTalents());
+                supportTalents.AddRange(selectedKaCharacter.GetTalents());
             }
 
-            foreach(Passive talent in talents)
+            foreach (Passive talent in talents)
             {
                 DisplayObjectHelper(talent.GetTitle(), talent.GetDescriptionHelper(), talentDisplays, talentContainer);
             }
-
-            foreach (Skill skill in selectedCharacter.Skills)
+            foreach (Passive talent in talentTriggers)
             {
-                DisplayObjectHelper(skill.GetTitle(), skill.GetDescriptionHelper(), skillDisplays, skillContainer);
+                DisplayObjectHelper(talent.GetTitle(), talent.GetDescription(), talentDisplays, skillContainer);
             }
+
             foreach (Passive passive in passives)
             {
                 DisplayObjectHelper(passive.GetTitleHelper(), passive.GetDescription(), skillDisplays, skillContainer);
             }
+            foreach (Skill skill in selectedCharacter.Skills)
+            {
+                DisplayObjectHelper(skill.GetTitle(), skill.GetDescriptionHelper(), skillDisplays, skillContainer);
+            }
+            foreach (Passive talent in supportTalents)
+            {
+                GameObject temp = DisplayObjectHelper(talent.GetTitle(), talent.GetDescriptionHelper(), talentDisplays, supportTalentContainter);
+                temp.transform.SetAsFirstSibling();
+            }
 
         }
 
-        private void DisplayObjectHelper(string title, string description, List<GameObject> list, GameObject container)
+        private GameObject DisplayObjectHelper(string title, string description, List<GameObject> list, GameObject container)
         {
             GameObject display =  Instantiate(displaySkill);
             display.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = title;
             display.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = description;
             list.Add(display);
             display.transform.SetParent(container.transform,false);
+            return display;
         }
 
 
@@ -288,51 +288,17 @@ namespace Placeholdernamespace.CharacterSelection
             if (character != null)
             {
                 Ka ka = new Ka(character.GetComponent<CharContainer>());
-                ka.AddSkill(character.Skills[0]);
                 DisplayKaHelper(ka);
             }
             else
                 DisplayKaHelper(null);
         }
 
-        public void DisplayKaSet(Ka ka)
+        public void SetDisplayKa(Ka ka)
         {
             DisplayKaHelper(ka);
         }
 
-
-        public void SetCharacter(CharacterBoardEntity character)
-        {
-            DisplayCharacter(character);
-            
-        }
-
-        public void SetKa(CharacterBoardEntity character)
-        {
-            DisplayKa(character);
-            //characterSelection2.SetSelectedKa(character);
-        }
-
-        /*
-        public void SelectionDeselectButtonClick()
-        {
-            if (selectedKaCharacter != null)
-            {
-                DisplayKa(null);
-            }
-            else if (!selectingKa)
-            {
-                selectingKa = true;
-                characterSelection2.HighLightKaSelection(selectedCharacter);
-            }
-            else
-            {
-                selectingKa = false;
-                characterSelection2.ClearParty((int)CharacterSelection2.ColorLocks.secondary);
-                DisplayKa(null);
-            }
-        }
-        */
 
     }
 }

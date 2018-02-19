@@ -25,7 +25,7 @@ namespace Placeholdernamespace.CharacterSelection
         // Use this for initialization
         void Start()
         {
-            ScenePropertyManager.Instance.setCharacterParty(new List<Tuple<CharacterBoardEntity, Ka>>());
+            ScenePropertyManager.Instance.SetCharacterParty(new List<Tuple<CharacterBoardEntity, Ka>>());
             ScenePropertyManager.Instance.updatedParty += UpdateGoToBattle;
             UpdateGoToBattle();
         }
@@ -65,7 +65,7 @@ namespace Placeholdernamespace.CharacterSelection
 
         public void ClearParty()
         {
-            ScenePropertyManager.Instance.setCharacterParty(new List<Tuple<CharacterBoardEntity, Ka>>());
+            ScenePropertyManager.Instance.SetCharacterParty(new List<Tuple<CharacterBoardEntity, Ka>>());
         }
     }
 }

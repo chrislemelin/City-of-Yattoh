@@ -30,6 +30,9 @@ namespace Placeholdernamespace.CharacterSelection
         private CharacterRightPanel rightPanel;
         [SerializeField]
         private GameObject selectDeselectButton;
+        [SerializeField]
+        private KaSkillSelect2 kaSkillSelect;
+
         private CharacterBoardEntity selectedCharacter;
         public CharacterBoardEntity GetSelectedCharacter()
         {
@@ -58,13 +61,7 @@ namespace Placeholdernamespace.CharacterSelection
 
         public void LockIn()
         {
-
-            Ka ka = null;
-            if (selectedKaCharacter != null)
-            {
-                ka = new Ka(selectedKaCharacter.GetComponent<CharContainer>());
-            }
-            kaSkillView.InitKa(ka);
+            Ka ka = kaSkillSelect.Ka; 
             List<Tuple<CharacterBoardEntity, Ka>> party = new List<Tuple<CharacterBoardEntity, Ka>>(ScenePropertyManager.Instance.GetCharacterParty());
 
             // filter out
@@ -98,7 +95,7 @@ namespace Placeholdernamespace.CharacterSelection
             }
 
             party.Add(new Tuple<CharacterBoardEntity, Ka>(selectedCharacter, ka));
-            ScenePropertyManager.Instance.setCharacterParty(party);
+            ScenePropertyManager.Instance.SetCharacterParty(party);
             rightPanel.UpdateGoToBattle();
             //characterSelection2.LockIn();
         }
@@ -162,48 +159,6 @@ namespace Placeholdernamespace.CharacterSelection
             }
             else
                 DisplayKaHelper(null);
-        }
-
-        public void DisplayKaSet(Ka ka)
-        {
-            DisplayKaHelper(ka);
-        }
-
-
-        public void SetCharacter(CharacterBoardEntity character)
-        {
-            if(!selectingKa)
-            {
-                DisplayCharacter(character);
-                DisplayKa(null);
-               
-            }
-            else
-            {
-                selectingKa = false;
-                DisplayKa(character);
-                characterSelection2.SetSelectedKa(character);
-            }
-        }
-
-       
-        public void SelectionDeselectButtonClick()
-        {
-            if(selectedKaCharacter != null)
-            {
-                DisplayKa(null);
-            }
-            else if (!selectingKa)
-            {
-                selectingKa = true;
-                characterSelection2.HighLightKaSelection(selectedCharacter);
-            }
-            else
-            {
-                selectingKa = false;
-                characterSelection2.ClearParty((int)CharacterSelection2.ColorLocks.secondary);
-                DisplayKa(null);
-            }
         }
 
     }

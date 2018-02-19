@@ -37,7 +37,8 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             if(character.Team == OtherTeam())
             {
                 character.Stats.SetMutableStat(AttributeStats.StatType.Movement, 0);
-                character.AddPassive(new BuffBleed(2));
+                battleCalculator.QuickDamage(character, new List<DamagePackage>() { new DamagePackage(3, DamageType.pure) });
+                //character.AddPassive(new BuffBleed(2));
                 //character.InteruptMovment();
                 return true;
 

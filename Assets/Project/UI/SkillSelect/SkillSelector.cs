@@ -16,6 +16,9 @@ namespace Placeholdernamespace.Battle.Interaction
 {
     public class SkillSelector : MonoBehaviour {
 
+        [SerializeField]
+        GameObject parent;
+
         private CharacterBoardEntity boardEntity;
 
         [SerializeField]
@@ -73,12 +76,12 @@ namespace Placeholdernamespace.Battle.Interaction
 
         public void Hide()
         {
-            gameObject.SetActive(false);
+            parent.SetActive(false);
         }
 
         public void Show()
         {
-            gameObject.SetActive(true);
+            parent.SetActive(true);
         }
 
         public void SetSelectedSkill(Skill skill)
@@ -146,9 +149,9 @@ namespace Placeholdernamespace.Battle.Interaction
         private GameObject buildSkillButton(string title, Action onClick, Func<String> getDescription ,
             Func<string> getFlavorText, Func<bool> active, Color? color = null)
         {
+            skillOptionButton.GetComponent<Button>().interactable = active();
             GameObject skillButton = Instantiate(skillOptionButton);
             skillButton.GetComponent<TooltipSpawner>().Init(() => { return null; }, getDescription, getFlavorText);
-            skillButton.GetComponent<Button>().interactable = active();            
             skillButton.GetComponentInChildren<TextMeshProUGUI>().text = title;
             skillButton.transform.SetParent(skillOptionContainer.transform, false);
             skillButton.GetComponent<Button>().onClick.AddListener(() => onClick());   
