@@ -14,7 +14,8 @@ namespace Placeholdernamespace.Battle.Managers
 {
     public class TurnManager : MonoBehaviour
     {
-
+        [SerializeField]
+        GameObject currentTurnPointer;
         public TextMeshProUGUI display;
 
         public delegate void NewTurnHandler(object sender, EventArgs e);
@@ -93,6 +94,7 @@ namespace Placeholdernamespace.Battle.Managers
             
             CenterText.Instance.DisplayMessage(tempcurrentBoardEntity.Name + "'s Turn", () => {
                 currentBoardEntity = tempcurrentBoardEntity;
+                SetCurrentTurnMarker((CharacterBoardEntity)tempcurrentBoardEntity);
                 PathOnClick.pause = false;
                 UpdateGui();
                 ((CharacterBoardEntity)tempcurrentBoardEntity).SetUpMyTurn();
@@ -104,6 +106,13 @@ namespace Placeholdernamespace.Battle.Managers
 
             });
            
+        }
+
+        private void SetCurrentTurnMarker(CharacterBoardEntity characterBoardEntity)
+        {
+            currentTurnPointer.GetComponent<UIFollow>().target = characterBoardEntity.gameObject;
+            currentTurnPointer.SetActive(true);
+   
         }
 
         public void ClearBoardEnities()

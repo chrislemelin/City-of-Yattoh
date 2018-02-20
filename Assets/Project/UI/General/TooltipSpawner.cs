@@ -57,18 +57,18 @@ namespace Placeholdernamespace.Common.UI
                 && (getDescription() != null || getTitle() != null) )
             {
                 spawnedTooltip = Instantiate(tooltip);
-                spawnedTooltip.GetComponent<Tooltip>().Init(clickAction);
-                spawnedTooltip.GetComponent<Tooltip>().setDescription(getDescription());
-                spawnedTooltip.GetComponent<Tooltip>().setTitle(getTitle());
-                spawnedTooltip.GetComponent<Tooltip>().setFlavorText(getFlavorText());
-                spawnedTooltip.GetComponent<Tooltip>().setDescriptionFontSize(fontSize);
+                spawnedTooltip.GetComponentInChildren<Tooltip>().Init(clickAction);
+                spawnedTooltip.GetComponentInChildren<Tooltip>().setDescription(getDescription());
+                spawnedTooltip.GetComponentInChildren<Tooltip>().setTitle(getTitle());
+                spawnedTooltip.GetComponentInChildren<Tooltip>().setFlavorText(getFlavorText());
+                spawnedTooltip.GetComponentInChildren<Tooltip>().setDescriptionFontSize(fontSize);
                 spawnedTooltip.transform.SetParent(FindObjectOfType<Canvas>().transform,false);
                 spawnedTooltip.transform.SetAsLastSibling();
                 spawnedTooltipRect = spawnedTooltip.transform.GetChild(0).GetComponent<RectTransform>();
                 spawnedTooltip.transform.position = new Vector3(10000, 10000);
                 placed = false;
             }
-            if(!placed && spawnedTooltip != null && spawnedTooltipRect.rect.height != 10)
+            if(!placed && spawnedTooltip != null && spawnedTooltipRect.rect.height != 0)
             {
                 Vector3 mousePos = Input.mousePosition;
                 float x = 0;
@@ -104,7 +104,7 @@ namespace Placeholdernamespace.Common.UI
                 spawnedTooltip.transform.position = new Vector3(x,mousePos.y);
                 placed = true;
             }
-            if(spawnedTooltip!= null && !hover && !spawnedTooltip.GetComponent<Tooltip>().Hover)
+            if(spawnedTooltip!= null && !hover && !spawnedTooltip.GetComponentInChildren<Tooltip>().Hover)
             {
                 Destroy(spawnedTooltip);
             }

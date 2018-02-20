@@ -74,7 +74,7 @@ namespace Placeholdernamespace.Common.UI
         {
             if (clickAction != null)
             {
-                //clickAction();
+                clickAction();
             }
         }
 

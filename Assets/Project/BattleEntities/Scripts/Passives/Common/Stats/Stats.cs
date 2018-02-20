@@ -203,7 +203,7 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
             SetMutableStat(StatType.AP, newValue);
         }
 
-        public bool SubtractMovementPoints(int value)
+        public bool SubtractMovementPoints(int value, bool display = false)
         {
             // if its less than zero something should probably happen here
             int newValue = GetMutableStat(StatType.Movement).Value - value;
@@ -222,7 +222,7 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
                 }
             }
             if(valueToSubract > 0) 
-                SubtractAPPoints(valueToSubract, true);
+                SubtractAPPoints(valueToSubract, display);
             SetMutableStat(StatType.Movement, newValue);
             return true;
 

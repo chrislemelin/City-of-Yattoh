@@ -417,7 +417,8 @@ namespace Placeholdernamespace.Battle.Entities
             }
             else
             {
-                stats.SubtractMovementPoints(pathCounter);
+                bool display = team == Team.Player;
+                stats.SubtractMovementPoints(pathCounter, display);
                 if(interuptClearMovement)
                 {
                     stats.SetMutableStat(AttributeStats.StatType.Movement, 0);

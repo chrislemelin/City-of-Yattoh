@@ -8,7 +8,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives {
 
         public PassiveTisha(): base()
         {
-            title = "Refusal to Die";
+            title = "Indomitable";
             description = "Once per battle, when reduced to 0HP, recover to full " +
                 "for three turns before dropping to 1HP";
            

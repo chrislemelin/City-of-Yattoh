@@ -33,16 +33,19 @@ namespace Placeholdernamespace.Battle.Entities.Passives
 
         private bool IsActive()
         {
-            List<Tile> tiles = tileManager.GetTilesDiag(character.Position, 1);
-            foreach(Tile t in tiles)
+            if (character != null)
             {
-                if(t.BoardEntity == boardEntity || t.BoardEntity == character)
+                List<Tile> tiles = tileManager.GetTilesDiag(character.Position, 1);
+                foreach (Tile t in tiles)
                 {
-                    return true;
+                    if (t.BoardEntity == boardEntity || t.BoardEntity == character)
+                    {
+                        return true;
+                    }
                 }
+                return false;
             }
             return false;
-
         }
     }
 }

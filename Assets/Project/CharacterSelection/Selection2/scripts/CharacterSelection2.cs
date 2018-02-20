@@ -177,9 +177,9 @@ namespace Placeholdernamespace.CharacterSelection {
                     arrow.SetActive(true);
                     //arrow.transform.position = new Vector3(110, charToButton[character].GetComponent<RectTransform>().position.y, 0);
                     //ugh this is gross
-                    arrow.GetComponent<RectTransform>().anchoredPosition = new Vector3 (-383,
+                    arrow.GetComponent<RectTransform>().anchoredPosition = new Vector3 (100,
                         charToButton[character].GetComponent<RectTransform>().localPosition.y *
-                        charToButton[character].GetComponent<RectTransform>().localScale.y - 300, 0);
+                        charToButton[character].GetComponent<RectTransform>().localScale.y  , 0);
                 }
 
             }

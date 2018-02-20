@@ -112,7 +112,7 @@ public class ScenePropertyManager : MonoBehaviour {
             new Tuple<CharacterBoardEntity, Ka>(typeToBE[CharacterType.PlayerBongani], null),
             new Tuple<CharacterBoardEntity, Ka>(typeToBE[CharacterType.PlayerJaz], null),
             new Tuple<CharacterBoardEntity, Ka>(typeToBE[CharacterType.PlayerTisha], null),
-            new Tuple<CharacterBoardEntity, Ka>(typeToBE[CharacterType.PlayerJaz], null),
+            new Tuple<CharacterBoardEntity, Ka>(typeToBE[CharacterType.PlayerLesidi], null),
 
         });
     }

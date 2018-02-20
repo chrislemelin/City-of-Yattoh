@@ -14,7 +14,7 @@ public class UIFollow : MonoBehaviour {
         {
             height = Camera.main.pixelHeight;
         }
-        if(height != -1)
+        if(height != -1 && target != null)
         {
             transform.position = Camera.main.WorldToScreenPoint(target.transform.position) + offest * height;
         }
