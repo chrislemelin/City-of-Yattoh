@@ -56,6 +56,7 @@ namespace Placeholdernamespace.Battle.Entities
 
         public Tile GetTile()
         {
+            
             bool a = isInit;
             return tileManager.GetTile(Position);
         }

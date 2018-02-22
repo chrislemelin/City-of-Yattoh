@@ -449,7 +449,7 @@ namespace Placeholdernamespace.Battle.Env
             List<Move> visitingTiles = new List<Move>();
             visitingTiles.Add(new Move { destination = startTile, movementCost = 0 });
 
-            while(visitingTiles.Count > 0)
+            while(visitingTiles.Count > 0 && startTile != null)
             {
                 List<Move> newVisitingTiles = new List<Move>();
                 foreach (Move move in visitingTiles)

@@ -28,6 +28,9 @@ namespace Placeholdernamespace.CharacterSelection
 
         [SerializeField]
         GameObject skillContainer;
+
+        [SerializeField]
+        GameObject passiveContainer;
         List<GameObject> skillDisplays = new List<GameObject>();
 
         [SerializeField]
@@ -253,12 +256,12 @@ namespace Placeholdernamespace.CharacterSelection
             }
             foreach (Passive talent in talentTriggers)
             {
-                DisplayObjectHelper(talent.GetTitle(), talent.GetDescription(), talentDisplays, skillContainer);
+                DisplayObjectHelper(talent.GetTitle(), talent.GetDescription(), talentDisplays, passiveContainer);
             }
 
             foreach (Passive passive in passives)
             {
-                DisplayObjectHelper(passive.GetTitleHelper(), passive.GetDescription(), skillDisplays, skillContainer);
+                DisplayObjectHelper(passive.GetTitleHelper(), passive.GetDescription(), skillDisplays, passiveContainer);
             }
             foreach (Skill skill in selectedCharacter.Skills)
             {
