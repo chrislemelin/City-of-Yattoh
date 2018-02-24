@@ -30,6 +30,9 @@ namespace Placeholdernamespace.CharacterSelection
         GameObject skillContainer;
 
         [SerializeField]
+        GameObject helpButton;
+
+        [SerializeField]
         GameObject passiveContainer;
         List<GameObject> skillDisplays = new List<GameObject>();
 
@@ -37,7 +40,7 @@ namespace Placeholdernamespace.CharacterSelection
         private CharacterSelection2 characterSelection2;
 
         [SerializeField]
-        private Profile2 profile;
+        private List<Profile2> profiles;
 
         [SerializeField]
         private KaSkillSelect2 kaSkillSelect;
@@ -141,6 +144,7 @@ namespace Placeholdernamespace.CharacterSelection
         {
             characterSelection2.Clear();
             profileDisplay.SetActive(false);
+            helpButton.SetActive(false);
             profileHidden.SetActive(true);
             addToParty.interactable = false;
         }
@@ -160,6 +164,7 @@ namespace Placeholdernamespace.CharacterSelection
         {
             selectedCharacter = character;
             profileDisplay.SetActive(false);
+            helpButton.SetActive(false);
             profileHidden.SetActive(true);
             addToParty.interactable = false;
             DisplayKa(null);
@@ -177,11 +182,15 @@ namespace Placeholdernamespace.CharacterSelection
                 {
                     selectedKaCharacter = null;
                 }
-                profile.gameObject.SetActive(true);
-                profile.SetProfilePic(selectedCharacter, selectedKaCharacter);
+                foreach (Profile2 profile in profiles)
+                {
+                    profile.gameObject.SetActive(true);
+                    profile.SetProfilePic(selectedCharacter, selectedKaCharacter);
+                }       
                 DisplayHelper();
                 kaSkillSelect.Init(selectedKaCharacter, EnableAddToParty);
                 profileDisplay.SetActive(true);
+                helpButton.SetActive(true);
                 profileHidden.SetActive(false);
                 if (selectedKaCharacter != null)
                 {
@@ -196,7 +205,10 @@ namespace Placeholdernamespace.CharacterSelection
             else
             {
                 selectedKaCharacter = null;
-                profile.gameObject.SetActive(false);
+                foreach (Profile2 profile in profiles)
+                {
+                    profile.gameObject.SetActive(false);
+                }
             }
 
             //characterSelection2.SetSelectedKa(selectedKaCharacter);
