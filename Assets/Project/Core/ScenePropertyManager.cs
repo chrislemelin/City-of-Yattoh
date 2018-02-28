@@ -23,8 +23,8 @@ public class ScenePropertyManager : MonoBehaviour {
         { new Position(9, 0), CharacterType.EnemyRanged },
         { new Position(8, 1), CharacterType.EnemyBalanced },
         { new Position(8, 0), CharacterType.EnemyTank },
-        { new Position(9, 8), CharacterType.EnemySpeedy},
-        { new Position(9, 7), CharacterType.EnemySpeedy}
+        //{ new Position(9, 8), CharacterType.EnemySpeedy},
+        //{ new Position(9, 7), CharacterType.EnemySpeedy}
     };
 
     private Dictionary<CharacterType, GameObject> boardEntityCharacters = new Dictionary<CharacterType, GameObject>();
@@ -116,7 +116,7 @@ public class ScenePropertyManager : MonoBehaviour {
     {
         SetCharacterParty(new List<Tuple<CharacterBoardEntity, Ka>>()
         {
-            new Tuple<CharacterBoardEntity, Ka>(typeToBE[CharacterType.PlayerDadi], null),
+            new Tuple<CharacterBoardEntity, Ka>(typeToBE[CharacterType.PlayerDadi], new Ka(typeToContainer[CharacterType.PlayerBongani]) ),
             new Tuple<CharacterBoardEntity, Ka>(typeToBE[CharacterType.PlayerJaz], null),
             new Tuple<CharacterBoardEntity, Ka>(typeToBE[CharacterType.PlayerTisha], null),
             new Tuple<CharacterBoardEntity, Ka>(typeToBE[CharacterType.PlayerLesidi], null),
