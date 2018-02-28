@@ -99,7 +99,6 @@ namespace Placeholdernamespace.Common.UI
                 {
                     y = height / 2;
                 }
-                //spawnedTooltip.transform.position = new Vector3(mousePos.x, mousePos.y);
 
                 spawnedTooltip.transform.position = new Vector3(x,mousePos.y);
                 placed = true;
@@ -109,6 +108,11 @@ namespace Placeholdernamespace.Common.UI
                 Destroy(spawnedTooltip);
             }
       
+        }
+
+        public void SetClickAction(Action clickAction)
+        {
+            this.clickAction = clickAction;
         }
 
         public void Init(Func<string> getTitle, Func<string> getDescription, Func<string> getFlavorText = null)

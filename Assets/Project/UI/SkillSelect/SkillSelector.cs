@@ -91,7 +91,7 @@ namespace Placeholdernamespace.Battle.Interaction
 
             if (skill.SelfCasting())
             {
-                selectedSkill.Action(new List<Tile>(), (bool ok) => ExecuteSkillCallback());
+                selectedSkill.Action(new List<Tile>(), ExecuteSkillCallback);
             }
             else
             {
@@ -127,7 +127,7 @@ namespace Placeholdernamespace.Battle.Interaction
         private void buildCancelSkillButton()
         {
             cancelButton = buildSkillButton("Cancel", () => { tileSelectionManager.CancelSelection(); ExecuteSkill(null); }, returnNull,
-                returnNull, defaultActive, Color.white);
+                returnNull, null, Color.white);
         }
 
         private void buildEndTurnButton()
@@ -149,7 +149,11 @@ namespace Placeholdernamespace.Battle.Interaction
         private GameObject buildSkillButton(string title, Action onClick, Func<String> getDescription ,
             Func<string> getFlavorText, Func<bool> active, Color? color = null)
         {
-            skillOptionButton.GetComponent<Button>().interactable = active();
+            if(active != null)
+                skillOptionButton.GetComponent<Button>().interactable = active();
+            else
+                skillOptionButton.GetComponent<Button>().interactable = true;
+
             GameObject skillButton = Instantiate(skillOptionButton);
             skillButton.GetComponent<TooltipSpawner>().Init(() => { return null; }, getDescription, getFlavorText);
             skillButton.GetComponentInChildren<TextMeshProUGUI>().text = title;
@@ -169,7 +173,8 @@ namespace Placeholdernamespace.Battle.Interaction
         {
             foreach(KeyValuePair<Button, Func<bool>> value in buttonToActive)
             {
-                value.Key.interactable = value.Value();
+                if(value.Value != null)
+                    value.Key.interactable = value.Value();
             }
         }
 
@@ -180,7 +185,7 @@ namespace Placeholdernamespace.Battle.Interaction
             {
                 if (cancelButton != null)
                     cancelButton.GetComponent<Button>().interactable = false;
-                selectedSkill.Action((List<Tile>)tile.ReturnObject, (bool ok) => ExecuteSkillCallback());
+                selectedSkill.Action((List<Tile>)tile.ReturnObject,  ExecuteSkillCallback);
             }
             else
             {

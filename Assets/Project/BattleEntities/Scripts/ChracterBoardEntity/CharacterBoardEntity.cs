@@ -44,6 +44,11 @@ namespace Placeholdernamespace.Battle.Entities
             characterType = type;
         }
 
+        private bool dying = false;
+        public bool Dying
+        {
+            get { return dying; }
+        }
 
         protected Ka ka;
         public Ka Ka
@@ -215,13 +220,7 @@ namespace Placeholdernamespace.Battle.Entities
             return statModifiers;
         }
 
-        private List<Tile> path = new List<Tile>();
-        private int pathCounter = 0;
-        private bool interupted = false;
-        private bool interuptClearMovement = false;
-        private bool charging = false;
-        private bool pushing = false;
-        private Position direction = null;
+       
 
         private void OnMouseEnter()
         {
@@ -242,6 +241,7 @@ namespace Placeholdernamespace.Battle.Entities
             if(stats.GetMutableStat(StatType.Health).Value == 0 )
             {
                 SetAnimation(AnimatorUtils.animationType.death);
+                dying = true;
                 Core.CallbackDelay(.8f, () => DieHelper());
  
             }
@@ -266,6 +266,7 @@ namespace Placeholdernamespace.Battle.Entities
                 SetAnimation(AnimatorUtils.animationType.idle);
                 ka = null;
                 charKaAura.SetActive(false);
+                FloatingTextGenerator.AddTextDisplay(new TextDisplay() { text = "Lost Support Character" });
             }
       
         }
@@ -277,6 +278,15 @@ namespace Placeholdernamespace.Battle.Entities
             Destroy(charactersprite);
         }
 
+        private List<Tile> path = new List<Tile>();
+        private int pathCounter = 0;
+        private int chargeCounter = 0;
+        private bool interupted = false;
+        private bool interuptClearMovement = false;
+        private bool charging = false;
+        private bool pushing = false;
+        private Position direction = null;
+        private Action<int, CharacterBoardEntity> chargeCallback;
 
         public void ExecutePush(Tile tile, AnimatorUtils.animationDirection direction)
         {
@@ -288,22 +298,24 @@ namespace Placeholdernamespace.Battle.Entities
             SetAnimation(AnimatorUtils.animationType.damage);
             
             path.Add(tile);
-            GetTile().SetBoardEntity(null);
-            tile.SetBoardEntity(this);
+            tileManager.MoveBoardEntity(tile.Position, this, false);
             ChangeTarget();
         }
 
-        public void ExecuteCharge(Move move, Position direction, Action<bool> action = null)
+        public void ExecuteCharge(Move move, Position direction, Action<int, CharacterBoardEntity> action = null)
         {
+
             interupted = false;
             charging = true;
             this.direction = direction;
             pathCounter = 0;
+            chargeCounter = 0;
             if (characterAnimation != null)
             {
                 SetAnimation(AnimatorUtils.animationType.walking);
             }
-            moveDoneCallback = action;
+            moveDoneCallback = null;
+            chargeCallback = action; 
             if (move != null)
             {
                 OutlineOnHover.disabled = true;
@@ -345,7 +357,6 @@ namespace Placeholdernamespace.Battle.Entities
 
         public void InteruptMovment()
         {
-            //pathCounter += path.Count;
             path.Clear();
             interupted = true;
             interuptClearMovement = true;
@@ -404,12 +415,9 @@ namespace Placeholdernamespace.Battle.Entities
                     Tile t = tileManager.GetTile(targetTile);
                     if(t != null && t.BoardEntity != null && t.BoardEntity.Team != Team)
                     {
-                        basicAttack.Action(new List<Tile>() { t }, null, true,
-                            new List<SkillModifier>() { new SkillModifier(SkillModifierType.Power, SkillModifierApplication.Mult, .5f) });
-                        Tile newTile = tileManager.GetTile(targetTile + direction);
-                    
+                        chargeCounter++;
+                        Tile newTile = tileManager.GetTile(targetTile + direction);                        
                         AnimatorUtils.animationDirection pushDir = AnimatorUtils.GetAttackDirectionCode(newTile.Position, position);
-
                         ((CharacterBoardEntity)t.BoardEntity).ExecutePush(newTile, pushDir);
 
                     }
@@ -418,7 +426,8 @@ namespace Placeholdernamespace.Battle.Entities
             else
             {
                 bool display = team == Team.Player;
-                stats.SubtractMovementPoints(pathCounter, display);
+                if(!charging)
+                    stats.SubtractMovementPoints(pathCounter, display);
                 if(interuptClearMovement)
                 {
                     stats.SetMutableStat(AttributeStats.StatType.Movement, 0);
@@ -446,7 +455,11 @@ namespace Placeholdernamespace.Battle.Entities
                     Tile t = tileManager.GetTile(targetTile);
                     if (t != null && t.BoardEntity != null && t.BoardEntity.Team != Team)
                     {
-                        basicAttack.Action(new List<Tile>() { t }, null, true);
+                        chargeCallback(chargeCounter, Core.Instance.convert(t.BoardEntity));
+                    }
+                    else
+                    {
+                        chargeCallback(chargeCounter, null);
                     }
                     charging = false;
                 }
@@ -688,7 +701,7 @@ namespace Placeholdernamespace.Battle.Entities
 
         public void SetAnimation(AnimatorUtils.animationType type)
         {
-            if (characterAnimation != null)
+            if (characterAnimation != null && !dying)
             {
                 characterAnimation.OnButtonClick((int)type);
             }
@@ -719,7 +732,7 @@ namespace Placeholdernamespace.Battle.Entities
 
         public void SetAnimationDirection(AnimatorUtils.animationDirection direction)
         {
-            if (characterAnimation != null)
+            if (characterAnimation != null && !dying)
             {
                 //bool changeDirection = changeDirection(direction);
                 if (direction == AnimatorUtils.animationDirection.left)

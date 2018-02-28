@@ -9,6 +9,12 @@ namespace Placeholdernamespace.Battle.Entities.Kas
 {
     public class Ka
     {
+        private Sprite profilePic;
+        public Sprite ProfilePic
+        {
+            get { return profilePic; }
+        }   
+
         private Talent talent;
         public Talent Talent
         {
@@ -59,6 +65,7 @@ namespace Placeholdernamespace.Battle.Entities.Kas
             }
             talent = character.Talent;
             AddPassive(talent);
+            profilePic = character.GetComponent<CharacterBoardEntity>().ProfileImageCircle;
         }
 
         public void AddPassive(Passive passive)

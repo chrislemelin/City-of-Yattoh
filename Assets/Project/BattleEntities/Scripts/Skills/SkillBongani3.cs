@@ -22,19 +22,10 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
         protected override SkillReport ActionHelper(List<Tile> t)
         {
-            /*
-            List<Tile> targetTiles = tileManager.GetTilesDiag(t[0].BoardEntity.Position);
-            List<CharacterBoardEntity> targets = tileManager.TilesToCharacterBoardEntities(targetTiles);
-            targets.Add((CharacterBoardEntity)t[0].BoardEntity);
-            foreach(CharacterBoardEntity character in targets)
-            {
-                character.AddPassive(new BuffStun());
-            }
-            */
             return null;
         }
 
-        protected override void ActionHelperNoPreview(List<Tile> tiles, Action<bool> callback)
+        protected override void ActionHelperNoPreview(List<Tile> tiles, Action callback)
         {
             List<Tile> targetTiles = tileManager.GetTilesDiag(tiles[0].BoardEntity.Position);
             List<CharacterBoardEntity> targets = tileManager.TilesToCharacterBoardEntities(targetTiles);
@@ -43,6 +34,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             {
                 character.AddPassive(new BuffStun());
             }
+            base.ActionHelperNoPreview(tiles, callback);
         }
 
         public override List<Tile> TileReturnHelper(Tile t)

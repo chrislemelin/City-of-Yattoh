@@ -8,7 +8,7 @@ using System;
 namespace Placeholdernamespace.Common.UI
 {
 
-    public class Tooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerClickHandler
+    public class Tooltip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
     {
 
         [SerializeField]
@@ -78,13 +78,5 @@ namespace Placeholdernamespace.Common.UI
             }
         }
 
-
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            if (clickAction != null)
-            {
-                clickAction();
-            }
-        }
     }
 }

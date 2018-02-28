@@ -26,6 +26,8 @@ namespace Placeholdernamespace.Battle.UI
         [SerializeField]
         private GameObject profilePic;
         [SerializeField]
+        private GameObject kaProfile;
+        [SerializeField]
         private GameObject titleGameObject;
         [SerializeField]
         private GameObject textGameObject;
@@ -83,6 +85,17 @@ namespace Placeholdernamespace.Battle.UI
                 currentBoardEntity.updateStatHandler += RefreshProfile;
                 gameObject.SetActive(true);
                 processBoardEntity(boardEntity, previewStats, skillReport);
+            }
+
+            CharacterBoardEntity characterBoardEntity = Core.Instance.convert(boardEntity);
+            if(characterBoardEntity != null && characterBoardEntity.Ka != null)
+            {
+                kaProfile.SetActive(true);
+                kaProfile.GetComponent<Image>().sprite = characterBoardEntity.Ka.ProfilePic;
+            }
+            else
+            {
+                kaProfile.SetActive(false);
             }
 
         }
@@ -165,7 +178,6 @@ namespace Placeholdernamespace.Battle.UI
         {
             foreach(StatType type in displayOrder)
             {
-                Stat stat = boardEntity.Stats.GetStatInstance().GetStat(type);
                 string text = boardEntity.Stats.StatToString(type);
                 if(previewStats != null)
                 {
@@ -199,7 +211,6 @@ namespace Placeholdernamespace.Battle.UI
         
         private void AddRangeText(BoardEntity boardEntity)
         {
-            string rangeText;
             if(boardEntity is CharacterBoardEntity)
             {
                 if(((CharacterBoardEntity)boardEntity).Range == Skill.RANGE_ADJACENT)

@@ -100,7 +100,7 @@ namespace Placeholdernamespace.Battle.Entities.AI
                             {
                                 aiMove.AddMoveAction(characterBoardEntity, m, DoNextAction);
                             }
-                            aiMove.AddAttackAction(skill, t, DoNextAction);
+                            aiMove.AddAttackAction(skill, t, (() => DoNextAction(false)));
                             aiMoves.Add(aiMove);
                         }
                     }

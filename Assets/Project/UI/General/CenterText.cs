@@ -38,7 +38,7 @@ public class CenterText : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        if (spawnTime != null && Time.time - spawnTime > duration)
+        if (spawnTime != null && (Time.time - spawnTime > duration && duration != -1))
         {
             text.text = "";
             text.enabled = false;
@@ -55,6 +55,10 @@ public class CenterText : MonoBehaviour {
             if (fade > 0)
             {
                 float newAlpha = ((1.0f - fade) * 255);
+                if(duration == -1)
+                {
+                    newAlpha = 255.0f;
+                }
                 Color newColor = new Color32(oldColor.r, oldColor.b, oldColor.g, (byte)newAlpha);
                 background.color = new Color32(oldBGColor.r, oldBGColor.b, oldBGColor.g,(byte)newAlpha);
                 text.color = newColor;

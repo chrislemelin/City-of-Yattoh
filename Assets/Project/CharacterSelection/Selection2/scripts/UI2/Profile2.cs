@@ -14,6 +14,9 @@ public class Profile2 : MonoBehaviour {
     Image profileImage;
 
     [SerializeField]
+    bool displayTexts = true;
+
+    [SerializeField]
     GameObject kaProfile;
 
     [SerializeField]
@@ -27,6 +30,8 @@ public class Profile2 : MonoBehaviour {
 
 
     List<GameObject> texts = new List<GameObject>();
+
+    /// I should really consolidate this code to profile.cs
 
     public void SetProfilePic(CharacterBoardEntity prim, CharacterBoardEntity ka)
     {
@@ -50,15 +55,18 @@ public class Profile2 : MonoBehaviour {
         {
             Destroy(g);
         }
-        AddTitle(boardEntity.Name);
-        EvaluateStats(boardEntity);
+        if (displayTexts)
+        {
+            AddTitle(boardEntity.Name);
+            EvaluateStats(boardEntity);
+        }
     }
 
     private void EvaluateStats(BoardEntity boardEntity)
     {
         foreach (StatType type in displayOrder)
         {
-            Stat stat = boardEntity.Stats.GetStatInstance().GetStat(type);
+            //Stat stat = boardEntity.Stats.GetStatInstance().GetStat(type);
             string text = boardEntity.Stats.StatToString(type);           
             AddText(text, Stats.StatTypeToTooltip(type));
         }
@@ -67,7 +75,6 @@ public class Profile2 : MonoBehaviour {
 
     private void AddRangeText(BoardEntity boardEntity)
     {
-        string rangeText;
         if (boardEntity is CharacterBoardEntity)
         {
             if (((CharacterBoardEntity)boardEntity).Range == Skill.RANGE_ADJACENT)

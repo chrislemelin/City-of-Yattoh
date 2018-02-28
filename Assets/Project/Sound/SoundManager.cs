@@ -25,7 +25,18 @@ namespace Placeholdernamespace.Common.Sound
             this.muted = muted;
         }
 
+        public void SkipSong()
+        {
+            if(soundTrackCounter >= battleSoundTracks.Count)
+            {
+                soundTrackCounter = 0;
+            }
+            SetMusic(battleSoundTracks[soundTrackCounter++]);
+        }
 
+        [SerializeField]
+        private List<AudioClip> battleSoundTracks;
+        private int soundTrackCounter = 0;
 
         private List<Soundtrack> soundtrackEnum = new List<Soundtrack> {Soundtrack.title, Soundtrack.battle };
         [SerializeField]
@@ -58,11 +69,24 @@ namespace Placeholdernamespace.Common.Sound
         {
             if(soundtracks.ContainsKey(track))
             {
-                musicPlayer.Stop();
-                musicPlayer.loop = true;
-                musicPlayer.clip = soundtracks[track];
-                musicPlayer.Play();
+                SetMusic(soundtracks[track]);
             }
+        }
+
+        public void SetMusic(AudioClip track)
+        {
+            musicPlayer.Stop();
+            if(track.name == "battle1")
+            {
+                musicPlayer.volume = .5f;
+            }
+            else
+            {
+                musicPlayer.volume = 1.0f;
+            }
+            musicPlayer.loop = true;
+            musicPlayer.clip = track;
+            musicPlayer.Play();        
         }
 
 

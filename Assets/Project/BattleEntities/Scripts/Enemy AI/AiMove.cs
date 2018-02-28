@@ -54,7 +54,7 @@ namespace Placeholdernamespace.Battle.Entities.AI
             this.movementScore = movementScore;
         }
 
-        public void AddAttackAction(Skill skill, Tile t, Action<bool> callBack)
+        public void AddAttackAction(Skill skill, Tile t, Action callBack)
         {
             SkillReport report = skill.TheoreticalAction(t);
             if(report.TargetAfter.MutableStats[AttributeStats.StatType.Health].Value == 0 )

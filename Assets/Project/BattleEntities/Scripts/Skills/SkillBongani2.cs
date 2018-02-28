@@ -24,12 +24,13 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             return null;
         }
 
-        protected override void ActionHelperNoPreview(List<Tile> tiles, Action<bool> callback)
+        protected override void ActionHelperNoPreview(List<Tile> tiles, Action callback)
         {
             if(tiles.Count > 0)
             {
                 tileManager.AddTrap(tiles[0], EnterTile);
             }
+            base.ActionHelperNoPreview(tiles, callback);
         }
 
         private bool EnterTile(Tile t, CharacterBoardEntity character)

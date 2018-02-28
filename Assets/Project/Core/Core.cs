@@ -10,7 +10,11 @@ namespace Placeholdernamespace
 {
     public class Core : MonoBehaviour
     {
-        static public Core instance; //the instance of our class that will do the work
+        static private Core instance; //the instance of our class that will do the work
+        static public Core Instance
+        {
+            get { return instance; }
+        }
 
         void Awake()
         { //called when an instance awakes in the game
@@ -43,6 +47,15 @@ namespace Placeholdernamespace
 
         }
 
+        public CharacterBoardEntity convert(BoardEntity boardEntity)
+        {
+            if (boardEntity is CharacterBoardEntity)
+            {
+                return (CharacterBoardEntity)boardEntity;
+            }
+            return null;
+        }
+        
     }
     
 }

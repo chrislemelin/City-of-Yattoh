@@ -18,7 +18,14 @@ public class ScenePropertyManager : MonoBehaviour {
         }
     }
 
-
+    public Dictionary<Position, CharacterType> Enemies = new Dictionary<Position, CharacterType>() {
+        { new Position(9, 1), CharacterType.EnemyRanged },
+        { new Position(9, 0), CharacterType.EnemyRanged },
+        { new Position(8, 1), CharacterType.EnemyBalanced },
+        { new Position(8, 0), CharacterType.EnemyTank },
+        { new Position(9, 8), CharacterType.EnemySpeedy},
+        { new Position(9, 7), CharacterType.EnemySpeedy}
+    };
 
     private Dictionary<CharacterType, GameObject> boardEntityCharacters = new Dictionary<CharacterType, GameObject>();
     public Dictionary<CharacterType, GameObject> BoardEntityCharacters
@@ -50,7 +57,7 @@ public class ScenePropertyManager : MonoBehaviour {
         MakeDictionary();
         instance = this;
         DontDestroyOnLoad(transform.gameObject);
-        initCharacters2();
+        initCharacters();
     }
 
     private void MakeDictionary()
@@ -105,11 +112,11 @@ public class ScenePropertyManager : MonoBehaviour {
 
     }
 
-    private void  initCharacters2()
+    private void  initCharacters()
     {
         SetCharacterParty(new List<Tuple<CharacterBoardEntity, Ka>>()
         {
-            new Tuple<CharacterBoardEntity, Ka>(typeToBE[CharacterType.PlayerBongani], null),
+            new Tuple<CharacterBoardEntity, Ka>(typeToBE[CharacterType.PlayerDadi], null),
             new Tuple<CharacterBoardEntity, Ka>(typeToBE[CharacterType.PlayerJaz], null),
             new Tuple<CharacterBoardEntity, Ka>(typeToBE[CharacterType.PlayerTisha], null),
             new Tuple<CharacterBoardEntity, Ka>(typeToBE[CharacterType.PlayerLesidi], null),

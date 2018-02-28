@@ -56,8 +56,6 @@ namespace Placeholdernamespace.Battle.Entities
 
         public Tile GetTile()
         {
-            
-            bool a = isInit;
             return tileManager.GetTile(Position);
         }
 
@@ -105,7 +103,7 @@ namespace Placeholdernamespace.Battle.Entities
             BattleCalculator battleCalculator, Ka ka = null)
         {
             healthBarInstance = Instantiate(healthBar);
-            healthBarInstance.transform.SetParent(FindObjectOfType<Canvas>().gameObject.transform);
+            healthBarInstance.transform.SetParent(FindObjectOfType<HealthBarContainer>().gameObject.transform);
             healthBarInstance.GetComponent<UIFollow>().target = gameObject;
             healthBarInstance.transform.SetAsFirstSibling();
             healthBarInstance.transform.position = new Vector3(100000, 100000);

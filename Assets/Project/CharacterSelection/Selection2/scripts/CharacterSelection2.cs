@@ -71,7 +71,6 @@ namespace Placeholdernamespace.CharacterSelection {
 
             ClearKaButtons();
             CharacterBoardEntity selectedCharacter = characterView.GetSelectedCharacter();
-            HashSet<CharacterBoardEntity> usedChars = ScenePropertyManager.Instance.GetUsedCharacters();
             foreach (GameObject character in ScenePropertyManager.Instance.BoardEntityCharacters.Values)
             {
                 bool blank = selectedCharacter == character.GetComponent<CharacterBoardEntity>();

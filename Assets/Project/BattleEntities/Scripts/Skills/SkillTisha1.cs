@@ -25,7 +25,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             return null;
         }
 
-        protected override void ActionHelperNoPreview(List<Tile> tiles, Action<bool> calback = null)
+        protected override void ActionHelperNoPreview(List<Tile> tiles, Action callback = null)
         {
             List<CharacterBoardEntity> enemies = tileManager.TilesToCharacterBoardEntities(tileManager.GetTilesDiag(boardEntity.Position, 1),boardEntity.Team);
             int moreArmour = enemies.Count;
@@ -36,6 +36,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
                     boardEntity.AddPassive(new BuffArmour(moreArmour, 2));
                 }
             }
+            base.ActionHelperNoPreview(tiles, callback);
         }
 
     }
