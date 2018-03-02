@@ -16,21 +16,35 @@ namespace Placeholdernamespace.Common.UI
         private Sprite playingMusicSprite;
 
         [SerializeField]
-        private GameObject soundButton;
-
+        private GameObject quitButton;
         [SerializeField]
         private GameObject resetButton;
+        [SerializeField]
+        private GameObject soundMuteButton;
+        [SerializeField]
+        private GameObject soundSkipButton;
+
+        [SerializeField]
+        private string resetScene;
 
         // Use this for initialization
         void Start()
         {
-            DontDestroyOnLoad(gameObject);
-            soundButton.GetComponent<OnPointerDownListener>().pressed += SoundPressed;
-            resetButton.GetComponent<OnPointerDownListener>().pressed += ResetPressed;
+            if(soundMuteButton != null)
+                soundMuteButton.GetComponent<OnPointerDownListener>().pressed += SoundPressed;
+
+            if(resetButton != null)
+                resetButton.GetComponent<OnPointerDownListener>().pressed += ResetPressed;
+
+            if(quitButton != null)
+                quitButton.GetComponent<OnPointerDownListener>().pressed += QuitPressed;
+
+            if(soundSkipButton != null)
+                soundSkipButton.GetComponent<OnPointerDownListener>().pressed += SkipSong;
+
             UpdateMuteIcon();
         }
 
-        // Update is called once per frame
         void Update() {
 
         }
@@ -43,20 +57,38 @@ namespace Placeholdernamespace.Common.UI
 
         private void UpdateMuteIcon()
         {
-            if (SoundManager.Instance.muted)
+            if (soundMuteButton != null)
             {
-                soundButton.GetComponent<Image>().sprite = mutedMusicSprite;
-            }
-            else
-            {
-                soundButton.GetComponent<Image>().sprite = playingMusicSprite;
+                if (SoundManager.Instance.muted)
+                {
+                    soundMuteButton.GetComponent<Image>().sprite = mutedMusicSprite;
+                }
+                else
+                {
+                    soundMuteButton.GetComponent<Image>().sprite = playingMusicSprite;
+                }
             }
         }
 
         private void ResetPressed()
         {
-            resetButton.SetActive(false);
-            SceneManager.LoadScene("CharacterSelection3");
+            if(resetScene != "" || resetScene != null)
+            {
+                SceneManager.LoadScene(resetScene);
+            }
+            else
+                SceneManager.LoadScene("CharacterSelection3");
+        }
+
+        private void QuitPressed()
+        {
+            print("quiting");
+            Application.Quit();
+        }
+
+        private void SkipSong()
+        {
+            SoundManager.Instance.SkipSong();
         }
     }
 }

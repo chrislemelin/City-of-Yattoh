@@ -35,8 +35,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1315592204861438}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 591.0469, y: 244.49939, z: 0.08382017}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 1087.0643, y: 575.0054, z: 0.08382017}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -154,6 +154,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   musicPlayer: {fileID: 82089647844895574}
   muted: 0
-  soundtrackAudio:
-  - {fileID: 8300000, guid: 7e3fc4742b0e6e34b80c3a23b9ac614d, type: 3}
+  battleSoundTracks:
+  - {fileID: 8300000, guid: 43a6e89007a76e846abb1eed8f731ea4, type: 3}
+  - {fileID: 8300000, guid: a1a3f646da7f16c49a3d7c035346cfb2, type: 3}
   - {fileID: 8300000, guid: 534500312c0098f429143377dbd044f1, type: 3}
+  - {fileID: 8300000, guid: 6a5e46cd64dc4a44982a4059edb3e96d, type: 3}
+  - {fileID: 8300000, guid: 9edceb2811c347b4bb68b2e32cb478a7, type: 3}
+  soundtrackAudio:
+  - {fileID: 8300000, guid: 64b910ab639e52644a5a8424c06abda9, type: 3}
+  - {fileID: 8300000, guid: 9edceb2811c347b4bb68b2e32cb478a7, type: 3}

@@ -39,12 +39,13 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             return null;
         }
 
-        protected override void ActionHelperNoPreview(List<Tile> tiles, Action<bool> callback)
+        protected override void ActionHelperNoPreview(List<Tile> tiles, Action callback)
         {
             if (tiles.Count > 0)
             {
                 tileManager.RemoveTile(tiles[0].Position);
             }
+            base.ActionHelperNoPreview(tiles, callback);
         }
 
     }

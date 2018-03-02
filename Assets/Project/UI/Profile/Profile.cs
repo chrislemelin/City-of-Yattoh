@@ -13,7 +13,20 @@ namespace Placeholdernamespace.Battle.UI
     public class Profile : MonoBehaviour
     {
         [SerializeField]
+        private Sprite defaultPassiveSprite;
+
+        [SerializeField]
+        private List<Sprite> passiveSprites;
+        private List<PassiveType> passiveSpritesTypes = new List<PassiveType>()
+        {
+           PassiveType.TalentTrigger, PassiveType.Talent, PassiveType.Buff, PassiveType.Debuff
+        };
+        private Dictionary<PassiveType, Sprite> passiveTypeToSprite = new Dictionary<PassiveType, Sprite>();
+
+        [SerializeField]
         private GameObject profilePic;
+        [SerializeField]
+        private GameObject kaProfile;
         [SerializeField]
         private GameObject titleGameObject;
         [SerializeField]
@@ -43,12 +56,18 @@ namespace Placeholdernamespace.Battle.UI
         private List<GameObject> passives = new List<GameObject>();
         private BoardEntity currentBoardEntity;
 
-        public void Start()
+        public void Awake()
         {
-            //gameObject.SetActive(false);
-            //GetComponent<VerticalLayoutGroup>()
+            MakePassiveSpriteDictionary();
         }
 
+        private void MakePassiveSpriteDictionary()
+        {
+            for(int a = 0; a < passiveSprites.Count && a < passiveSpritesTypes.Count; a++)
+            {
+                passiveTypeToSprite.Add(passiveSpritesTypes[a], passiveSprites[a]);
+            }
+        }
 
         public void UpdateProfile(BoardEntity boardEntity, Stats previewStats = null, SkillReport skillReport = null)
         {
@@ -66,6 +85,17 @@ namespace Placeholdernamespace.Battle.UI
                 currentBoardEntity.updateStatHandler += RefreshProfile;
                 gameObject.SetActive(true);
                 processBoardEntity(boardEntity, previewStats, skillReport);
+            }
+
+            CharacterBoardEntity characterBoardEntity = Core.Instance.convert(boardEntity);
+            if(characterBoardEntity != null && characterBoardEntity.Ka != null)
+            {
+                kaProfile.SetActive(true);
+                kaProfile.GetComponent<Image>().sprite = characterBoardEntity.Ka.ProfilePic;
+            }
+            else
+            {
+                kaProfile.SetActive(false);
             }
 
         }
@@ -118,6 +148,17 @@ namespace Placeholdernamespace.Battle.UI
             foreach(Passive passive in passives)
             {
                 GameObject passiveObject = Instantiate(passiveGameObject);
+                Sprite passiveSprite = defaultPassiveSprite;
+                if (passiveTypeToSprite.ContainsKey(passive.Type))
+                {
+                    passiveSprite = passiveTypeToSprite[passive.Type];
+                }
+                passiveObject.transform.GetChild(0).transform.GetChild(0).GetComponent<Image>().sprite = passiveSprite;
+                if(passive.Type == PassiveType.Debuff)
+                {
+                    passiveObject.transform.GetChild(0).transform.GetChild(0).transform.rotation = new Quaternion(180, 0, 0, 0);
+                }
+
                 passiveObject.GetComponent<TooltipSpawner>().Init(passive.GetTitle, passive.GetDescription, ()=> { return null; });
                 passiveObject.transform.SetParent(passivePanel.transform);
                 this.passives.Add(passiveObject);
@@ -137,7 +178,6 @@ namespace Placeholdernamespace.Battle.UI
         {
             foreach(StatType type in displayOrder)
             {
-                Stat stat = boardEntity.Stats.GetStatInstance().GetStat(type);
                 string text = boardEntity.Stats.StatToString(type);
                 if(previewStats != null)
                 {
@@ -171,7 +211,6 @@ namespace Placeholdernamespace.Battle.UI
         
         private void AddRangeText(BoardEntity boardEntity)
         {
-            string rangeText;
             if(boardEntity is CharacterBoardEntity)
             {
                 if(((CharacterBoardEntity)boardEntity).Range == Skill.RANGE_ADJACENT)

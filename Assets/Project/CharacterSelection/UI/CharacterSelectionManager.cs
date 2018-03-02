@@ -168,17 +168,16 @@ namespace Placeholdernamespace.CharacterSelection
             {
                 Dropdown dropdown = partyDropdowns[a];
                 Dropdown kaDropdown = kaDropDowns[a];
-                Ka ka = null;
                 if(textToType.ContainsKey(kaDropdown.options[kaDropdown.value].text))
                 {
                     CharacterType kaType = textToType[kaDropdown.options[kaDropdown.value].text];
-                    ka = new Ka(ScenePropertyManager.Instance.typeToContainer[kaType]);
                 }
                // ScenePropertyManager.Instance.characterParty.Add( new Tuple<CharacterType, Ka>(
                //     textToType[dropdown.options[dropdown.value].text], ka));
 
             }
             SoundManager.Instance.SetMusic(Soundtrack.battle);
+
             SceneManager.LoadScene("Battlefield");
         }
     }

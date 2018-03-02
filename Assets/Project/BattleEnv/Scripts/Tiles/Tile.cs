@@ -62,6 +62,7 @@ namespace Placeholdernamespace.Battle.Env
 
         public bool CheckIfBlocked(Tile tile)
         {
+            /*
             if(checkIfBlockedCaching.ContainsKey(tile))
             {
                 return checkIfBlockedCaching[tile];
@@ -70,7 +71,7 @@ namespace Placeholdernamespace.Battle.Env
             Vector2 tilePos = tile.transform.position;
             float distance = Vector2.Distance(currentPos, tilePos);
             Vector2 rayDirection = tilePos - currentPos;
-
+            */
             return false;
             /* performance problem here
             RaycastHit2D hit = Physics2D.Raycast(currentPos, rayDirection, distance, myLayerMask);   

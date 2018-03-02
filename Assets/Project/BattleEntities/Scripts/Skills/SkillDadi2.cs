@@ -52,16 +52,18 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             return null;
         }
 
-        protected override void ActionHelperNoPreview(List<Tile> tiles, Action<bool> calback = null)
+        protected override void ActionHelperNoPreview(List<Tile> tiles, Action callback = null)
         {
             List<CharacterBoardEntity> characters = tileManager.TilesToCharacterBoardEntities(tiles, boardEntity.Team);
             foreach(CharacterBoardEntity character in characters)
             {
                 character.AddPassive(new BuffRaged(boardEntity));
             }
+            base.ActionHelperNoPreview(tiles, callback);
+
         }
 
-        
+
 
     }
 }

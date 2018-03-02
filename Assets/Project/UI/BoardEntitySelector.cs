@@ -130,7 +130,6 @@ namespace Placeholdernamespace.Battle.Interaction
                 if (TurnManager.CurrentBoardEntity == selectedBoardEntity)
                 {
                     List<Move> moveSet = selectedBoardEntity.MoveSet();
-                    HashSet<Move> usedMoves = new HashSet<Move>();
                     List<TileSelectOption> options = new List<TileSelectOption>();
                     foreach (Move m in moveSet)
                     {

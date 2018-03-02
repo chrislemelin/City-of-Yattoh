@@ -13,7 +13,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         {
             title = "Desperate Flurry";
             description = "Exhast all energy to unleash repeated attacks";
-            apCost = 0;
+            apCost = 1;
             coolDown = 2;
         }
 
@@ -32,9 +32,10 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             return battleCalculator.ExecuteSkillDamage(boardEntity, this, ((CharacterBoardEntity)t[0].BoardEntity), packs);
         }
 
-        protected override void ActionHelperNoPreview(List<Tile> tiles, Action<bool> calback = null)
+        protected override void ActionHelperNoPreview(List<Tile> tiles, Action callback = null)
         {
             boardEntity.Stats.SetMutableStat(AttributeStats.StatType.AP, 0);
+            base.ActionHelperNoPreview(tiles, callback);
         }
 
     }

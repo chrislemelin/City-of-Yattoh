@@ -46,7 +46,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
         private void EnterAction (BoardEntity boardEntity, Tile leavingTile, Action callback)
         {
             if (this.boardEntity.Team != boardEntity.Team && !influenceTiles.Contains(leavingTile))
-                influenceSkill.Action(boardEntity.GetTile(), (bool ok) => callback(), true);
+                influenceSkill.Action(boardEntity.GetTile(),  callback);
             else
                 callback();
         }

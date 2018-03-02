@@ -26,17 +26,30 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             return null;
         }
 
-        protected override void ActionHelperNoPreview(List<Tile> tiles, Action<bool> callback)
+        protected override void ActionHelperNoPreview(List<Tile> tiles, Action callback)
         {
             int range = boardEntity.Stats.GetNonMuttableStat(AttributeStats.StatType.Movement).Value;
             Position startTile = boardEntity.GetTile().Position;
             Move move = new Move() { apCost = 0, movementCost = 0, path = tiles, destination = tiles[tiles.Count-1]};
             Position direction = tiles[0].Position - boardEntity.GetTile().Position;
-            boardEntity.ExecuteCharge(move, direction, callback);
-
+            boardEntity.ExecuteCharge(move, direction, ((x, be) => { ChargeCallback(callback, x, be); }) );
+        } 
+        
+        private void ChargeCallback(Action callback, int distance, CharacterBoardEntity characterBoardEntity)
+        {
+            if(characterBoardEntity != null)
+            {
+                boardEntity.BasicAttack.Action(new List<Tile> { characterBoardEntity.GetTile() }, callback, free: true,
+                    mods: new List<SkillModifier> { new SkillModifier(SkillModifierType.Power, SkillModifierApplication.Add, distance)});
+            }
+            else
+            {
+                if (callback != null)
+                    callback();
+            }
         }
 
-        protected override void DoCallback(Action<bool> callback = null){}
+        //protected override void DoCallback(Action callback = null){}
 
         public override bool TileOptionClickable(Tile t)
         {
@@ -71,7 +84,22 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             rightTiles = ChargeListHelper(tileManager.GetTilesInDirection(startTile, new Position(1, 0), range));
             leftTiles = ChargeListHelper(tileManager.GetTilesInDirection(startTile, new Position(-1, 0), range));
 
-            
+            while(upTiles.Count > 0 && upTiles[upTiles.Count-1].BoardEntity != null)
+            {
+                upTiles.RemoveAt(upTiles.Count - 1);
+            }
+            while (rightTiles.Count > 0 && rightTiles[rightTiles.Count - 1].BoardEntity != null)
+            {
+                rightTiles.RemoveAt(rightTiles.Count - 1);
+            }
+            while (downTiles.Count > 0 && downTiles[downTiles.Count - 1].BoardEntity != null)
+            {
+                downTiles.RemoveAt(downTiles.Count - 1);
+            }
+            while (leftTiles.Count > 0 && leftTiles[leftTiles.Count - 1].BoardEntity != null)
+            {
+                leftTiles.RemoveAt(leftTiles.Count - 1);
+            }
 
             List<Tile> returnTiles = new List<Tile>();
             returnTiles.AddRange(upTiles);

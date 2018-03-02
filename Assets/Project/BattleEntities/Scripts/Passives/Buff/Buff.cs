@@ -30,6 +30,11 @@ namespace Placeholdernamespace.Battle.Entities.Passives
             type = PassiveType.Buff;
         }
 
+        public virtual void Added()
+        {
+
+        }
+
         public override void StartTurn()
         {
         }

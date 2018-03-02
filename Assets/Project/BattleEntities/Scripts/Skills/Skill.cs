@@ -295,12 +295,12 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
         }
 
-        public void Action(Tile t, Action<bool> callback = null, bool free = false)
+        public void Action(Tile t, Action callback = null, bool free = false)
         {
             Action(new List<Tile>() { t }, callback);
         }
 
-        public void Action(List<Tile> tiles, Action<bool> callback = null, bool free = false, List<SkillModifier> mods = null, bool animation = true)
+        public void Action(List<Tile> tiles, Action callback = null, bool free = false, List<SkillModifier> mods = null, bool animation = true)
         {
             if( mods != null )
             {
@@ -328,11 +328,16 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             }
       
 
-            ActionHelperNoPreview(tiles, callback);
+            ActionHelperNoPreview(tiles, ()=> previewCallback(report, free, tiles, callback));
+       
+        }
+
+        private void previewCallback(SkillReport report, bool free, List<Tile> tiles, Action callback)
+        {
             battleCalculator.ExecuteSkillReport(report);
-            foreach(Tile t in tiles)
+            foreach (Tile t in tiles)
             {
-                if(TileHasTarget(t))
+                if (TileHasTarget(t))
                 {
                     foreach (Buff b in GetBuffs())
                     {
@@ -341,11 +346,11 @@ namespace Placeholdernamespace.Battle.Entities.Skills
                 }
             }
 
-            if(!free)
+            if (!free)
             {
                 currentCoolDown = GetCoolDown();
-                if(GetAPCost() > 0)
-                    boardEntity.Stats.SubtractAPPoints(GetAPCost(), true);
+                if (GetAPCost() > 0)
+                    boardEntity.Stats.SubtractAPPoints(GetAPCost(), boardEntity.Team == Team.Player);
             }
 
             // tell the passives what just happened
@@ -359,20 +364,16 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             {
                 passive.ExecutedSkill(this, report);
             }
-         
+
             skillModifiers = new List<SkillModifier>();
             turnManager.CheckEntitiesForDeath();
 
-            DoCallback(callback);
-        }
-
-        protected virtual void DoCallback(Action<bool> callback = null)
-        {
             if (callback != null)
             {
-                Core.CallbackDelay(.8f, () => callback(false));
+                Core.CallbackDelay(.8f, () => { callback(); });
             }
         }
+
 
         /// <summary>
         /// override for the actual execution of skill
@@ -380,7 +381,9 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         /// <param name="t"></param>
         protected abstract SkillReport ActionHelper(List<Tile> t);
 
-        protected virtual void ActionHelperNoPreview(List<Tile> tiles, Action<bool> calback = null){ }
+        protected virtual void ActionHelperNoPreview(List<Tile> tiles, Action callback = null){
+            callback();
+        }
 
         public virtual bool IsActive()
         {

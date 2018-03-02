@@ -17,7 +17,10 @@ namespace Placeholdernamespace.Common.UI
         // Use this for initialization
         void Start() {
             GetComponent<TooltipSpawner>().Init(() => title, () => description, () => flavorText);
-   
+            if(GetComponent<OnPointerDownListener>() != null)
+            {
+                GetComponent<TooltipSpawner>().SetClickAction(() => GetComponent<OnPointerDownListener>().OnPointerDown(null) );
+            }
         }
 
   

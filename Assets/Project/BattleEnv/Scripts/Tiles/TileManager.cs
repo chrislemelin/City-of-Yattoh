@@ -37,7 +37,7 @@ namespace Placeholdernamespace.Battle.Env
             generateBoard();
         }
 
-        public void MoveBoardEntity(Position p, BoardEntity entity)
+        public void MoveBoardEntity(Position p, BoardEntity entity, bool move = true)
         {
             Tile oldTile = entity.GetTile();
             Tile tile = GetTile(p);      
@@ -52,7 +52,8 @@ namespace Placeholdernamespace.Battle.Env
                 entity.GetTile().SetBoardEntity(entity);
             }
 
-            entity.transform.position = entity.GetTile().transform.position;
+            if(move)
+                entity.transform.position = entity.GetTile().transform.position;
 
             if (entity is CharacterBoardEntity)
             {
@@ -73,10 +74,6 @@ namespace Placeholdernamespace.Battle.Env
 
         public Tile GetTile(Position position)
         {
-            if(position == null)
-            {
-                int a = 0;
-            }
             Dictionary<Position, Tile> coords;
             if(tempCoordinateToTile != null)
             {
@@ -346,7 +343,6 @@ namespace Placeholdernamespace.Battle.Env
             Dictionary<Tile, Tile> path = new Dictionary<Tile, Tile>();
 
             Queue<Tile> queue = new Queue<Tile>();
-            HashSet<Tile> visitedTiles = new HashSet<Tile>();
             queue.Enqueue(startTile);
             while (queue.Count != 0)
             {
@@ -441,7 +437,7 @@ namespace Placeholdernamespace.Battle.Env
             int movementStats = character.Stats.GetStatInstance().getValue(Entities.AttributeStats.StatType.Movement);
             int movementPoints = character.Stats.GetMutableStat(Entities.AttributeStats.StatType.Movement).Value;
 
-            int range = movementPoints + movementStats * character.Stats.GetMutableStat(Entities.AttributeStats.StatType.AP).Value;
+            //int range = movementPoints + movementStats * character.Stats.GetMutableStat(Entities.AttributeStats.StatType.AP).Value;
 
             List<Move> tiles = new List<Move>();
             Tile startTile = GetTile(start);
@@ -449,7 +445,7 @@ namespace Placeholdernamespace.Battle.Env
             List<Move> visitingTiles = new List<Move>();
             visitingTiles.Add(new Move { destination = startTile, movementCost = 0 });
 
-            while(visitingTiles.Count > 0)
+            while(visitingTiles.Count > 0 && startTile != null)
             {
                 List<Move> newVisitingTiles = new List<Move>();
                 foreach (Move move in visitingTiles)

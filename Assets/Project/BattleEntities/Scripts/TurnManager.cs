@@ -14,12 +14,12 @@ namespace Placeholdernamespace.Battle.Managers
 {
     public class TurnManager : MonoBehaviour
     {
-
+        [SerializeField]
+        GameObject currentTurnPointer;
         public TextMeshProUGUI display;
 
         public delegate void NewTurnHandler(object sender, EventArgs e);
-        public event NewTurnHandler OnNewTurn;
-
+        private bool endState = false;
 
         private static BoardEntity currentBoardEntity;
         public static BoardEntity CurrentBoardEntity
@@ -47,8 +47,7 @@ namespace Placeholdernamespace.Battle.Managers
         }
 
         public void startGame()
-        {
-            
+        {     
             NextTurn();
         }
 
@@ -69,6 +68,42 @@ namespace Placeholdernamespace.Battle.Managers
         {
             enities.Remove(boardEntity);
             ReCalcQueue();
+            CheckForEndState();
+        }
+
+        private void CheckForEndState()
+        {
+            bool win = true;
+            bool lose = true;
+            foreach (BoardEntity boardEntity in Entities)
+            {
+                if (boardEntity.Team == Team.Enemy)
+                    win = false;
+                if (boardEntity.Team == Team.Player)
+                    lose = false;
+            }
+            if(win)
+            {
+                winHelper();
+            }
+            else if (lose)
+            {
+                loseHelper();
+            }
+        }
+
+        private void winHelper()
+        {
+            endState = true;
+            CenterText.Instance.DisplayMessage("Player Wins! press reset in top left corner to restart", null, duration: -1);
+            NextTurnHelper();
+        }
+
+        private void loseHelper()
+        {
+            endState = true;
+            CenterText.Instance.DisplayMessage("Player Loses! press reset in top left corner to restart", null, duration: -1);
+            NextTurnHelper();
         }
 
         public void NextTurnHelper()
@@ -81,29 +116,41 @@ namespace Placeholdernamespace.Battle.Managers
 
         public void NextTurn()
         {
-            ReCalcQueue();
-            PathOnClick.pause = true;
-            tileSelectionManager.CancelSelection();
             currentBoardEntity = null;
             boardEntitySelector.setSelectedBoardEntity(null);
-            
-            BoardEntity tempcurrentBoardEntity = turnQueue[0];
-            alreadyTakenTurn.Add(tempcurrentBoardEntity);
-            turnQueue.RemoveAt(0);
-            
-            CenterText.Instance.DisplayMessage(tempcurrentBoardEntity.Name + "'s Turn", () => {
-                currentBoardEntity = tempcurrentBoardEntity;
-                PathOnClick.pause = false;
-                UpdateGui();
-                ((CharacterBoardEntity)tempcurrentBoardEntity).SetUpMyTurn();
-                if (currentBoardEntity.Team == Team.Player)
-                {
-                    boardEntitySelector.setSelectedBoardEntity(currentBoardEntity);
-                }
-                tempcurrentBoardEntity.StartMyTurn();
+            if (!endState)
+            {
+                ReCalcQueue();
+                PathOnClick.pause = true;
+                tileSelectionManager.CancelSelection();
 
-            });
+                BoardEntity tempcurrentBoardEntity = turnQueue[0];
+                alreadyTakenTurn.Add(tempcurrentBoardEntity);
+                turnQueue.RemoveAt(0);
+
+                CenterText.Instance.DisplayMessage(tempcurrentBoardEntity.Name + "'s Turn", () =>
+                {
+                    currentBoardEntity = tempcurrentBoardEntity;
+                    SetCurrentTurnMarker((CharacterBoardEntity)tempcurrentBoardEntity);
+                    PathOnClick.pause = false;
+                    UpdateGui();
+                    ((CharacterBoardEntity)tempcurrentBoardEntity).SetUpMyTurn();
+                    if (currentBoardEntity.Team == Team.Player)
+                    {
+                        boardEntitySelector.setSelectedBoardEntity(currentBoardEntity);
+                    }
+                    tempcurrentBoardEntity.StartMyTurn();
+
+                });
+            }
            
+        }
+
+        private void SetCurrentTurnMarker(CharacterBoardEntity characterBoardEntity)
+        {
+            currentTurnPointer.GetComponent<UIFollow>().target = characterBoardEntity.gameObject;
+            currentTurnPointer.SetActive(true);
+   
         }
 
         public void ClearBoardEnities()

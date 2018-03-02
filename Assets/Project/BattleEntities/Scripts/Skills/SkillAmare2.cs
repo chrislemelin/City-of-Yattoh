@@ -25,9 +25,10 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             return null;
         }
 
-        protected override void ActionHelperNoPreview(List<Tile> tiles, Action<bool> calback = null)
+        protected override void ActionHelperNoPreview(List<Tile> tiles, Action callback = null)
         {
             boardEntity.AddPassive(new BuffDodge(1));
+            base.ActionHelperNoPreview(tiles, callback);
         }
     }
 }

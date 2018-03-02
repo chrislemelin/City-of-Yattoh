@@ -52,7 +52,6 @@ namespace Placeholdernamespace.CharacterSelection {
                 MakeButton(character.GetComponent<CharacterBoardEntity>());
             }
             ScenePropertyManager.Instance.updatedParty += GreyOutUsedCharacters;
-            //RemakeKaButtons();
         }
 
         private void OnDestroy()
@@ -71,7 +70,6 @@ namespace Placeholdernamespace.CharacterSelection {
 
             ClearKaButtons();
             CharacterBoardEntity selectedCharacter = characterView.GetSelectedCharacter();
-            HashSet<CharacterBoardEntity> usedChars = ScenePropertyManager.Instance.GetUsedCharacters();
             foreach (GameObject character in ScenePropertyManager.Instance.BoardEntityCharacters.Values)
             {
                 bool blank = selectedCharacter == character.GetComponent<CharacterBoardEntity>();
@@ -177,9 +175,9 @@ namespace Placeholdernamespace.CharacterSelection {
                     arrow.SetActive(true);
                     //arrow.transform.position = new Vector3(110, charToButton[character].GetComponent<RectTransform>().position.y, 0);
                     //ugh this is gross
-                    arrow.GetComponent<RectTransform>().anchoredPosition = new Vector3 (-383,
+                    arrow.GetComponent<RectTransform>().anchoredPosition = new Vector3 (100,
                         charToButton[character].GetComponent<RectTransform>().localPosition.y *
-                        charToButton[character].GetComponent<RectTransform>().localScale.y - 300, 0);
+                        charToButton[character].GetComponent<RectTransform>().localScale.y  , 0);
                 }
 
             }

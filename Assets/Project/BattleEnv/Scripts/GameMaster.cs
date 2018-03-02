@@ -18,7 +18,7 @@ namespace Placeholdernamespace.Battle
     public enum CharacterType
     {
         PlayerJaz, PlayerBongani, PlayerLesidi, PlayerAmare, PlayerTisha, PlayerDadi,
-        EnemyTank, EnemyBalanced, EnemyRanged, EnemySpeedy
+        EnemyTank, EnemyBalanced, EnemyRanged, EnemySpeedy, EnemyWeak
     }
 
     public class GameMaster : MonoBehaviour
@@ -50,7 +50,6 @@ namespace Placeholdernamespace.Battle
             MakeDictionary();
 
             tileManager.Init(turnManager, profile);
-            GameObject BE;
 
             Position currentPosition = new Position(0, 0);
             foreach(Tuple<CharacterBoardEntity, Ka> character in ScenePropertyManager.Instance.GetCharacterParty())
@@ -58,22 +57,7 @@ namespace Placeholdernamespace.Battle
                 MakeCharacter(character.first, currentPosition, character.second);
                 currentPosition = currentPosition + new Position(0, 1);
             }
-
-            /*
-            MakeCharacter(ScenePropertyManager.Instance.characters[0], new Position(1, 1), CharacterType.PlayerAmare);
-            MakeCharacter(ScenePropertyManager.Instance.characters[1], new Position(0, 1));
-            MakeCharacter(ScenePropertyManager.Instance.characters[2], new Position(1, 0));
-            MakeCharacter(ScenePropertyManager.Instance.characters[3], new Position(0, 0));
-            */
-
-            MakeCharacter(GetCharacterBoardEntity(CharacterType.EnemyRanged), new Position(9, 0));
-            MakeCharacter(GetCharacterBoardEntity(CharacterType.EnemyRanged), new Position(9, 1));
-            MakeCharacter(GetCharacterBoardEntity(CharacterType.EnemyBalanced), new Position(8, 0));
-            //MakeCharacter(GetCharacterBoardEntity(CharacterType.EnemySpeedy), new Position(6, 0));
-            MakeCharacter(GetCharacterBoardEntity(CharacterType.EnemyTank), new Position(8, 1));
-
-            MakeCharacter(GetCharacterBoardEntity(CharacterType.EnemySpeedy), new Position(9, 8));
-            MakeCharacter(GetCharacterBoardEntity(CharacterType.EnemySpeedy), new Position(9, 7));
+            SpawnEnemies();
 
             turnManager.init(boardEntitySelector, tileSelectionManager);
             turnManager.ReCalcQueue();
@@ -109,6 +93,14 @@ namespace Placeholdernamespace.Battle
             }
             return null;
 
+        }
+
+        private void SpawnEnemies()
+        {
+            foreach(KeyValuePair<Position, CharacterType> value in ScenePropertyManager.Instance.Enemies)
+            {
+                MakeCharacter(GetCharacterBoardEntity(value.Value), value.Key);
+            }
         }
     }
 }

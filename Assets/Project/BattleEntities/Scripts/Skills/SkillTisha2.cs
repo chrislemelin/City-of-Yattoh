@@ -24,7 +24,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             return null;
         }
 
-        protected override void ActionHelperNoPreview(List<Tile> tiles, Action<bool> calback = null)
+        protected override void ActionHelperNoPreview(List<Tile> tiles, Action calback = null)
         {
             foreach (BoardEntity boardEntity in TurnManager.Entities)
             {

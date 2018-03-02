@@ -24,7 +24,17 @@ namespace Placeholdernamespace.Battle.Entities.Passives
             {
                 set.Add(t);
             }
-            return set;
+            if(set.Contains(boardEntity.GetTile()))
+            {
+                return set;
+            }
+            else
+            {
+                Remove();
+                return new HashSet<Tile>();
+            }
+
+            
         }
 
 

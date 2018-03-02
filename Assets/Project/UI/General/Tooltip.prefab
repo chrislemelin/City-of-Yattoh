@@ -58,9 +58,9 @@ GameObject:
   - component: {fileID: 222297908826505964}
   - component: {fileID: 114394978043419656}
   - component: {fileID: 114226630025409008}
-  - component: {fileID: 114375871576179792}
   - component: {fileID: 114243536167296196}
   - component: {fileID: 114197856578772896}
+  - component: {fileID: 61881480407272546}
   m_Layer: 0
   m_Name: Tooltip
   m_TagString: Untagged
@@ -81,6 +81,7 @@ GameObject:
   - component: {fileID: 222743675362236928}
   - component: {fileID: 114926628936822726}
   - component: {fileID: 114572987055788282}
+  - component: {fileID: 114147111201121178}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -106,6 +107,31 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
+--- !u!61 &61881480407272546
+BoxCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1752687632968606}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
 --- !u!114 &114039015093401850
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -218,6 +244,20 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &114147111201121178
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1853946768234258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 286bccbc9018aa34eae04335f756658f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  title: {fileID: 114967891911904086}
+  description: {fileID: 114039015093401850}
+  flavorText: {fileID: 114705074248761724}
 --- !u!114 &114178491448907704
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -291,20 +331,6 @@ MonoBehaviour:
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1
   m_ChildControlHeight: 1
---- !u!114 &114375871576179792
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1752687632968606}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 286bccbc9018aa34eae04335f756658f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  title: {fileID: 114967891911904086}
-  description: {fileID: 114039015093401850}
-  flavorText: {fileID: 114705074248761724}
 --- !u!114 &114394978043419656
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -367,7 +393,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 114926628936822726}
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
@@ -743,7 +769,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 72.72, y: 13.41}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224347861017512780
 RectTransform:
@@ -782,7 +808,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 10}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224859088778735698
 RectTransform:
@@ -801,7 +827,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 193.94336, y: -160.38477}
-  m_SizeDelta: {x: 200, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!224 &224938054436407572
 RectTransform:

@@ -61,7 +61,10 @@ namespace Placeholdernamespace.CharacterSelection
         private void DisplayCharacter(CharacterBoardEntity character, Ka ka)
         {
             characterView.DisplayCharacter(character);
-            characterView.DisplayKa(ScenePropertyManager.Instance.TypeToBE[ka.CharacterType]);
+            if(ka != null)
+            {
+                characterView.DisplayKa(ScenePropertyManager.Instance.TypeToBE[ka.CharacterType]);
+            }
         }
 
         private void RemoveCharacter(CharacterBoardEntity character)

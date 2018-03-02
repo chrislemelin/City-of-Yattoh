@@ -28,13 +28,19 @@ namespace Placeholdernamespace.CharacterSelection
 
         [SerializeField]
         GameObject skillContainer;
+
+        [SerializeField]
+        GameObject helpButton;
+
+        [SerializeField]
+        GameObject passiveContainer;
         List<GameObject> skillDisplays = new List<GameObject>();
 
         [SerializeField]
         private CharacterSelection2 characterSelection2;
 
         [SerializeField]
-        private Profile2 profile;
+        private List<Profile2> profiles;
 
         [SerializeField]
         private KaSkillSelect2 kaSkillSelect;
@@ -67,7 +73,6 @@ namespace Placeholdernamespace.CharacterSelection
             return selectedKaCharacter;
         }
 
-        bool needToSelectSkill = false;
    
 
         //private string bannarCharacterSelectMessage = "Equip Support Character, or Add to Party";
@@ -76,7 +81,6 @@ namespace Placeholdernamespace.CharacterSelection
 
         //private string 
 
-        bool selectedKa = false;
 
         public void LockIn()
         {
@@ -134,10 +138,11 @@ namespace Placeholdernamespace.CharacterSelection
             }
         }
 
-        private void Clear()
+        public void Clear()
         {
             characterSelection2.Clear();
             profileDisplay.SetActive(false);
+            helpButton.SetActive(false);
             profileHidden.SetActive(true);
             addToParty.interactable = false;
         }
@@ -157,6 +162,7 @@ namespace Placeholdernamespace.CharacterSelection
         {
             selectedCharacter = character;
             profileDisplay.SetActive(false);
+            helpButton.SetActive(false);
             profileHidden.SetActive(true);
             addToParty.interactable = false;
             DisplayKa(null);
@@ -174,11 +180,15 @@ namespace Placeholdernamespace.CharacterSelection
                 {
                     selectedKaCharacter = null;
                 }
-                profile.gameObject.SetActive(true);
-                profile.SetProfilePic(selectedCharacter, selectedKaCharacter);
+                foreach (Profile2 profile in profiles)
+                {
+                    profile.gameObject.SetActive(true);
+                    profile.SetProfilePic(selectedCharacter, selectedKaCharacter);
+                }       
                 DisplayHelper();
                 kaSkillSelect.Init(selectedKaCharacter, EnableAddToParty);
                 profileDisplay.SetActive(true);
+                helpButton.SetActive(true);
                 profileHidden.SetActive(false);
                 if (selectedKaCharacter != null)
                 {
@@ -193,7 +203,10 @@ namespace Placeholdernamespace.CharacterSelection
             else
             {
                 selectedKaCharacter = null;
-                profile.gameObject.SetActive(false);
+                foreach (Profile2 profile in profiles)
+                {
+                    profile.gameObject.SetActive(false);
+                }
             }
 
             //characterSelection2.SetSelectedKa(selectedKaCharacter);
@@ -253,12 +266,12 @@ namespace Placeholdernamespace.CharacterSelection
             }
             foreach (Passive talent in talentTriggers)
             {
-                DisplayObjectHelper(talent.GetTitle(), talent.GetDescription(), talentDisplays, skillContainer);
+                DisplayObjectHelper(talent.GetTitle(), talent.GetDescription(), talentDisplays, passiveContainer);
             }
 
             foreach (Passive passive in passives)
             {
-                DisplayObjectHelper(passive.GetTitleHelper(), passive.GetDescription(), skillDisplays, skillContainer);
+                DisplayObjectHelper(passive.GetTitleHelper(), passive.GetDescription(), skillDisplays, passiveContainer);
             }
             foreach (Skill skill in selectedCharacter.Skills)
             {
