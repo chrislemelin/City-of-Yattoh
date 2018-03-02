@@ -338,7 +338,7 @@ namespace Placeholdernamespace.Battle.Entities
             pathCounter = 0;
             if (characterAnimation != null)
             {
-                characterAnimation.OnButtonClick(1);
+                SetAnimation(AnimatorUtils.animationType.walking);
             }
             moveDoneCallback = action;
             if (move != null)
@@ -438,14 +438,14 @@ namespace Placeholdernamespace.Battle.Entities
                 target = null;
                 PathOnClick.pause = false;
                 OutlineOnHover.disabled = false;
+                if (characterAnimation != null)
+                {
+                    SetAnimation(AnimatorUtils.animationType.idle);
+                }
                 if (moveDoneCallback != null)
                 {
                     Action<bool> tempMoveDoneCallback = moveDoneCallback;
-                    moveDoneCallback = null;
-                    if (characterAnimation != null)
-                    {
-                        characterAnimation.OnButtonClick(0);
-                    }
+                    moveDoneCallback = null; 
                     tempMoveDoneCallback(interupted);
                 }
                 
@@ -653,6 +653,7 @@ namespace Placeholdernamespace.Battle.Entities
         protected bool AddBuff(Buff buff)
         {
             buff.Init(passives.Remove);
+            buff.Added();
             foreach(Passive p in Passives)
             {
                 if(buff.GetType() == p.GetType())

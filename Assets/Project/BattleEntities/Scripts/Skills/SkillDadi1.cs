@@ -84,7 +84,22 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             rightTiles = ChargeListHelper(tileManager.GetTilesInDirection(startTile, new Position(1, 0), range));
             leftTiles = ChargeListHelper(tileManager.GetTilesInDirection(startTile, new Position(-1, 0), range));
 
-            
+            while(upTiles.Count > 0 && upTiles[upTiles.Count-1].BoardEntity != null)
+            {
+                upTiles.RemoveAt(upTiles.Count - 1);
+            }
+            while (rightTiles.Count > 0 && rightTiles[rightTiles.Count - 1].BoardEntity != null)
+            {
+                rightTiles.RemoveAt(rightTiles.Count - 1);
+            }
+            while (downTiles.Count > 0 && downTiles[downTiles.Count - 1].BoardEntity != null)
+            {
+                downTiles.RemoveAt(downTiles.Count - 1);
+            }
+            while (leftTiles.Count > 0 && leftTiles[leftTiles.Count - 1].BoardEntity != null)
+            {
+                leftTiles.RemoveAt(leftTiles.Count - 1);
+            }
 
             List<Tile> returnTiles = new List<Tile>();
             returnTiles.AddRange(upTiles);

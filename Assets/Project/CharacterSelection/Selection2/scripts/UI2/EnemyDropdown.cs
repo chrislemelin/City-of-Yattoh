@@ -16,7 +16,7 @@ namespace Placeholdernamespace.CharacterSelection
         Dictionary<string, Dictionary<Position, CharacterType>> enemyConfigurationOptions = new Dictionary<string, Dictionary<Position, CharacterType>>()
         {
             {
-                "Easy", new Dictionary<Position, CharacterType>()
+                "Small Group", new Dictionary<Position, CharacterType>()
                 {
                     { new Position(4,0), CharacterType.EnemyBalanced },
                     { new Position(5,0), CharacterType.EnemyRanged },
@@ -24,7 +24,7 @@ namespace Placeholdernamespace.CharacterSelection
                 }
             },
             {
-                "Medium", new Dictionary<Position, CharacterType>()
+                "Medium Group", new Dictionary<Position, CharacterType>()
                 {
                     { new Position(9, 1), CharacterType.EnemyRanged },
                     { new Position(9, 0), CharacterType.EnemyRanged },
@@ -35,7 +35,7 @@ namespace Placeholdernamespace.CharacterSelection
                 }
             },
             {
-                "Medium2", new Dictionary<Position, CharacterType>()
+                "Medium Group2", new Dictionary<Position, CharacterType>()
                 {
                     { new Position(9, 0), CharacterType.EnemyRanged },
                     { new Position(8, 0), CharacterType.EnemyBalanced },
@@ -46,7 +46,7 @@ namespace Placeholdernamespace.CharacterSelection
                 }
             },
             {
-                "Hard", new Dictionary<Position, CharacterType>()
+                "Large Group", new Dictionary<Position, CharacterType>()
                 {
                     { new Position(9, 1), CharacterType.EnemyRanged },
                     { new Position(9, 0), CharacterType.EnemyRanged },
@@ -93,11 +93,6 @@ namespace Placeholdernamespace.CharacterSelection
             dropdown.options = options;
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
     }
 
 }

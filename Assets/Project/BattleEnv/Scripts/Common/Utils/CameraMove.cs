@@ -23,7 +23,7 @@ namespace Placeholdernamespace.Common.Utils
 
         void Update()
         {
-            if (Input.GetMouseButton(1))
+            if (Input.GetMouseButton(2))
             {
                 moving = true;
                 diff = (Camera.main.ScreenToWorldPoint(Input.mousePosition)) - Camera.main.transform.position;

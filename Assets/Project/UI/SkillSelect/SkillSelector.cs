@@ -35,6 +35,7 @@ namespace Placeholdernamespace.Battle.Interaction
         private Action skillSelected;
         private Profile profile;
         private GameObject cancelButton;
+        private GameObject endTurnButton;
         private TurnManager turnManager;
 
         public Skill SelectedSkill
@@ -72,6 +73,14 @@ namespace Placeholdernamespace.Battle.Interaction
             }
             buildEndTurnButton();
 
+        }
+
+        private void Update()
+        {
+            if(Input.GetMouseButton(1) && cancelButton != null)
+            {
+                cancelButton.GetComponent<Button>().onClick.Invoke();
+            }
         }
 
         public void Hide()
@@ -132,7 +141,7 @@ namespace Placeholdernamespace.Battle.Interaction
 
         private void buildEndTurnButton()
         {
-            cancelButton = buildSkillButton("End Turn", boardEntity.EndMyTurn, returnNull,
+            endTurnButton = buildSkillButton("End Turn", boardEntity.EndMyTurn, returnNull,
               returnNull, defaultActive, Color.white);
         }
 
@@ -208,6 +217,7 @@ namespace Placeholdernamespace.Battle.Interaction
             buttonToActive.Clear();
             skillButtons.Clear();
             cancelButton = null;
+            endTurnButton = null;
         }
 
     }

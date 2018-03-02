@@ -13,7 +13,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
         {
             title = "Desperate Flurry";
             description = "Exhast all energy to unleash repeated attacks";
-            apCost = 0;
+            apCost = 1;
             coolDown = 2;
         }
 

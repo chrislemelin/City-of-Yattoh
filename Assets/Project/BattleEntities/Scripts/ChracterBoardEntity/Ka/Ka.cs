@@ -64,7 +64,7 @@ namespace Placeholdernamespace.Battle.Entities.Kas
                 kaColor = typeToColor[character.Type];
             }
             talent = character.Talent;
-            AddPassive(talent);
+            AddPassive(((Passive)talent));
             profilePic = character.GetComponent<CharacterBoardEntity>().ProfileImageCircle;
         }
 

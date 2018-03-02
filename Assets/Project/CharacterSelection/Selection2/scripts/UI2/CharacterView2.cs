@@ -138,7 +138,7 @@ namespace Placeholdernamespace.CharacterSelection
             }
         }
 
-        private void Clear()
+        public void Clear()
         {
             characterSelection2.Clear();
             profileDisplay.SetActive(false);

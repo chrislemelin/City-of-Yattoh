@@ -18,7 +18,7 @@ namespace Placeholdernamespace.Battle
     public enum CharacterType
     {
         PlayerJaz, PlayerBongani, PlayerLesidi, PlayerAmare, PlayerTisha, PlayerDadi,
-        EnemyTank, EnemyBalanced, EnemyRanged, EnemySpeedy
+        EnemyTank, EnemyBalanced, EnemyRanged, EnemySpeedy, EnemyWeak
     }
 
     public class GameMaster : MonoBehaviour

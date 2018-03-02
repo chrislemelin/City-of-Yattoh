@@ -155,10 +155,11 @@ MonoBehaviour:
   musicPlayer: {fileID: 82089647844895574}
   muted: 0
   battleSoundTracks:
-  - {fileID: 8300000, guid: 534500312c0098f429143377dbd044f1, type: 3}
+  - {fileID: 8300000, guid: 43a6e89007a76e846abb1eed8f731ea4, type: 3}
   - {fileID: 8300000, guid: a1a3f646da7f16c49a3d7c035346cfb2, type: 3}
+  - {fileID: 8300000, guid: 534500312c0098f429143377dbd044f1, type: 3}
+  - {fileID: 8300000, guid: 6a5e46cd64dc4a44982a4059edb3e96d, type: 3}
   - {fileID: 8300000, guid: 9edceb2811c347b4bb68b2e32cb478a7, type: 3}
   soundtrackAudio:
-  - {fileID: 8300000, guid: 52eb284e55d63bc48b85b42efa3e824f, type: 3}
+  - {fileID: 8300000, guid: 64b910ab639e52644a5a8424c06abda9, type: 3}
   - {fileID: 8300000, guid: 9edceb2811c347b4bb68b2e32cb478a7, type: 3}
-  - {fileID: 0}

@@ -52,7 +52,6 @@ namespace Placeholdernamespace.CharacterSelection {
                 MakeButton(character.GetComponent<CharacterBoardEntity>());
             }
             ScenePropertyManager.Instance.updatedParty += GreyOutUsedCharacters;
-            //RemakeKaButtons();
         }
 
         private void OnDestroy()

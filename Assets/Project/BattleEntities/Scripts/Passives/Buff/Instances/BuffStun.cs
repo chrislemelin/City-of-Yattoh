@@ -12,6 +12,12 @@ namespace Placeholdernamespace.Battle.Entities.Passives
             skip = true;
             description = "Skips next " + stacks + " turn(s)";
         }
-        
+
+        public override void Added()
+        {
+            (boardEntity).FloatingTextGenerator.AddTextDisplay(new Common.UI.TextDisplay() { text = "Stunned" });
+        }
+
+
     }
 }
