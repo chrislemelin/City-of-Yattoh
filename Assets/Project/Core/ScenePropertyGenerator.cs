@@ -11,11 +11,11 @@ namespace Placeholdernamespace.Common
         GameObject SceneProperty;
 
         // Use this for initialization
-        void Awake()
+        void Start()
         {
             if(ScenePropertyManager.Instance == null)
             {
-                Instantiate(SceneProperty).GetComponent<ScenePropertyManager>().Init();
+                Instantiate(SceneProperty).GetComponent<ScenePropertyManager>();
             }
         }
 

@@ -27,6 +27,15 @@ public class ScenePropertyManager : MonoBehaviour {
         //{ new Position(9, 7), CharacterType.EnemySpeedy}
     };
 
+    [SerializeField]
+    public bool testing = false;
+
+    [SerializeField]
+    public CharacterBoardEntity testingPlayer;
+
+    [SerializeField]
+    public CharacterBoardEntity testingEnemy;
+
     private Dictionary<CharacterType, GameObject> boardEntityCharacters = new Dictionary<CharacterType, GameObject>();
     public Dictionary<CharacterType, GameObject> BoardEntityCharacters
     {
@@ -49,15 +58,25 @@ public class ScenePropertyManager : MonoBehaviour {
     private List<GameObject> boardEntities;
 
     void Awake()
-    { 
+    {
+        Init();
     }
 
     public void Init()
     {
         MakeDictionary();
         instance = this;
-        DontDestroyOnLoad(transform.gameObject);
-        initCharacters();
+        if (!testing)
+        {
+            initCharacters();
+            DontDestroyOnLoad(transform.gameObject);
+        }
+        else
+        {
+            InitTestingCharacters();           
+        }
+    
+
     }
 
     private void MakeDictionary()
@@ -76,6 +95,17 @@ public class ScenePropertyManager : MonoBehaviour {
         }
     }
 
+    private void InitTestingCharacters()
+    {
+        SetCharacterParty(new List<Tuple<CharacterBoardEntity, Ka>>()
+        {
+            new Tuple<CharacterBoardEntity, Ka>(testingPlayer, null )
+        });
+        Enemies = new Dictionary<Position, CharacterType>()
+        {
+            { new Position(1,0), CharacterType.TestingEnemy }
+        };
+    }
 
    // public Dictionary<Position, CharacterType> characters;
     public List<CharacterType> characters = new List<CharacterType>() {CharacterType.PlayerBongani, CharacterType.PlayerTisha,

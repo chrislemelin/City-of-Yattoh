@@ -120,7 +120,7 @@ namespace Placeholdernamespace.Battle.Entities
             stats.updateStatHandler += UpdateUi;
             stats.Start(this);
 
-            turnManager.AddBoardEntity(this);
+            turnManager.AddBoardEntity((CharacterBoardEntity)this);
             UpdateUi();
         }
 
