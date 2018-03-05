@@ -18,12 +18,12 @@ namespace Placeholdernamespace.Battle
     public enum CharacterType
     {
         PlayerJaz, PlayerBongani, PlayerLesidi, PlayerAmare, PlayerTisha, PlayerDadi,
-        EnemyTank, EnemyBalanced, EnemyRanged, EnemySpeedy, EnemyWeak
+        EnemyTank, EnemyBalanced, EnemyRanged, EnemySpeedy, EnemyWeak,
+        TestingPlayer, TestingEnemy
     }
 
     public class GameMaster : MonoBehaviour
     {
-
         private static GameMaster instance;
         public static GameMaster Instance
         {
@@ -54,8 +54,12 @@ namespace Placeholdernamespace.Battle
             Position currentPosition = new Position(0, 0);
             foreach(Tuple<CharacterBoardEntity, Ka> character in ScenePropertyManager.Instance.GetCharacterParty())
             {
-                MakeCharacter(character.first, currentPosition, character.second);
+                GameObject BE = MakeCharacter(character.first, currentPosition, character.second);
                 currentPosition = currentPosition + new Position(0, 1);
+                if (ScenePropertyManager.Instance.testing)
+                {
+                    ScenePropertyManager.Instance.testingPlayer = BE.GetComponent<CharacterBoardEntity>();
+                }
             }
             SpawnEnemies();
 
@@ -74,12 +78,13 @@ namespace Placeholdernamespace.Battle
             }
         }
 
-        private void MakeCharacter(CharacterBoardEntity character, Position position, Ka ka = null)
+        private GameObject MakeCharacter(CharacterBoardEntity character, Position position, Ka ka = null)
         {
             GameObject characterObj = character.gameObject;
            
             GameObject BE = Instantiate(characterObj);
             BE.GetComponent<CharacterBoardEntity>().Init(position, turnManager, tileManager, boardEntitySelector, battleCalulator, ka);
+            return BE;
         }
 
         private CharacterBoardEntity GetCharacterBoardEntity(CharacterType type)
@@ -99,7 +104,11 @@ namespace Placeholdernamespace.Battle
         {
             foreach(KeyValuePair<Position, CharacterType> value in ScenePropertyManager.Instance.Enemies)
             {
-                MakeCharacter(GetCharacterBoardEntity(value.Value), value.Key);
+                GameObject BE = MakeCharacter(GetCharacterBoardEntity(value.Value), value.Key);
+                if(ScenePropertyManager.Instance.testing)
+                {
+                    ScenePropertyManager.Instance.testingEnemy = BE.GetComponent<CharacterBoardEntity>();
+                }
             }
         }
     }

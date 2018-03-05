@@ -19,7 +19,8 @@ namespace Placeholdernamespace.Common.Sound
         [SerializeField]
         private AudioSource musicPlayer;
 
-        public bool muted;
+        [SerializeField]
+        public bool muted = false;
         public void setMuted(bool muted)
         {
             this.muted = muted;
@@ -46,7 +47,6 @@ namespace Placeholdernamespace.Common.Sound
 
         private void Awake()
         {
-            muted = false;
             instance = this;
             for(int a = 0; a < soundtrackEnum.Count; a++)
             {
