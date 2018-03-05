@@ -21,25 +21,37 @@ namespace Placeholdernamespace.Battle.Managers
         public delegate void NewTurnHandler(object sender, EventArgs e);
         private bool endState = false;
 
-        private static BoardEntity currentBoardEntity;
-        public static BoardEntity CurrentBoardEntity
+        private static CharacterBoardEntity currentBoardEntity;
+        public static CharacterBoardEntity CurrentBoardEntity
         {
             get { return currentBoardEntity; }
         }
 
-        private static List<BoardEntity> enities = new List<BoardEntity>();
-        public static List<BoardEntity> Entities
+        private static List<CharacterBoardEntity> enities = new List<CharacterBoardEntity>();
+        public static List<CharacterBoardEntity> Entities
         {
-            get { return new List<BoardEntity>(enities); }
+            get { return new List<CharacterBoardEntity>(enities); }
         }
 
-        //private List<BoardEntity> enities = new List<BoardEntity>();
-        private List<BoardEntity> turnQueue = new List<BoardEntity>();
-        private HashSet<BoardEntity> alreadyTakenTurn = new HashSet<BoardEntity>();
+        public static List<BoardEntity> GetBEofType(CharacterType type)
+        {
+            List<BoardEntity> returnList = new List<BoardEntity>();
+            foreach(BoardEntity BE in Entities)
+            {
+               // if(BE)
+            }
+            return null;
+
+        }
+
+        private List<CharacterBoardEntity> turnQueue = new List<CharacterBoardEntity>();
+        private HashSet<CharacterBoardEntity> alreadyTakenTurn = new HashSet<CharacterBoardEntity>();
         private int queueLength = 5;
         private Profile profile;
         private BoardEntitySelector boardEntitySelector;
         private TileSelectionManager tileSelectionManager;
+
+        
 
         public void Awake()
         {
@@ -58,16 +70,16 @@ namespace Placeholdernamespace.Battle.Managers
             this.tileSelectionManager = tileSelectionManager;
         }
 
-        public void AddBoardEntity(BoardEntity boardEntity)
+        public void AddBoardEntity(CharacterBoardEntity boardEntity)
         {
-            enities.Add(boardEntity);
-            ReCalcQueue();
+           enities.Add(boardEntity);
+           //ReCalcQueue();
         }
 
-        public void RemoveBoardEntity(BoardEntity boardEntity)
+        public void RemoveBoardEntity(CharacterBoardEntity boardEntity)
         {
             enities.Remove(boardEntity);
-            ReCalcQueue();
+            //ReCalcQueue();
             CheckForEndState();
         }
 
@@ -110,7 +122,7 @@ namespace Placeholdernamespace.Battle.Managers
         {
             if(currentBoardEntity != null)
             {
-                ((CharacterBoardEntity)currentBoardEntity).EndMyTurn();
+                currentBoardEntity.EndMyTurn();
             }
         }
 
@@ -124,7 +136,7 @@ namespace Placeholdernamespace.Battle.Managers
                 PathOnClick.pause = true;
                 tileSelectionManager.CancelSelection();
 
-                BoardEntity tempcurrentBoardEntity = turnQueue[0];
+                CharacterBoardEntity tempcurrentBoardEntity = turnQueue[0];
                 alreadyTakenTurn.Add(tempcurrentBoardEntity);
                 turnQueue.RemoveAt(0);
 
@@ -147,9 +159,13 @@ namespace Placeholdernamespace.Battle.Managers
         }
 
         private void SetCurrentTurnMarker(CharacterBoardEntity characterBoardEntity)
-        {
-            currentTurnPointer.GetComponent<UIFollow>().target = characterBoardEntity.gameObject;
-            currentTurnPointer.SetActive(true);
+        { 
+            if(characterBoardEntity != null)
+            {
+                currentTurnPointer.GetComponent<UIFollow>().target = characterBoardEntity.gameObject;
+                currentTurnPointer.SetActive(true);
+            }
+ 
    
         }
 
@@ -165,8 +181,8 @@ namespace Placeholdernamespace.Battle.Managers
             int counter = 1;
             newText += AddOrdinal(counter++) + "  " + currentBoardEntity.Name;
             
-            List<BoardEntity> displayList = turnQueue;
-            foreach (BoardEntity entity in displayList)
+            List<CharacterBoardEntity> displayList = turnQueue;
+            foreach (CharacterBoardEntity entity in displayList)
             {
                 newText += "\n"+AddOrdinal(counter++)+"  " + entity.Name;
             }
@@ -205,7 +221,7 @@ namespace Placeholdernamespace.Battle.Managers
 
         public void ReCalcQueue()
         {
-            List<BoardEntity> firstListentities = ReCalcQueueHelper();
+            List<CharacterBoardEntity> firstListentities = ReCalcQueueHelper();
             firstListentities.RemoveAll((a) => alreadyTakenTurn.Contains(a));
             SetFirst(firstListentities);
             
@@ -215,7 +231,7 @@ namespace Placeholdernamespace.Battle.Managers
                 firstListentities = ReCalcQueueHelper();
             }
 
-            List<BoardEntity> secondListentities = ReCalcQueueHelper();
+            List<CharacterBoardEntity> secondListentities = ReCalcQueueHelper();
             secondListentities.RemoveAll((a) => !alreadyTakenTurn.Contains(a));
             SetFirst(secondListentities);
 
@@ -223,24 +239,23 @@ namespace Placeholdernamespace.Battle.Managers
             turnQueue = firstListentities;
         }
 
-        public void SetFirst(List<BoardEntity> list)
+        public void SetFirst(List<CharacterBoardEntity> list)
         {
             for(int a = 0; a < list.Count; a++)
             {
-                BoardEntity b = list[a];
-                if(b is CharacterBoardEntity)
+                CharacterBoardEntity b = list[a];
+
+                bool first = false;
+                foreach(Passive p in b.Passives)
                 {
-                    bool first = false;
-                    foreach(Passive p in ((CharacterBoardEntity)b).Passives)
-                    {
-                        first = p.TurnOrderFirst(first);
-                    }
-                    if(first)
-                    {
-                        list.Remove(b);
-                        list.Insert(0, b);
-                    }
+                    first = p.TurnOrderFirst(first);
                 }
+                if(first)
+                {
+                    list.Remove(b);
+                    list.Insert(0, b);
+                }
+                
             }
         }
 
@@ -255,9 +270,9 @@ namespace Placeholdernamespace.Battle.Managers
             }
         }
 
-        private List<BoardEntity> ReCalcQueueHelper()
+        private List<CharacterBoardEntity> ReCalcQueueHelper()
         {
-            List<BoardEntity> returnQueue = new List<BoardEntity>();
+            List<CharacterBoardEntity> returnQueue = new List<CharacterBoardEntity>();
             returnQueue.AddRange(enities);
             // this should order it so that speed determines the turn order with movement as a tiebreaker
             returnQueue = returnQueue.OrderBy(x => {
@@ -267,9 +282,9 @@ namespace Placeholdernamespace.Battle.Managers
             return returnQueue;
         }
 
-        private List<BoardEntity> QueueDisplayHelper()
+        private List<CharacterBoardEntity> QueueDisplayHelper()
         {
-            List<BoardEntity> returnQueue = new List<BoardEntity>();
+            List<CharacterBoardEntity> returnQueue = new List<CharacterBoardEntity>();
             while(returnQueue.Count < queueLength)
             {
                 if(turnQueue.Count > returnQueue.Count)
@@ -278,7 +293,7 @@ namespace Placeholdernamespace.Battle.Managers
                 }
                 else
                 {
-                    List<BoardEntity> helper = ReCalcQueueHelper();
+                    List<CharacterBoardEntity> helper = ReCalcQueueHelper();
                     returnQueue.AddRange(helper);
                 }
             }

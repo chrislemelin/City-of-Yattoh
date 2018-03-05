@@ -6,17 +6,20 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Final/TitleScreen.unity
+    path: Assets/Project/Scenes/Final/TitleScreen.unity
     guid: d4bdb54cf52945f458cf716cdda7f554
   - enabled: 1
-    path: Assets/Scenes/Final/CharacterSelection3.unity
+    path: Assets/Project/Scenes/Final/CharacterSelection3.unity
     guid: db6acfa12178a564fa354d43f682fe65
   - enabled: 1
-    path: Assets/Scenes/Final/Battlefield.unity
+    path: Assets/Project/Scenes/Final/Battlefield.unity
     guid: 26d453320298b82438ea554695124b66
+  - enabled: 1
+    path: Assets/Project/Scenes/Final/TestBattlefield.unity
+    guid: 6355df6584cdcff4ca02cb8468c240d6
   - enabled: 0
-    path: Assets/Scenes/CharacterSelection2.unity
+    path: Assets/Project/Scenes/CharacterSelection2.unity
     guid: 79eff9aa829f80349a07dd1f97568b2d
   - enabled: 0
-    path: Assets/Scenes/CharacterSelection.unity
+    path: Assets/Project/Scenes/CharacterSelection.unity
     guid: d81d3a8dd9562ad469b41b8153e43596
