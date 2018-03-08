@@ -1062,7 +1062,7 @@ Prefab:
     - target: {fileID: 224524566346394734, guid: d4ff6fbed61f00e4c84c3d9b4643a291,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 20.11
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224524566346394734, guid: d4ff6fbed61f00e4c84c3d9b4643a291,
         type: 2}
@@ -1107,12 +1107,12 @@ Prefab:
     - target: {fileID: 224243635060974118, guid: d4ff6fbed61f00e4c84c3d9b4643a291,
         type: 2}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 224243635060974118, guid: d4ff6fbed61f00e4c84c3d9b4643a291,
         type: 2}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 224243635060974118, guid: d4ff6fbed61f00e4c84c3d9b4643a291,
         type: 2}
