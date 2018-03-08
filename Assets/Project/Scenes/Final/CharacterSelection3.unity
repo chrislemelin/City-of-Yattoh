@@ -6149,6 +6149,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cb576c9ba5163a4686ce15d4e2209cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  noneSprite: {fileID: 21300000, guid: 40503f0087f371640ac5d08fc835df41, type: 3}
+  greyOutColor: {r: 0.5735294, g: 0.5735294, b: 0.5735294, a: 1}
+  version2: 0
+
   characterView: {fileID: 1355555233}
   charButton: {fileID: 1992951559445944, guid: 55c33e99ff26512409e4a49c846fa5b9, type: 2}
 --- !u!1001 &1102137549

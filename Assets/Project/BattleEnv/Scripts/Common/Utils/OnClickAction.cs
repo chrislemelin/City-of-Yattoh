@@ -6,22 +6,22 @@ using UnityEngine.EventSystems;
 
 public class OnClickAction : MonoBehaviour, IPointerClickHandler{
 
-    public Action clickAction;
+    public List<Action> clickActions = new List<Action>();
     public bool active = false;
 
     private void OnMouseUp()
     {
-        if(clickAction != null)
-        {
-            clickAction();
-        }
+       foreach(Action action in clickActions)
+       {
+           action();
+       }
     }
 
     void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
     {
-        if (clickAction != null)
+        foreach (Action action in clickActions)
         {
-            clickAction();
+            action();
         }
     }
 }
