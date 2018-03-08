@@ -4,17 +4,23 @@ using System.Collections.Generic;
 using System.Net;
 using UnityEngine;
 using UnityEngine.UI;
-
-[System.Serializable]
-public class DialogueOption : IClickable{
-
-    public string displayText;    
-	public delegate void onOptionChoose();
-	public onOptionChoose onChoose;
-
-    public void OnMouseUp()
+namespace Placeholdernamespace.Dialouge
+{
+    [System.Serializable]
+    public class DialogueOption : IClickable
     {
-        if(onChoose != null)
-            onChoose();
+
+        public string displayText;
+        public delegate void onOptionChoose();
+        public onOptionChoose onChoose;
+        [System.NonSerialized]
+        public DialogueFrame nextFrame;
+
+
+        public void OnMouseUp()
+        {
+            if (onChoose != null)
+                onChoose();
+        }
     }
 }
