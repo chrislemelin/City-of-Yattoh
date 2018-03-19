@@ -12,31 +12,20 @@ using UnityEngine.UI;
 using TMPro;
 using Placeholdernamespace.Battle.Managers;
 
-namespace Placeholdernamespace.Battle.Interaction
+namespace Placeholdernamespace.Battle.UI
 {
-    public class SkillSelector : MonoBehaviour {
+    
+    enum State { start, move, skill }
 
-        [SerializeField]
-        GameObject parent;
+    public class SkillSelector : BaseSelector {
+        
 
         private CharacterBoardEntity boardEntity;
 
-        [SerializeField]
-        private GameObject skillOptionButton;
-
-        [SerializeField]
-        private GameObject skillOptionContainer;
-
-        private List<GameObject> skillButtons = new List<GameObject>();
-        private Dictionary<Button, Func<bool>> buttonToActive = new Dictionary<Button, Func<bool>>();
-
         private List<Skill> skills;
         private Skill selectedSkill;
-        private Action skillSelected;
         private Profile profile;
-        private GameObject cancelButton;
-        private GameObject endTurnButton;
-        private TurnManager turnManager;
+        private Action doneAction;
 
         public Skill SelectedSkill
         {
@@ -45,52 +34,30 @@ namespace Placeholdernamespace.Battle.Interaction
 
         private TileSelectionManager tileSelectionManager;
         private Action selectionCancel;
-        private Func<BoardEntity> getHoverEntity;
 
-        public void Init(TileSelectionManager tileSelectionManager, Action selectionCancel, Func<BoardEntity> getHoverEntity, Profile profile, TurnManager turnManager)
+        public void Init(TileSelectionManager tileSelectionManager, Transform targetTransform, Profile profile, GameObject parent)
         {
             this.tileSelectionManager = tileSelectionManager;
-            this.selectionCancel = selectionCancel;
             this.profile = profile;
-            this.getHoverEntity = getHoverEntity;
-            this.turnManager = turnManager;
+            base.Init(targetTransform, parent);
         }
 
-        public void SetBoardEntity(CharacterBoardEntity boardEntity)
+        public void SetDoneAction(Action doneAction)
         {
-            this.boardEntity = boardEntity;
+            this.doneAction = () => { ClearButtons(); tileSelectionManager.CancelSelection(); doneAction(); };
+
         }
 
         public void SetSkills(List<Skill> newSkills)
         {
             skills = newSkills;
-            Show();
-
-            ClearButtonList();
+            ClearButtons();
             foreach (Skill skill in skills)
             {
                 buildSkillButton(skill);
             }
-            buildEndTurnButton();
+            buildCancelSkillButton(doneAction);
 
-        }
-
-        private void Update()
-        {
-            if(Input.GetMouseButton(1) && cancelButton != null)
-            {
-                cancelButton.GetComponent<Button>().onClick.Invoke();
-            }
-        }
-
-        public void Hide()
-        {
-            parent.SetActive(false);
-        }
-
-        public void Show()
-        {
-            parent.SetActive(true);
         }
 
         public void SetSelectedSkill(Skill skill)
@@ -104,8 +71,8 @@ namespace Placeholdernamespace.Battle.Interaction
             }
             else
             {
-                ClearButtonList();
-                buildCancelSkillButton();
+                ClearButtons();
+                buildCancelSkillButton(() => { tileSelectionManager.CancelSelection(); ExecuteSkill(null); } );
                 List<TileSelectOption> tileSelectOptions = skill.TileOptionSet();
                 foreach (TileSelectOption option in tileSelectOptions)
                 {
@@ -113,14 +80,14 @@ namespace Placeholdernamespace.Battle.Interaction
                     {
                         option.OnHoverAction = () =>
                         {
-                            if (getHoverEntity() == null)
-                            { profile.UpdateProfile(option.DisplayStats.BoardEntity, skillReport: option.skillReport); }
+                            profile.UpdateProfile(option.DisplayStats.BoardEntity, skillReport: option.skillReport); 
                         };
                     }
                 }
                 tileSelectionManager.SelectTile(boardEntity, tileSelectOptions, ExecuteSkill);
 
             }
+           // buildCancelSkillButton(doneAction);
 
 
             //tileSelectionManager.SelectTile(boardEntity, skill.TileSet(), ExecuteSkill, Color.blue, Color.cyan);
@@ -128,73 +95,22 @@ namespace Placeholdernamespace.Battle.Interaction
 
         private GameObject buildSkillButton(Skill skill)
         {
-            GameObject skillButton = buildSkillButton(skill.GetTitle(), () => { SetSelectedSkill(skill); }, skill.GetDescription, 
+            GameObject skillButton = buildButton(skill.GetTitle(), () => { SetSelectedSkill(skill); }, skill.GetDescription, 
                 skill.GetFlavorText, skill.IsActive);
             return skillButton;
-        }
-
-        private void buildCancelSkillButton()
-        {
-            cancelButton = buildSkillButton("Cancel", () => { tileSelectionManager.CancelSelection(); ExecuteSkill(null); }, returnNull,
-                returnNull, null, Color.white);
-        }
-
-        private void buildEndTurnButton()
-        {
-            endTurnButton = buildSkillButton("End Turn", boardEntity.EndMyTurn, returnNull,
-              returnNull, defaultActive, Color.white);
-        }
-
-        private bool defaultActive()
-        {
-            return !PathOnClick.pause;
-        }
-
-        private string returnNull()
-        {
-            return null;
-        }
-
-        private GameObject buildSkillButton(string title, Action onClick, Func<String> getDescription ,
-            Func<string> getFlavorText, Func<bool> active, Color? color = null)
-        {
-            if(active != null)
-                skillOptionButton.GetComponent<Button>().interactable = active();
-            else
-                skillOptionButton.GetComponent<Button>().interactable = true;
-
-            GameObject skillButton = Instantiate(skillOptionButton);
-            skillButton.GetComponent<TooltipSpawner>().Init(() => { return null; }, getDescription, getFlavorText);
-            skillButton.GetComponentInChildren<TextMeshProUGUI>().text = title;
-            skillButton.transform.SetParent(skillOptionContainer.transform, false);
-            skillButton.GetComponent<Button>().onClick.AddListener(() => onClick());   
-            buttonToActive.Add(skillButton.GetComponent<Button>(), active);
-            skillButtons.Add(skillButton);
-            if (color != null)
-            {                
-                skillButton.GetComponent<Image>().color = (Color)color;
-            }
-            skillButton.SetActive(true);
-            return skillButton;
-        }
-
-        private void OnGUI()
-        {
-            foreach(KeyValuePair<Button, Func<bool>> value in buttonToActive)
-            {
-                if(value.Value != null)
-                    value.Key.interactable = value.Value();
-            }
-        }
+        } 
 
         private void ExecuteSkill(TileSelectOption tile)
         {
-            profile.UpdateProfile(null);
+            
+            //profile.UpdateProfile(null);
             if(tile != null)
             {
                 if (cancelButton != null)
                     cancelButton.GetComponent<Button>().interactable = false;
+                SetInteractableCancelButton(false);
                 selectedSkill.Action((List<Tile>)tile.ReturnObject,  ExecuteSkillCallback);
+
             }
             else
             {
@@ -202,25 +118,16 @@ namespace Placeholdernamespace.Battle.Interaction
             }
         }
         private void ExecuteSkillCallback()
-        {
-            ClearButtonList();
-            selectionCancel();
+        {           
             selectedSkill = null;
+            SetSkills(skills);
         }
 
-        private void ClearButtonList()
-        {
-            foreach (GameObject g in skillButtons)
-            {
-                Destroy(g);
-            }
-            buttonToActive.Clear();
-            skillButtons.Clear();
-            cancelButton = null;
-            endTurnButton = null;
-        }
+        
 
+    
+      
     }
-
+    
 
 }

@@ -18,8 +18,6 @@ namespace Placeholdernamespace.Battle.Entities
 {
     public abstract class BoardEntity : MonoBehaviour, ISelectable
     {
-        public delegate void UpdateState(object sender);
-        public event UpdateState updateStatHandler;
 
         [SerializeField]
         private Sprite profileImage;
@@ -76,7 +74,7 @@ namespace Placeholdernamespace.Battle.Entities
         }
 
 
-        public virtual List<Move> MoveSet()
+        public virtual List<Move> MoveSet(int? ap = null)
         {
             // cant move by default
             return new List<Move>();
@@ -102,11 +100,12 @@ namespace Placeholdernamespace.Battle.Entities
         public virtual void Init(Position startingPosition, TurnManager turnManager, TileManager tileManager, BoardEntitySelector boardEntitySelector, 
             BattleCalculator battleCalculator, Ka ka = null)
         {
+            stats.Start(this);
+
             healthBarInstance = Instantiate(healthBar);
-            healthBarInstance.transform.SetParent(FindObjectOfType<HealthBarContainer>().gameObject.transform);
             healthBarInstance.GetComponent<UIFollow>().target = gameObject;
-            healthBarInstance.transform.SetAsFirstSibling();
-            healthBarInstance.transform.position = new Vector3(100000, 100000);
+            healthBarInstance.transform.SetParent(FindObjectOfType<HealthBarContainer>().gameObject.transform, false);
+            healthBarInstance.GetComponent<UIBar>().Init(this);
 
             this.turnManager = turnManager;
             this.tileManager = tileManager;
@@ -117,38 +116,26 @@ namespace Placeholdernamespace.Battle.Entities
             tileManager.AddBoardEntity(startingPosition, gameObject);
             position = startingPosition;
 
-            stats.updateStatHandler += UpdateUi;
-            stats.Start(this);
 
             turnManager.AddBoardEntity((CharacterBoardEntity)this);
-            UpdateUi();
         }
 
         public abstract void StartMyTurn();
 
         public virtual void OnSelect()
         {
-            boardEntitySelector.setSelectedBoardEntity(this);
-        }
-
-        public void UpdateUi()
-        {
-            if (healthBarInstance != null)
-            {
-                float newHealth = (float)Stats.GetMutableStat(StatType.Health).Value / (float)Stats.GetStatInstance().getValue(StatType.Health);
-                healthBarInstance.GetComponent<UIBar>().SetValue(newHealth);
-            }
+            boardEntitySelector.SetSelectedBoardEntity(this);
         }
 
 
         public void Hover()
         {
-            boardEntitySelector.Hover(this);
+            //boardEntitySelector.Hover(this);
         }
 
         public void ExitHover()
         {
-            boardEntitySelector.ExitHover();
+            //boardEntitySelector.ExitHover();
         }
 
         public abstract void AddPassive(Passive passive);

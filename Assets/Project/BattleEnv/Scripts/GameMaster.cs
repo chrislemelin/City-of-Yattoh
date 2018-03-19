@@ -46,7 +46,6 @@ namespace Placeholdernamespace.Battle
         void Start()
         {
             instance = this;
-
             MakeDictionary();
 
             tileManager.Init(turnManager, profile);

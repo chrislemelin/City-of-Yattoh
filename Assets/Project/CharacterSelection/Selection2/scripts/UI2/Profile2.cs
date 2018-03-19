@@ -11,6 +11,9 @@ using UnityEngine.UI;
 public class Profile2 : MonoBehaviour {
 
     [SerializeField]
+    int underlineCharCount = 20;
+
+    [SerializeField]
     Image profileImage;
 
     [SerializeField]
@@ -102,6 +105,10 @@ public class Profile2 : MonoBehaviour {
     {
         GameObject movementStat = Instantiate(textGameObject);
         movementStat.GetComponent<TooltipSpawner>().Init(() => { return ""; }, () => { return tooltip; }, () => { return null; });
+        while(text.Length < underlineCharCount)
+        {
+            text += " ";
+        }
         movementStat.GetComponent<TextMeshProUGUI>().text = text;
         movementStat.transform.SetParent(profilePanel.transform, false);
         texts.Add(movementStat);

@@ -18,12 +18,15 @@ namespace Placeholdernamespace.Battle.UI
         [SerializeField]
         GameObject ApPip;
 
+        [SerializeField]
+        GameObject apDisplayPanel;
+
         private List<GameObject> ApPips = new List<GameObject>();
 
         public void DisplayAp(BoardEntity character, Stats previewStats = null)
         {
             int grey = 0;
-            int ap = character.Stats.GetDefaultStat(StatType.AP).Value ;
+            int ap = character.Stats.GetDefaultStat(StatType.AP).Value;
             if (previewStats != null)
             {
                 grey = character.Stats.GetDefaultStat(StatType.AP).Value
@@ -32,27 +35,28 @@ namespace Placeholdernamespace.Battle.UI
                 if (grey < 0)
                     grey = 0;
             }
-            
-          
-            if(boardEntitySelector.SelectedBoardEntity == character)
-            {
-                ClearPips();
-                for (int a = 0; a < grey; a++)
-                {
-                    GameObject instance = Instantiate(ApPip);
-                    instance.GetComponent<Image>().color = Color.grey;
-                    ApPips.Add(instance);
-                    instance.transform.SetParent(transform, false);
-                }
 
-                for (int a = 0 ; a < ap; a++)
-                {
-                    GameObject instance = Instantiate(ApPip);
-                    instance.GetComponent<Image>().color = Color.red;
-                    ApPips.Add(instance);
-                    instance.transform.SetParent(transform, false);
-                }
+            grey = 8 - ap;
+            ClearPips();
+
+            for (int a = 0; a < ap; a++)
+            {
+                GameObject instance = Instantiate(ApPip);
+                instance.GetComponent<Image>().color = Color.red;
+                ApPips.Add(instance);
+                instance.transform.SetParent(apDisplayPanel.transform, false);
             }
+
+            for (int a = 0; a < grey; a++)
+            {
+                GameObject instance = Instantiate(ApPip);
+                instance.GetComponent<Image>().color = Color.grey;
+                ApPips.Add(instance);
+                instance.transform.SetParent(apDisplayPanel.transform, false);
+            }
+
+           
+            
         }
 
         private void ClearPips()

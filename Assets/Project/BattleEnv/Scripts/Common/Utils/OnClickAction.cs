@@ -24,4 +24,9 @@ public class OnClickAction : MonoBehaviour, IPointerClickHandler{
             action();
         }
     }
+
+    public void Click()
+    {
+        OnMouseUp();
+    }
 }

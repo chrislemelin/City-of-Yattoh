@@ -56,6 +56,8 @@ namespace Placeholdernamespace.Battle.Calculator
 
                 foreach(Tuple<Stats,Stats> stats in skillReport.targets)
                 {
+                    
+                    stats.second.SetUpdateHandler(stats.second.BoardEntity.Stats);
                     stats.second.BoardEntity.Stats = stats.second;
                     stats.second.UpdateStatHandler();
                 }

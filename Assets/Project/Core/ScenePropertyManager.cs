@@ -3,6 +3,7 @@ using Placeholdernamespace.Battle.Entities;
 using Placeholdernamespace.Battle.Entities.Instances;
 using Placeholdernamespace.Battle.Entities.Kas;
 using Placeholdernamespace.Battle.Env;
+using Placeholdernamespace.CharacterSelection;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -68,7 +69,7 @@ public class ScenePropertyManager : MonoBehaviour {
         instance = this;
         if (!testing)
         {
-            initCharacters();
+            InitCharacters();
             DontDestroyOnLoad(transform.gameObject);
         }
         else
@@ -142,16 +143,9 @@ public class ScenePropertyManager : MonoBehaviour {
 
     }
 
-    private void  initCharacters()
+    private void  InitCharacters()
     {
-        SetCharacterParty(new List<Tuple<CharacterBoardEntity, Ka>>()
-        {
-            new Tuple<CharacterBoardEntity, Ka>(typeToBE[CharacterType.PlayerBongani], new Ka(typeToContainer[CharacterType.PlayerBongani]) ),
-            new Tuple<CharacterBoardEntity, Ka>(typeToBE[CharacterType.PlayerJaz], null),
-            new Tuple<CharacterBoardEntity, Ka>(typeToBE[CharacterType.PlayerDadi], null),
-            new Tuple<CharacterBoardEntity, Ka>(typeToBE[CharacterType.PlayerLesidi], null),
-
-        });
+        SetCharacterParty(PremadeParties.PresetPartyOne());
     }
 
 }

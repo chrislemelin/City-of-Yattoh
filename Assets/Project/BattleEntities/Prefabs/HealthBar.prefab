@@ -40,6 +40,7 @@ GameObject:
   - component: {fileID: 114451885793882038}
   - component: {fileID: 114145329129535940}
   - component: {fileID: 114536380190674756}
+  - component: {fileID: 114955123707188266}
   m_Layer: 0
   m_Name: HealthBar
   m_TagString: Untagged
@@ -150,7 +151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcf3b8d8ea93487439479bdc7e321cec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 1616944961264860}
+  target: {fileID: 0}
   offest: {x: 0, y: -0.03, z: 0}
 --- !u!114 &114491047463545342
 MonoBehaviour:
@@ -219,6 +220,25 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114955123707188266
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1075659018159238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1679637790, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: 20
+  m_PreferredHeight: 10
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!222 &222751452534630012
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -258,7 +278,7 @@ RectTransform:
   m_GameObject: {fileID: 1075659018159238}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.2314981, y: 1.2314981, z: 1.2314981}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 224965587214328072}
   - {fileID: 224462731894028008}
@@ -284,7 +304,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0.5}

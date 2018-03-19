@@ -195,9 +195,9 @@ namespace Placeholdernamespace.Battle.Entities
 
         }
 
-        public override List<Move> MoveSet()
+        public override List<Move> MoveSet(int? ap = null)
         {
-            return tileManager.DFSMoves(GetTile().Position, this, team: team, tauntTiles:GetTauntTiles());
+            return tileManager.DFSMoves(GetTile().Position, this, team: team, tauntTiles:GetTauntTiles(), ap:ap);
         }
         
         public List<SkillModifier> GetSkillModifier(Skill skill)

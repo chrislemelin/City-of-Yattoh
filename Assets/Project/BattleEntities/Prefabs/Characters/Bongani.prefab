@@ -302,7 +302,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   profileImage: {fileID: 21300000, guid: 22228d1e9d4530a4da2a33e701427a27, type: 3}
-  profileImageCircle: {fileID: 21300000, guid: b7f3a47b42fed5f4c9753c566ad8d057, type: 3}
+  profileImageCircle: {fileID: 21300000, guid: 6fb86cd9dd77eed49b785c75741b30dd, type: 3}
   healthBar: {fileID: 1075659018159238, guid: a0ae54a5f3f969d418b6a279f613a09d, type: 2}
   team: 0
   stats:

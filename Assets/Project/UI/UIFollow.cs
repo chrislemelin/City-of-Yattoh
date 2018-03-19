@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UIFollow : MonoBehaviour {
 
-    public GameObject target;
+    public GameObject target = null;
     public Vector3 offest;
     float height = -1;
 

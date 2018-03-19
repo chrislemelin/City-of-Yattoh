@@ -8,18 +8,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Placeholdernamespace.Battle.Interaction
+namespace Placeholdernamespace.Battle.UI
 {
     public class BoardEntitySelector :MonoBehaviour{
 
-        [SerializeField]
-        Color SelectColor;
 
         [SerializeField]
-        private SkillSelector skillSelector;
-        public SkillSelector SkillSelector
+        private MasterSelector masterSelector;
+        public MasterSelector MasterSelector
         {
-            get { return SkillSelector; }
+            get { return masterSelector; }
         }
 
         [SerializeField]
@@ -33,10 +31,10 @@ namespace Placeholdernamespace.Battle.Interaction
         private Profile profile;
 
         [SerializeField]
-        private List<Color> ApCostColors;
+        private Profile previewProfile;
 
         [SerializeField]
-        private Color hoverColor;
+        GameObject apDisplay;
 
         [SerializeField]
         private TurnManager turnManager;
@@ -53,166 +51,50 @@ namespace Placeholdernamespace.Battle.Interaction
         public void Init()
         {
             tileSelectionManager.Init(profile);
-            skillSelector.Init(tileSelectionManager, () => { setSelectedBoardEntity(selectedBoardEntity); buildMoveOptions(); } ,
-                getHoverEntity, profile, turnManager);
+            apDisplay.SetActive(false);
         }
 
-        public void setSelectedBoardEntity(BoardEntity boardEntity)
+        public void SetPreviewBoardEntity(CharacterBoardEntity boardEntity)
         {
-            
-            if (boardEntity == TurnManager.CurrentBoardEntity && (boardEntity == null || boardEntity.Team != Team.Enemy ))
+            masterSelector.SetPreviewBoardEntity(boardEntity);
+            previewProfile.UpdateProfile(boardEntity);
+        }
+
+        public void SetSelectedBoardEntity(BoardEntity boardEntity)
+        {
+            if(boardEntity == TurnManager.CurrentBoardEntity)
             {
-                setHoverEntity(null);
-                selectedBoardEntity = null;
-                tileSelectionManager.CancelSelection();
-
-                selectedBoardEntity = boardEntity;
                 profile.UpdateProfile(boardEntity);
-
-                buildMoveOptions();
-                if (boardEntity == null)
+                SetPreviewBoardEntity(null);
+                if (boardEntity == null || boardEntity.Team != Team.Enemy)
                 {
-                    skillSelector.Hide();
+                    tileSelectionManager.CancelSelection();
+                    apDisplay.SetActive(true);
+                    if (selectedBoardEntity != boardEntity)
+                    {
+                        masterSelector.SetBoardEntity((CharacterBoardEntity)boardEntity);
+
+                    }
+                    masterSelector.Show();
+                    selectedBoardEntity = boardEntity;
                 }
+                else
+                {
+                    masterSelector.Hide();
+                }
+
             }
-            /*
             else
             {
-                if (boardEntity == hoverBoardEntity)
-                {
-                    setHoverEntity(null);
-                }
-                else
-                {
-                    //setHoverEntity(boardEntity);
-                }
+                SetPreviewBoardEntity((CharacterBoardEntity)boardEntity);
             }
-            */
-        }
+        }  
 
-        private void setHoverEntity(BoardEntity boardEntity)
+        public void HideSelector()
         {
-            if (hoverBoardEntity != null)
-            {
-                hoverBoardEntity.GetTile().PathOnClick.ColorEffectManager.TurnOff(this);
-            }
-            hoverBoardEntity = boardEntity;
-            if (hoverBoardEntity != null)
-            {
-                //profile.UpdateProfile(boardEntity);
-                //hoverBoardEntity.GetTile().PathOnClick.ColorEffectManager.TurnOn(this, Color.blue);
-            }
-
+            masterSelector.Hide();
+            apDisplay.SetActive(false);
         }
-
-        private BoardEntity getHoverEntity()
-        {
-            return hoverBoardEntity;
-        }
-
-        public void Hover(BoardEntity boardEntity)
-        {
-            if(getHoverEntity() == null)
-            {
-                profile.UpdateProfile(boardEntity);
-            }
-        }
-
-        public void ExitHover()
-        {
-            //profile.UpdateProfile(selectedBoardEntity);
-        }
-
-        private void buildMoveOptions()
-        {
-            if (selectedBoardEntity is CharacterBoardEntity)
-            {
-                if (TurnManager.CurrentBoardEntity == selectedBoardEntity)
-                {
-                    List<Move> moveSet = selectedBoardEntity.MoveSet();
-                    List<TileSelectOption> options = new List<TileSelectOption>();
-                    foreach (Move m in moveSet)
-                    {
-                        Stats displaystats = selectedBoardEntity.Stats.GetCopy();
-                        displaystats.SubtractAPPoints(m.apCost);
-                        displaystats.SetMutableStat(StatType.Movement, m.movementPointsAfterMove);
-                        Color col = ApCostColors[0];
-                        if (m.apCost < ApCostColors.Count)
-                        {
-                            col = ApCostColors[m.apCost];
-                        }
-                        options.Add(new TileSelectOption()
-                        {
-                            Selection = m.destination,
-                            OnHover = m.path,
-                            HighlightColor = col,
-                            HoverColor = hoverColor,
-                            ReturnObject = m,
-                            OnHoverAction = (
-                            () => {
-                                if (getHoverEntity() == null)
-                                {
-                                    profile.PreviewMove(selectedBoardEntity, m);
-                                    //profile.UpdateProfile(selectedBoardEntity, displaystats);
-                                } }
-                            )
-                        });
-                    }
-
-                    options.Add(new TileSelectOption()
-                    {
-                        Selection = selectedBoardEntity.GetTile(),
-                        HighlightColor = SelectColor,
-                        HoverColor = SelectColor,
-                        OnHoverAction = (
-                            () => {
-                                if (getHoverEntity() == null)
-                                {
-                                    profile.UpdateProfile(selectedBoardEntity);
-                                }
-                            })
-                    });
-
-                    tileSelectionManager.SelectTile(selectedBoardEntity, options, sendMoveToBoardEntity, isMovement: true,
-                        hoverExit: () => { if (hoverBoardEntity == null) profile.UpdateProfile(selectedBoardEntity); }
-                        );               
-                    skillSelector.SetBoardEntity((CharacterBoardEntity)selectedBoardEntity);
-                    skillSelector.SetSkills(((CharacterBoardEntity)selectedBoardEntity).Skills);
-                }
-                else
-                {
-                    tileSelectionManager.SelectTile(selectedBoardEntity, new List<Move>() , sendMoveToBoardEntity, null, null);
-                }
-            }
-        }
-
-        private void sendMoveToBoardEntity(TileSelectOption tileOption)
-        {
-           
-            if (selectedBoardEntity is CharacterBoardEntity)
-            {
-                if(tileOption != null)
-                {
-                    setHoverEntity(null);
-                    ((CharacterBoardEntity)selectedBoardEntity).ExecuteMove( (Move)tileOption.ReturnObject, (bool ok) => { buildMoveOptions();
-                        profile.UpdateProfile(selectedBoardEntity); });
-                }
-                else
-                {
-                    if(skillSelector.SelectedSkill == null)
-                    {
-                        buildMoveOptions();
-                    }
-                    //((CharacterBoardEntity)selectedBoardEntity).ExecuteMove(null);
-
-                }
-                if(skillSelector.SelectedSkill == null)
-                {
-                    //buildMoveOptions();
-                    //setSelectedBoardEntity(null);
-                    //skillSelector.Hide();
-                }
-            }
-        }
+     
     }
 }

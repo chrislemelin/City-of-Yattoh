@@ -27,11 +27,20 @@ namespace Placeholdernamespace.Battle.Entities.Skills
 
         protected override void ActionHelperNoPreview(List<Tile> tiles, Action callback)
         {
+            
             List<Tile> targetTiles = tileManager.GetTilesDiag(tiles[0].BoardEntity.Position);
-            List<CharacterBoardEntity> targets = tileManager.TilesToCharacterBoardEntities(targetTiles);
+            List<Tile> newTargetTiles = new List<Tile>();
+            foreach (Tile tile in targetTiles)
+            {
+                if(TileHasTarget(tile))
+                {
+                    newTargetTiles.Add(tile);
+                }
+            }
+            List<CharacterBoardEntity> targets = tileManager.TilesToCharacterBoardEntities(newTargetTiles);
             targets.Add((CharacterBoardEntity)tiles[0].BoardEntity);
             foreach (CharacterBoardEntity character in targets)
-            {
+            { 
                 character.AddPassive(new BuffStun());
             }
             base.ActionHelperNoPreview(tiles, callback);

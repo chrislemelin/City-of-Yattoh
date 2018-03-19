@@ -25,7 +25,7 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
         /// <summary>
         /// these are the stats that can change without modifiers, things like health and movement points
         /// </summary>
-        private static HashSet<StatType> mutableStatSet = new HashSet<StatType>() { StatType.Health, StatType.Movement, StatType.AP };
+        private static HashSet<StatType> mutableStatSet = new HashSet<StatType>() { StatType.Health, /*StatType.Movement,*/ StatType.AP };
         public static HashSet<StatType> MutableStatSet
         {
             get { return mutableStatSet; }
@@ -95,7 +95,7 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
             // a clone for the different previews,
             Stats stats = new Stats();
             stats.modifiers = new List<StatModifier>();
-            stats.updateStatHandler += updateStatHandler;
+            //stats.updateStatHandler += updateStatHandler;
             foreach(StatModifier mod in modifiers)
             {
                 stats.modifiers.Add(mod);
@@ -104,6 +104,11 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
             stats.mutableStats = MutableStats;
             stats.boardEntity = boardEntity;
             return stats;
+        }
+
+        public void SetUpdateHandler( Stats stats)
+        {
+            updateStatHandler = stats.updateStatHandler;
         }
 
         public void SetStats(Stats stats)
@@ -205,7 +210,13 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
 
         public bool SubtractMovementPoints(int value, bool display = false)
         {
+            int movement = GetDefaultStat(StatType.Movement).Value;
+            double apCost = Math.Ceiling((float)value / (float)movement);
+            SubtractAPPoints((int)apCost);
+            return true;
+
             // if its less than zero something should probably happen here
+            /*
             int newValue = GetMutableStat(StatType.Movement).Value - value;
 
             int valueToSubract= 0;
@@ -225,7 +236,7 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
                 SubtractAPPoints(valueToSubract, display);
             SetMutableStat(StatType.Movement, newValue);
             return true;
-
+            */
         }
 
         public void SubtractAPPoints(int value, bool display = false)
@@ -272,12 +283,12 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
             return (stat.Value + "/" + maxStat.Value);
         }
 
-        public static String StatTypeToString(StatType type)
+        public static string StatTypeToString(StatType type)
         {
             switch(type)
             {
                 case StatType.AP:
-                    return "Action Points";
+                    return "AP";
                 case StatType.APGain:
                     return "AP Gain";
                 case StatType.Armour:
@@ -287,7 +298,7 @@ namespace Placeholdernamespace.Battle.Entities.AttributeStats
                 case StatType.Inteligence:
                     return "Inteligence";
                 case StatType.Movement:
-                    return "Movement Points";
+                    return "Movement";
                 case StatType.Speed:
                     return "Speed";
                 case StatType.Strength:

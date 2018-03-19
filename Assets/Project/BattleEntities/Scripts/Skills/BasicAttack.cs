@@ -18,7 +18,7 @@ namespace Placeholdernamespace.Battle.Entities.Skills
             title = "Basic Attack";
             description = "Deal STRENGTH damage to one enemy";
             apCost = 1;
-            coolDown = 1;
+            coolDown = 0;
             piercing = 0;
             flavorText = "this is the basic attack";
         }

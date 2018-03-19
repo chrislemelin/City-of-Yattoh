@@ -7,8 +7,10 @@ using Placeholdernamespace.Battle.Entities;
 using Placeholdernamespace.Battle.Entities.AttributeStats;
 using Placeholdernamespace.Battle.UI;
 using Placeholdernamespace.Battle.Interaction;
-using TMPro;
 using Placeholdernamespace.Battle.Entities.Passives;
+using UnityEngine.UI;
+using TMPro;
+using Placeholdernamespace.Common.UI;
 
 namespace Placeholdernamespace.Battle.Managers
 {
@@ -16,7 +18,14 @@ namespace Placeholdernamespace.Battle.Managers
     {
         [SerializeField]
         GameObject currentTurnPointer;
-        public TextMeshProUGUI display;
+
+        [SerializeField]
+        GameObject orderDisplayPanel;
+
+        [SerializeField]
+        GameObject turnOrderDisplay;
+
+        List<GameObject> orderDisplays = new List<GameObject>();
 
         public delegate void NewTurnHandler(object sender, EventArgs e);
         private bool endState = false;
@@ -33,21 +42,9 @@ namespace Placeholdernamespace.Battle.Managers
             get { return new List<CharacterBoardEntity>(enities); }
         }
 
-        public static List<BoardEntity> GetBEofType(CharacterType type)
-        {
-            List<BoardEntity> returnList = new List<BoardEntity>();
-            foreach(BoardEntity BE in Entities)
-            {
-               // if(BE)
-            }
-            return null;
-
-        }
-
         private List<CharacterBoardEntity> turnQueue = new List<CharacterBoardEntity>();
         private HashSet<CharacterBoardEntity> alreadyTakenTurn = new HashSet<CharacterBoardEntity>();
-        private int queueLength = 5;
-        private Profile profile;
+        private int queueLength = 10;
         private BoardEntitySelector boardEntitySelector;
         private TileSelectionManager tileSelectionManager;
 
@@ -128,8 +125,8 @@ namespace Placeholdernamespace.Battle.Managers
 
         public void NextTurn()
         {
+            boardEntitySelector.HideSelector();
             currentBoardEntity = null;
-            boardEntitySelector.setSelectedBoardEntity(null);
             if (!endState)
             {
                 ReCalcQueue();
@@ -143,16 +140,12 @@ namespace Placeholdernamespace.Battle.Managers
                 CenterText.Instance.DisplayMessage(tempcurrentBoardEntity.Name + "'s Turn", () =>
                 {
                     currentBoardEntity = tempcurrentBoardEntity;
-                    SetCurrentTurnMarker((CharacterBoardEntity)tempcurrentBoardEntity);
+                    SetCurrentTurnMarker(tempcurrentBoardEntity);
                     PathOnClick.pause = false;
                     UpdateGui();
-                    ((CharacterBoardEntity)tempcurrentBoardEntity).SetUpMyTurn();
-                    if (currentBoardEntity.Team == Team.Player)
-                    {
-                        boardEntitySelector.setSelectedBoardEntity(currentBoardEntity);
-                    }
+                    tempcurrentBoardEntity.SetUpMyTurn();
+                    boardEntitySelector.SetSelectedBoardEntity(currentBoardEntity); 
                     tempcurrentBoardEntity.StartMyTurn();
-
                 });
             }
            
@@ -177,19 +170,38 @@ namespace Placeholdernamespace.Battle.Managers
 
         private void UpdateGui()
         {
+            foreach(GameObject gameObject in orderDisplays)
+            {
+                Destroy(gameObject);
+            }
+
             string newText = "";
             int counter = 1;
             newText += AddOrdinal(counter++) + "  " + currentBoardEntity.Name;
-            
             List<CharacterBoardEntity> displayList = turnQueue;
+            displayList.Insert(0, currentBoardEntity);
+            bool first = true;
             foreach (CharacterBoardEntity entity in displayList)
             {
+                if(counter-1 == queueLength)              
+                    break;
+
+                GameObject newDisplay = Instantiate(turnOrderDisplay);
+                newDisplay.GetComponentsInChildren<Image>()[1].sprite = entity.ProfileImage;
+                newDisplay.GetComponentInChildren<TooltipSpawnerStatic>().description = entity.Name;
+                newDisplay.GetComponent<OnClickAction>().clickActions.Add(() => boardEntitySelector.SetPreviewBoardEntity(entity));
+                newDisplay.transform.SetParent(orderDisplayPanel.transform, false);
+
+                if(first)
+                {
+                    newDisplay.GetComponentsInChildren<Image>()[0].color = Color.yellow;
+                    first = false;
+                }
+
+                orderDisplays.Add(newDisplay);
                 newText += "\n"+AddOrdinal(counter++)+"  " + entity.Name;
             }
-            if (display != null)
-            {
-                display.text = newText;
-            }
+
         }
 
         //https://stackoverflow.com/questions/20156/is-there-an-easy-way-to-create-ordinals-in-c
@@ -229,6 +241,7 @@ namespace Placeholdernamespace.Battle.Managers
             {
                 alreadyTakenTurn.Clear();
                 firstListentities = ReCalcQueueHelper();
+                SetFirst(firstListentities);
             }
 
             List<CharacterBoardEntity> secondListentities = ReCalcQueueHelper();

@@ -10,42 +10,50 @@ namespace Placeholdernamespace.CharacterSelection
     public class PremadeParties : MonoBehaviour
     {
 
-        [SerializeField]
-        private CharacterView2 characterView2;
-
-        public void PresetOne()
+        public static List<Tuple<CharacterBoardEntity, Ka>> PresetPartyOne()
         {
             Ka AmareKa = new Ka(ScenePropertyManager.Instance.typeToContainer[CharacterType.PlayerAmare]);
             AmareKa.AddPassive(ScenePropertyManager.Instance.typeToContainer[CharacterType.PlayerAmare].Passive);
             Ka TishaKa = new Ka(ScenePropertyManager.Instance.typeToContainer[CharacterType.PlayerTisha]);
             TishaKa.AddPassive(ScenePropertyManager.Instance.typeToContainer[CharacterType.PlayerTisha].Passive);
 
-            ScenePropertyManager.Instance.SetCharacterParty(new List<Tuple<CharacterBoardEntity, Ka>>()
+            return new List<Tuple<CharacterBoardEntity, Ka>>()
             {
                 new Tuple<CharacterBoardEntity, Ka>(ScenePropertyManager.Instance.typeToBE[CharacterType.PlayerLesidi],AmareKa),
                 new Tuple<CharacterBoardEntity, Ka>(ScenePropertyManager.Instance.typeToBE[CharacterType.PlayerDadi],TishaKa),
                 new Tuple<CharacterBoardEntity, Ka>(ScenePropertyManager.Instance.typeToBE[CharacterType.PlayerJaz],null),
                 new Tuple<CharacterBoardEntity, Ka>(ScenePropertyManager.Instance.typeToBE[CharacterType.PlayerBongani],null),
-            });
-
-            characterView2.Clear();
+            };
         }
 
-        public void PresetTwo()
-        {
+        public static List<Tuple<CharacterBoardEntity, Ka>> PresetPartyTwo()
+        { 
             Ka DadiKa = new Ka(ScenePropertyManager.Instance.typeToContainer[CharacterType.PlayerDadi]);
             DadiKa.AddPassive(ScenePropertyManager.Instance.typeToContainer[CharacterType.PlayerDadi].Passive);
             Ka BonganiKa = new Ka(ScenePropertyManager.Instance.typeToContainer[CharacterType.PlayerBongani]);
             BonganiKa.AddPassive(ScenePropertyManager.Instance.typeToContainer[CharacterType.PlayerBongani].Passive);
 
-            ScenePropertyManager.Instance.SetCharacterParty(new List<Tuple<CharacterBoardEntity, Ka>>()
+            return new List<Tuple<CharacterBoardEntity, Ka>>()
             {
                 new Tuple<CharacterBoardEntity, Ka>(ScenePropertyManager.Instance.typeToBE[CharacterType.PlayerLesidi],null),
-                new Tuple<CharacterBoardEntity, Ka>(ScenePropertyManager.Instance.typeToBE[CharacterType.PlayerJaz],DadiKa),
-                new Tuple<CharacterBoardEntity, Ka>(ScenePropertyManager.Instance.typeToBE[CharacterType.PlayerTisha],BonganiKa),
+                new Tuple<CharacterBoardEntity, Ka>(ScenePropertyManager.Instance.typeToBE[CharacterType.PlayerJaz], DadiKa),
+                new Tuple<CharacterBoardEntity, Ka>(ScenePropertyManager.Instance.typeToBE[CharacterType.PlayerTisha], BonganiKa),
                 new Tuple<CharacterBoardEntity, Ka>(ScenePropertyManager.Instance.typeToBE[CharacterType.PlayerAmare],null),
-            });
+            };
+        }
 
+        [SerializeField]
+        private CharacterView2 characterView2;
+
+        public void PresetOne()
+        {
+            ScenePropertyManager.Instance.SetCharacterParty(PresetPartyOne());
+            characterView2.Clear();
+        }
+
+        public void PresetTwo()
+        {
+            ScenePropertyManager.Instance.SetCharacterParty(PresetPartyTwo());
             characterView2.Clear();
         }
 

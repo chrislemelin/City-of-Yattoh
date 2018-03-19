@@ -437,7 +437,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   profileImage: {fileID: 21300000, guid: 2599ea49fee8a5b45a93e6f8232a7990, type: 3}
-  profileImageCircle: {fileID: 21300000, guid: e3a893a2c81bccd45aed3506b3378f98, type: 3}
+  profileImageCircle: {fileID: 21300000, guid: 41eb324b3a8ea284bbdc8b7ae8e2f467, type: 3}
   healthBar: {fileID: 1075659018159238, guid: a0ae54a5f3f969d418b6a279f613a09d, type: 2}
   team: 0
   stats:

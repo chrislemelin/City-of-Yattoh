@@ -35,6 +35,7 @@ namespace Placeholdernamespace.Battle.Entities.Passives
                     Trigger();
                 }
             }
+            lastHealth = boardEntity.Stats.GetMutableStat(AttributeStats.StatType.Health).Value;
         }
 
     }

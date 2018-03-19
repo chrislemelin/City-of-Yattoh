@@ -13,6 +13,9 @@ namespace Placeholdernamespace.Battle.UI
     public class Profile : MonoBehaviour
     {
         [SerializeField]
+        private GameObject line;
+
+        [SerializeField]
         private Sprite defaultPassiveSprite;
 
         [SerializeField]
@@ -32,8 +35,11 @@ namespace Placeholdernamespace.Battle.UI
         [SerializeField]
         private GameObject textGameObject;
         [SerializeField]
+        private GameObject statTextGameObject;
+        [SerializeField]
         private GameObject profilePanel;
-
+        [SerializeField]
+        private GameObject healthbar;
         [SerializeField]
         private GameObject passivePanel;
         [SerializeField]
@@ -50,7 +56,7 @@ namespace Placeholdernamespace.Battle.UI
         [SerializeField]
         private Color negColor = Color.red;
 
-        private List<StatType> displayOrder = new List<StatType>() { StatType.Health, StatType.AP, StatType.Movement, StatType.Strength, StatType.Armour, StatType.Speed };
+        private List<StatType> displayOrder = new List<StatType>() { StatType.Strength, StatType.Armour, StatType.Movement, StatType.Speed };
 
         private List<GameObject> texts = new List<GameObject>();
         private List<GameObject> passives = new List<GameObject>();
@@ -73,7 +79,7 @@ namespace Placeholdernamespace.Battle.UI
         {
             if (currentBoardEntity != null)
             {
-                currentBoardEntity.updateStatHandler -= RefreshProfile;
+                currentBoardEntity.Stats.updateStatHandler -= RefreshProfile;
             }
             currentBoardEntity = boardEntity;
             if (boardEntity == null)
@@ -82,7 +88,7 @@ namespace Placeholdernamespace.Battle.UI
             }
             else
             {
-                currentBoardEntity.updateStatHandler += RefreshProfile;
+                currentBoardEntity.Stats.updateStatHandler += RefreshProfile;
                 gameObject.SetActive(true);
                 processBoardEntity(boardEntity, previewStats, skillReport);
             }
@@ -112,11 +118,13 @@ namespace Placeholdernamespace.Battle.UI
         {
             if(previewStats != null)
             {
-                apDisplay.DisplayAp(boardEntity, previewStats);
+                if(apDisplay!= null)
+                    apDisplay.DisplayAp(boardEntity, previewStats);
             }
-            else
+            else 
             {
-                apDisplay.DisplayAp(boardEntity);
+                if(apDisplay != null)
+                    apDisplay.DisplayAp(boardEntity);
             }
             UpdateProfilePic(boardEntity.ProfileImage);
             foreach (GameObject g in texts)
@@ -138,7 +146,7 @@ namespace Placeholdernamespace.Battle.UI
             }
         }
 
-        private void RefreshProfile(object sender)
+        private void RefreshProfile()
         {
             processBoardEntity(currentBoardEntity);
         }
@@ -162,22 +170,24 @@ namespace Placeholdernamespace.Battle.UI
                 passiveObject.GetComponent<TooltipSpawner>().Init(passive.GetTitle, passive.GetDescription, ()=> { return null; });
                 passiveObject.transform.SetParent(passivePanel.transform);
                 this.passives.Add(passiveObject);
-            }
-            if(passives.Count == 0)
-            {
-                passivePanel.gameObject.SetActive(false);
-            }
-            else
-            {
-                passivePanel.gameObject.SetActive(true);
-            }
+            }            
 
         }
 
         private void EvaluateStats(BoardEntity boardEntity, Stats previewStats = null, SkillReport skillReport = null)
         {
-            foreach(StatType type in displayOrder)
+
+            GameObject healthBarInstance = Instantiate(healthbar);
+            healthBarInstance.GetComponentInChildren<TextMeshProUGUI>().text = boardEntity.Stats.StatValueString(StatType.Health);
+            healthBarInstance.GetComponentInChildren<UIBar>().Init(boardEntity, follow: false);
+            healthBarInstance.transform.SetParent(profilePanel.transform, false);
+            texts.Add(healthBarInstance);
+
+
+            foreach (StatType type in displayOrder)
             {
+                Stat stat = boardEntity.Stats.GetDefaultStat(type);
+                
                 string text = boardEntity.Stats.StatToString(type);
                 if(previewStats != null)
                 {
@@ -204,9 +214,11 @@ namespace Placeholdernamespace.Battle.UI
                     }
                     skillReport.targetAfter.modifiers = new List<StatModifier>();
                 }
-                AddText(text, Stats.StatTypeToTooltip(type));
+                //AddText(text, Stats.StatTypeToTooltip(type));
+                AddTextStat(Stats.StatTypeToString(type), boardEntity.Stats.StatValueString(type), Stats.StatTypeToTooltip(type));
+            
             }
-            AddRangeText(boardEntity);
+            //AddRangeText(boardEntity);
         }
         
         private void AddRangeText(BoardEntity boardEntity)
@@ -270,11 +282,22 @@ namespace Placeholdernamespace.Battle.UI
 
         private void AddText(string text, string tooltip = null)
         {
-            GameObject movementStat = Instantiate(textGameObject);
-            movementStat.GetComponent<TooltipSpawner>().Init(() => { return ""; }, () => { return tooltip; }, ()=> { return null; });
-            movementStat.GetComponent<TextMeshProUGUI>().text = text;
-            movementStat.transform.SetParent(profilePanel.transform, false);
-            texts.Add(movementStat);
+            GameObject textObj = Instantiate(textGameObject);
+            textObj.GetComponent<TooltipSpawner>().Init(() => { return ""; }, () => { return tooltip; }, ()=> { return null; });
+            textObj.GetComponent<TextMeshProUGUI>().text = text;
+            textObj.transform.SetParent(profilePanel.transform, false);
+            texts.Add(textObj);
+        }
+
+        private void AddTextStat(string label, string value, string tooltip = null)
+        {
+            GameObject textStat = Instantiate(statTextGameObject);
+            TextMeshProUGUI[] textUIs = textStat.GetComponentsInChildren<TextMeshProUGUI>();
+            textStat.GetComponent<TooltipSpawner>().Init(() => { return ""; }, () => { return tooltip; }, () => { return null; });
+            textUIs[0].text = label;
+            textUIs[1].text = value;
+            textStat.transform.SetParent(profilePanel.transform, false);
+            texts.Add(textStat);
         }
 
         private void UpdateProfilePic(Sprite sprite)

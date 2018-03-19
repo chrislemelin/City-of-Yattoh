@@ -422,7 +422,7 @@ namespace Placeholdernamespace.Battle.Env
         /// <param name="range"></param>
         /// <returns></returns>
         public List<Move> DFSMoves(Position start, CharacterBoardEntity character, int apLimit = 2, Team? team = null,
-            HashSet<Tile> tauntTiles = null)
+            HashSet<Tile> tauntTiles = null, int? ap = null)
         {
               
             if (tauntTiles != null && tauntTiles.Count != 0)
@@ -433,9 +433,17 @@ namespace Placeholdernamespace.Battle.Env
                     tempCoordinateToTile.Add(t.Position, t);
                 }
             }
-
+            int currentAp;
+            if(ap == null)
+            {
+                currentAp = character.Stats.GetMutableStat(Entities.AttributeStats.StatType.AP).Value;
+            }
+            else
+            {
+                currentAp = (int)ap;
+            }
             int movementStats = character.Stats.GetStatInstance().getValue(Entities.AttributeStats.StatType.Movement);
-            int movementPoints = character.Stats.GetMutableStat(Entities.AttributeStats.StatType.Movement).Value;
+            int movementPoints = 0; // character.Stats.GetMutableStat(Entities.AttributeStats.StatType.Movement).Value;
 
             //int range = movementPoints + movementStats * character.Stats.GetMutableStat(Entities.AttributeStats.StatType.AP).Value;
 
@@ -485,7 +493,7 @@ namespace Placeholdernamespace.Battle.Env
                             }
                             newMove.movementPointsAfterMove = movementPoints + (newMove.apCost * movementStats) - newMove.movementCost;
 
-                            if((newMove.apCost <= apLimit) && (newMove.apCost <= character.Stats.GetMutableStat(Entities.AttributeStats.StatType.AP).Value))
+                            if((newMove.apCost <= apLimit) && (newMove.apCost <= currentAp))
                             {
                                 newVisitingTiles.Add(newMove);
                                 visitedTiles.Add(processingTile);

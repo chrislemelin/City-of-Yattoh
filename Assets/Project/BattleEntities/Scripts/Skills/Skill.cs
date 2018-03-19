@@ -201,8 +201,8 @@ namespace Placeholdernamespace.Battle.Entities.Skills
                     OnHover = TileReturnHelper(t),
                     HighlightColor = selectColor,
                     HoverColor = highlightColor,
-                    DisplayStats = targetAfter,
-                    skillReport = skillReport,
+                    //DisplayStats = targetAfter,
+                    //skillReport = skillReport,
                     Clickable = TileOptionClickable(t),
                     ReturnObject = TileReturnHelper(t)
                    

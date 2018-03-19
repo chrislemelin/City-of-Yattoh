@@ -37,10 +37,6 @@ namespace Placeholdernamespace.Battle.Interaction
 
         public bool IsActive()
         {
-            if(selectionCallBack != null && isMovement)
-            {
-                return false;
-            }
             return selectionCallBack != null;
         }
 
@@ -87,12 +83,15 @@ namespace Placeholdernamespace.Battle.Interaction
                     }
                     isMovement = false;
                 }
+                else
+                {
+
+                }
             }
         }
 
         public void CancelSelection()
         {
-            //profile.UpdateProfile(selectedEntity);
             TileClicked(null);
         }
 
@@ -119,7 +118,7 @@ namespace Placeholdernamespace.Battle.Interaction
                 }
                 if(pathOnClick.Tile.BoardEntity != null)
                 {
-                    profile.UpdateProfile(pathOnClick.Tile.BoardEntity);
+                    //profile.UpdateProfile(pathOnClick.Tile.BoardEntity);
                 }
             }
         }
@@ -297,7 +296,7 @@ namespace Placeholdernamespace.Battle.Interaction
         public void NewGlowPath(TileSelectOption tileSelectOption)
         {
             List<Tile> newTiles = new List<Tile>();
-            if(tileSelectOption != null)
+            if(tileSelectOption != null && tileSelectOption.OnHover != null)
             {
                 newTiles = tileSelectOption.OnHover;
             }
