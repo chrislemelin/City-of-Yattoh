@@ -94,12 +94,13 @@ namespace Placeholdernamespace.Battle.UI
 
         public void BuildPreviewMoveOptions(CharacterBoardEntity selectedBoardEntity)
         {
+            tileSelectionManager.CancelSelection();
             if (selectedBoardEntity != null)
             {
                 List<TileSelectOption> options = GetTileSelectOptions(selectedBoardEntity, true, 2);
-                tileSelectionManager.CancelSelection();
                 tileSelectionManager.SelectTile(selectedBoardEntity, options, PreviewAction, isMovement: true);
             }
+
         }
 
         private void PreviewAction(TileSelectOption tileOption)

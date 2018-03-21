@@ -56,6 +56,8 @@ namespace Placeholdernamespace.Battle.UI
 
         public void SetPreviewBoardEntity(CharacterBoardEntity boardEntity)
         {
+            if (boardEntity == TurnManager.CurrentBoardEntity)
+                boardEntity = null;
             masterSelector.SetPreviewBoardEntity(boardEntity);
             previewProfile.UpdateProfile(boardEntity);
         }

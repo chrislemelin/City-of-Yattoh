@@ -75,9 +75,9 @@ namespace Placeholdernamespace.Battle.Interaction
                     {
                         tempSelectOption(null);
                         active = false;
-                        if (pathOnClick != null && tempSelectedEntity != null && pathOnClick != tempSelectedEntity.GetTile().PathOnClick && !isMovement)
+                        if (pathOnClick != null && (tempSelectedEntity == null || pathOnClick != tempSelectedEntity.GetTile().PathOnClick) && pathOnClick.Tile.BoardEntity != null)
                         {
-                            //pathOnClick.OnMouseUp();
+                            pathOnClick.Tile.BoardEntity.OnSelect();
                         }
                         active = true;
                     }
@@ -185,6 +185,12 @@ namespace Placeholdernamespace.Battle.Interaction
              Action hoverExit = null)
         {
             this.hoverExit = hoverExit;
+
+            if(selectionCallBack != null)
+            {
+                CancelSelection();
+            }
+
             if (selectionCallBack == null)
             {
                 this.isMovement = isMovement;
